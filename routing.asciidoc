@@ -1,0 +1,19 @@
+Routing Protocols
+=================
+
+Hierarchy
+---------
+
+* Interior Gateway Protocols
+** *OSFP*
+*** link-state.
+*** Considers cost
+** *RIP*
+*** distance vector
+*** Hop Count
+** *EIGRP*
+*** distance vector
+*** Bandwidth, Delay, Load and Reliability (also called the K-values)
+* Exterior Gateway Protocols
+** BGP
+*** path vector

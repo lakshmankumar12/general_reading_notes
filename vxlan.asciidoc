@@ -1,0 +1,54 @@
+VXLAN notes
+===========
+
+What it tries to do
+-------------------
+
+VXLAN is an L2 overlay over an L3 network. That is, it emulates a BiiiG
+L2 Network across a L3 network. Like, one BiiG L2 network over data-centers
+spread across say SFO and Boston.
+
+Terminologies/Concepts
+----------------------
+
+VXLAN Segment:
+~~~~~~~~~~~~~~
+
+Each overlay network(L2 network, that is being spread out) is known as a VXLAN
+Segment and identified by a unique 24-bit segment ID called a VXLAN Network
+Identifier (VNI).
+
+Only virtual machine on the same VNI are allowed to communicate with each
+other.  Virtual machines are identified uniquely by the combination of their
+MAC addresses and VNI.  As such it is possible to have duplicate MAC addresses
+in different VXLAN Segments without issue, but not in the same VXLAN Segments.
+
+Picture of a VxLan Pkt
+~~~~~~~~~~~~~~~~~~~~~~
+
+----
+  Outer-MAC | Outer-IP (prot:UDP) | UDP (dstPort:VLAN) | VxLAN Header | Inner-MAC-hdr | Inner IP Hdr
+----
+
+VXLAN Tunnel End Points (VTEP)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Host machine that will process the VxLAN pkt and strip off VXLAN info and present the actual
+inner pkt to its guests
+
+VTEP Discovery
+---------------
+
+If this is not known, as in the case of a target virtual machine that the VTEP
+has not targeted before,  a discovery process needs to be done by originating
+VTEP.  This is done in a couple of steps:
+
+
+
+Links to read
+-------------
+
+* http://www.borgcube.com/blogs/2011/11/vxlan-primer-part-1/[Primer 1]
+* http://www.borgcube.com/blogs/2012/03/vxlan-primer-part-2-lets-get-physical/[Primer 2]
+* http://www.yellow-bricks.com/2012/11/02/vxlan-use-cases/[Some use cases - yellow bricks]
+* https://plus.google.com/+KennethDuda/posts/2tnVCHkeVyZ[K.Duda post]
