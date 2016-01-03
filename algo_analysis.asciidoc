@@ -1,0 +1,113 @@
+Algorithm Analysis
+===================
+
+== Asymtotic analysis
+
+=====
+n! << 2^n^  << n^3^  << n^2^  << n log n << n << log n << 1
+=====
+
+
+== Graphs
+
+* Represents pair-wise relationship among objects
+* Terminology
+** Vertices or nodes
+** Edges
+*** Careful. Dont confuse edge (having smaller spelling for a vertex, having a bigger
+    spelling!)
+** Directed or Undirected edges
+*** In directed, first is tail and second is head. That is direction is from tail to head.
+** *Cuts*
+*** A Cut in a graph is a split of vertices into 2 non-empty groups(A and B).
+*** For undirected, Crossing edges are those that have one end-point each in A and B
+*** For Directed, Crossing edges are those that have tail in A, head in B
+** Parallel edges are those that have same origin and destination vertex. This may
+   or may not be meaningful to a given problem
+** Typically m is number of edges, and n is number of vertices. (Mnemonic: m>>n, we
+   have far more edges than there are vertices. Number of lines in m(3) is more than n(2)!
+   Alternatively, m is O(n) to upto O(n^2^) to classify sparse/dense)
+** A degree of a vertex, is referred as the number of edges that start out from that
+   vertex.
+
+
+=== Numerical Facts
+
+* If there are n vertices, assuming no parallel edges, there should be minimum of
+  n-1 edges to have all the vertices connected (in one line) and utmost ~n~C~2~ = n(n-1)/2
+  number of edges (where all edge is connected to the other edge) in a undirected graph
+* If there are n vertices in a graph, we can have up 2^n^-2 possible cuts for this graph.
+  Each vertex can be in either set A or B independant of the choice of other vertices. We
+  just subtract 2 as we can't have all vertices in each set.
+
+=== Graph Representations
+
+==== Adjacency Matrix
+
+* We have nxn matrix (verticesxvertices matrix).
+* Each non-primary diagnal represents a possible Edge. Its 0/1 based on if that edge exists.
+* Add bells and whistles to what the matrix element is to accomodate directed (+ve/-ve),
+  parallel edges, weighted edges
+* Super waste of memory for a sparse graph.
+
+==== Adjancenty List
+
+* Algo course style
+** Have 2 different lists - one for vertices and one for edges
+** They cross reference each other.
+*** Each edge points to its 2 vertices. This way edge struct is of fixed size.
+*** Each vertex points to all edges incident on it. The vertex thus should have
+    a list of edge-pointers.
+*** Note that the sum of cross-references from edges to vertices is exactly
+    same as vertices to edges. The edges to vertices are exaclty 2 per edge,
+    while in vertices to edges, it varies on degree of each vertex.
+
+* Skiena book style
+** Kind of a 2D linked list.
+** We have a linked-list of vertices.
+** For each vertex, we have a list of edges that originate from that vertex.
+** For unidirected, the edge appears twice, once is each vertex's list. For directed
+  graph, it appears in the vertex which is its tail.
+** Here we show the list of vertices as an array and the vertices as linked-list.
++
+----
+#define MAXV 1000 /* maximum number of vertices */
+
+typedef struct {
+  int y;                 /* adjacency info */
+  int weight;            /* edge weight, if any */
+  struct edgenode *next; /* next edge in list */
+} edgenode;
+
+typedef struct {
+  edgenode *edges[MAXV+1]; /* adjacency info */
+  int degree[MAXV+1];      /* outdegree of each vertex */
+  int nvertices;           /* number of vertices in graph */
+  int nedges;              /* number of edges in graph */
+  bool directed;           /* is the graph directed? */
+} graph;
+----
+
+The Sienna book style and algo-course styles are kind of same. In both ways, u can
+walk over vertices and then for each vertex walk over its edges. Just that the algo-course
+suggests to keep the actual vertices and edges separately in lists of their own.
+
+
+=== Graph classifications
+
+* Directed, Undirected
+* Sparse, Dense
+** Sparse has edge-number closer to the linear bound (n-1), while dense matrix is
+   where edge-number is closer to upper bound ~n~C~2~
+   
+
+=== General Algorithms in a Graph
+
+==== Minimum cuts
+
+Given a graph, find the cut that has the minimum number of cross-over edge (Min-cut)
+
+This is useful, to find closesly related vertices in a graph.
+
+The solution allows parallel edges for this graph.
+
