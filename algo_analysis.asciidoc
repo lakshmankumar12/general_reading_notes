@@ -88,10 +88,23 @@ typedef struct {
 } graph;
 ----
 
-The Sienna book style and algo-course styles are kind of same. In both ways, u can
+The Skienna book style and algo-course styles are kind of same. In both ways, u can
 walk over vertices and then for each vertex walk over its edges. Just that the algo-course
 suggests to keep the actual vertices and edges separately in lists of their own.
 
+===== Comparision
+
+[options="header"]
+|=======================
+|Comparison                             | Winner
+|Faster to test if (x,y) is in graph?   | adjacency matrices
+|Faster to find the degree of a vertex? | adjacency lists
+|Less memory on small graphs?           | adjacency lists (m + n) vs. (n2)
+|Less memory on big graphs?             | adjacency matrices (a small win)
+|Edge insertion or deletion?            | adjacency matrices O(1) vs. O(d)
+|Faster to traverse the graph?          | adjacency lists Θ(m + n) vs. Θ(n2)
+|Better for most problems?              | adjacency lists
+|=======================
 
 === Graph classifications
 
@@ -99,15 +112,69 @@ suggests to keep the actual vertices and edges separately in lists of their own.
 * Sparse, Dense
 ** Sparse has edge-number closer to the linear bound (n-1), while dense matrix is
    where edge-number is closer to upper bound ~n~C~2~
-   
 
 === General Algorithms in a Graph
 
 ==== Minimum cuts
 
 Given a graph, find the cut that has the minimum number of cross-over edge (Min-cut)
-
 This is useful, to find closesly related vertices in a graph.
 
-The solution allows parallel edges for this graph.
+===== Karger Algorithm
 
+The solution allows parallel edges for this graph. This goes as follows:
+
+* Keep proceeding till the node-count reduces to 2.
+* In every iteration, *randomly* pick an edge and collapse the 2 vertices that
+  it connects into one fused-super-vertex. Remove this chosen edge.
+* Remove any edges that start and end at same-edge.
+* When you are left with 2, all vertices part of each fused/orig vertex is
+  the resulting graph-cut.
+
+But this is just a random algo. There is no guarantee that the resulting cut
+is a min-cut.
+
+===== Analysis of this algorithem
+
+* If a edge that should remain as part of min-cut, ends up getting randomly
+  chosen, then the algo will fail.
+* But if run a few times, this algorithem will succeed with a high degree of
+  probability.
+
+==== Graph Traversal
+
+* Before traversal, we can mark each node as one of the 3 states
+** Undiscovered
+** Discovered
+** Processed
+* Most search graph algorithms consider one vertex as the source/start vertex.
+
+===== Breadth First Traversal
+
+* Note the presence of a Queue in BFS
+
+.Skienna code
+----
+BFS(G,s)
+  for each vertex u ∈ V [G] − {s} do
+    state[u] = “undiscovered”
+    p[u] = nil, i.e. no parent is in the BFS tree
+  state[s] = “discovered”
+  p[s] = nil
+  Q = {s}
+  while Q ≠ do
+    u = dequeue[Q]
+    process vertex u as desired
+    for each v ∈ Adj[u] do
+      process edge (u,v) as desired  /* For undirected graph, this edge may be already processed
+                                        So, if u want only one time, track that as well */
+      if state[v] = “undiscovered” then
+        state[v] = “discovered”
+        p[v] = u                    /* This parent path from v to source s, is the shortest path from s to v! */
+        enqueue[Q,v]
+    state[u] = “processed”
+----
+
+* Whatever is marked processed at the end of BFS is what is reacheable from s.
+
+===== Depth First Traversal
