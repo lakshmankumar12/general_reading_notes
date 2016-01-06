@@ -14,6 +14,23 @@ n! << 2^n^  << n^3^  << n^2^  << n log n << n << log n << 1
 * This is same as merge sort. As part of merging, just count inversions.
 * Remember, u should also do sorting alongside.
 
+== Binary Trees
+
+
+== Terneray Search Tress
+
+* Each node has a data-member (one char - or trie's equivalent), and an optional end-of-word marker.
+  The end of word doesn't necessarily imply termination of search. For eg, cat, cats will
+  have cat's t having end-of-word, but there is also a cats
+* Each Node has a {lo,eq,hi}-kid pointer. I personally want to call it low-peer, high-peer and child
+  pointers
+* Operations are insert, search, get-next-char, get-next-string, get-all-substrings.
+
+=== Links to read
+
+* http://www.drdobbs.com/database/ternary-search-trees/184410528[Dobbs journal]
+
+
 == Graphs
 
 * Represents pair-wise relationship among objects
@@ -195,6 +212,7 @@ BFS(G,s)
    connected with this. Dequeue from outer queue as you meet nodes.
 ** Keep doing BFS, till outer queue is empty. That way you get all groups in the
    graph.
+** This could be done DFS way also (my own observation!)
 * Find distance of each vertex from source vertex s.
 ** This is easily achived by storing the distance in each vertex - as part of processing
    of node.
@@ -225,22 +243,22 @@ find_parent(parents_arr, parent_desired, node)
 * We can technically modify BFS slightly by replaceing Queue with stack, or
   leverage recursion to naturally achieve our stacking.
 
-.Skienna code
+.Skienna code Vs Standford-algo-course-code
 ----
-time = 0                         /* is a global var */
-DFS(G,u)
-  state[u] = "discovered"
-  process vertex u if desired
-  entry[u] = time
-  time = time + 1
-  for each v ∈ Adj[u] do
-    process edge (u,v) if desired
-    if state[v] = "undiscovered" then
-      p[v] = u
-      DFS(G,v)
-  state[u] = "processed"
-  exit[u] = time
-  time = time + 1
+time = 0          /* is a global var */    |
+DFS(G,u)                                   |    DFS(G,u)
+  state[u] = "discovered"                  |     state[u] = "discovered"
+  process vertex u if desired              |        ... early_process_vertex ...
+  entry[u] = time                          |        ...
+  time = time + 1                          |        ...
+  for each v ∈ Adj[u] do                   |     for each v ∈ Adj[u] do
+    process edge (u,v) if desired          |        ... process_edge (u,v)
+    if state[v] = "undiscovered" then      |        if state[v] = "Undiscovered" then
+      p[v] = u                             |          ...
+      DFS(G,v)                             |          DFS(G,v)
+  state[u] = "processed"                   |
+  exit[u] = time                           |
+  time = time + 1                          |
 ----
 
 * The notion of parent is looking superfluous to me.
@@ -254,4 +272,49 @@ DFS(G,u)
    edges. Edge that explores new vertex is a tree edge, while an
    edge that goes back into a ancestor is a back-edge
 ** A acyclic graph is one, that has no back-edge during a traversal
+* Topological sort for directed graph
+** Topological sort is the ordering of what should be completed before
+   another.
+** Topological order is possible only if there are no cycles. Further
+   this implies that acyclic graphs should have atleast one sink vertex.
+*** *A sink vertex* is a vertex that has no outgoing edges. If there
+    are no sink vertices in a graph, then it definitely cyclic.
+** You can start DFS at any vertex. You will end up walking all nodes
+   from this. But some vertices may have higher precendence(before)
+   than the chosen vertex.
+** THere are 2 solutions.
+*** First
+**** Start with a sink vertex(you need to find this some how). Give
+     this the value N (no of vertices in graph). This has to be done
+     last by definition.
+**** Now remove that node from Graph. Repeat the algorithm. (Due to
+     loss of this node, there will be new sink vertex(ices) created
+*** Second / slick way.
+**** This is same as DFS algo. Just have a current-label extra with
+     initial value as N, number of edges
+**** Start DFS from any node. Once you hit the depth of recursion,
+     which is end of for-loop, assign the current-label value to
+     that node.
+**** This will neatly assign the Nth value for the first sink you
+     discover and back-track from there and so on.
++
+----
+topological_sort(G)
+  all vertices = "Undiscovered"
+  current_label = N  /* number of vertices */
+  for each vertex u
+    if u is "Undiscovered":
+      DFS(G,u)
 
+DFS(G,u)
+ state[u] = "discovered"
+ for each v ∈ Adj[u] do
+   if state[v] = "Undiscovered" then
+      DFS(G,v)
+   level-of-u = current_label
+   current_label--
+----
++
+* Articulate edge detection
+** Given in skienna.
+** I didn't follow it
