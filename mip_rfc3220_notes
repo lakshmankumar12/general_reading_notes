@@ -1,0 +1,132 @@
+RFC 3220 -- Plain mobile Ip in IPV4
+======================================
+
+Mobile Node
+
+Agents:
+  Home Agent
+  Foreign Agent
+
+Types of address:
+  Home Address  -- to which pkts are sent to the mobile node by external peers
+  Care-of-Address
+    1. Foreign Agent care of address
+    2. Co-located.
+
+
+
+Outline of operation
+--------------------
+* If in home network, receive pkts directly
+* When outside, get a CoA. Send registration request/(get reply) to Home-agent to upate this CoA.
+* Tunnel pkts from HomeAgent to CoA
+* When back to home, send registration req/reply to cancel the tunneling.
+
+Two Modes
+~~~~~~~~~~
+
+* Foreign Agent owns CoA. Tunnel ends at FA
+* Colocated CoA.
+
+ICMP router solication and router adv.
+----------------------------------------
+  * read rfc 1256.. Just the 2 messages.. a quite minimal rfc.
+  * soliciation -> hosts asks "hey how is the router here"
+                -> sent to 224.0.0.2 or 255.255.255.255 (this is limited L2-level broadcast)
+  * advertisement -> router sends to 224.0.0.1 or 255.255.255.255
+
+Messages
+-------
+  * uses udp port 434 and is over UDP.
+  * Registration Req / Reply are this *mobility-ip control protocol*
+  * TLV concept in the messages .. (section 1.9)
+  * for agent discovery, Extend ICMP router discovery/solicitation with extensions
+
+Agent Discovery:
+-----------------
+  * Mobile-IP extends extends ICMP protocol by adding extensions in router-discovery message
+  * Agent adv is router-adv with with mobility agent adv extension
+    * mob-adv is discovered when the ip-len is more than the normal icmp-pkt-size!!
+    * mob-adv extensions follow tlv style. Presently just 3
+       ** mov-adv exten
+       ** pref-len exten (This seems to indicate nw-mas-prefix of the orig icmp hdr's router add)
+       ** one-byte-padding
+  * Agent solicitation is icmp router solicitation with IP TTL == 1
+  * no auth for agent adv/solic within the scope of this rfc
+
+
+Move detection algorithm
+
+algo-1:
+ * agent availablity life-time (the ICMP router adv lifetime) expiration
+algo-2
+ * using n/w addr prefix
+
+seq number handling
+ * always start from 0 on restart
+ * when hitting MAX, wrap to 256.
+ * this will ensure u detect a reboot. (Isn't this cool?)
+
+Registration
+------------
+  * request forwarding services when visiting a foreign network,
+  * inform their home agent of their current care-of address,
+  * renew a registration which is due to expire, and/or
+  * deregister when they return home.
+
+
+RFC 3775 mobility in ipv6
+==========================
+
+* Binding -> home-address <-> CoA
+* Binding update .. mobile-node to a router in home-link, (home-agent)
+* Mobile node may register its CoA with the correspondent node also.
+
+Home agent uses proxy neighbor discovery to intecept mobile'nodes pkts on the home link.
+
+   Mobile node                 Home agent           Correspondent node
+        |                                                     |
+        |  Home Test Init (HoTI)   |                          |
+        |------------------------->|------------------------->|
+        |                          |                          |
+        |  Care-of Test Init (CoTI)                           |
+        |---------------------------------------------------->|
+        |                                                     |
+        |                          |  Home Test (HoT)         |
+        |<-------------------------|<-------------------------|
+        |                          |                          |
+        |                             Care-of Test (CoT)      |
+        |<----------------------------------------------------|
+        |                                                     |
+
+
+   Mobile node                                Correspondent node
+        |                                               |
+        |             Binding Update (BU)               |
+        |---------------------------------------------->|
+        |  (MAC, seq#, nonce indices, care-of address)  |
+        |                                               |
+        |                                               |
+        |    Binding Acknowledgement (BA) (if sent)     |
+        |<----------------------------------------------|
+        |              (MAC, seq#, status)              |
+
+
+RFC 5123 - PMIP
+================
+
+key terms:
+
+Proxy Mobile IPv6 Domain (PMIPv6-Domain) .. n/w wihin which mobility is handled.
+LMA                                      .. The anchor point.
+MAG                                      .. Like the Foreign Agent
+MN                                       .. can by only ipv4(!)
+LMAA                                     .. address of LMA as visible to MAGs. if ipv4, IPv4-LMAA
+Proxy-CoA                                .. address of MAG. The tunnel endpoint from LMA
+MN-HNP                                   .. addres-prefix assigned to one node. A MN can have many such prefixes.
+MN-HoA                                   .. actual address. (MN-HNP + host-id part)
+MN-Home Link                             .. The conceptual L3-link from MN to LMA that always follows the MN
+MN-Identifier                            .. The stable identifier used to identify the mobile
+[lj[l[l
+
+I didn't understand the MN-HNP clearly..
