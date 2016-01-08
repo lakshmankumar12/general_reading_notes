@@ -7,6 +7,56 @@ Algorithm Analysis
 n! << 2^n^  << n^3^  << n^2^  << n log n << n << log n << 1
 =====
 
+== Strings
+
+=== Substring
+
+==== Boyer-Moore
+
+* Explained in Goodrich/Tamassia/Goldwasser
+* Idea is to build a hash for each char, the last index it appears
+  in pattern. If a char is non-existant, then make it -1.
+* So, when a mismatch happens, we check if the mismatching char is
+  present in sub-string or not. If not we slide the sub-string
+  fully past there. If not, we slide the string till the index
+  we know its present.
+* Since we store the last index, we start matching from end of
+  pattern to beg of pattern - so that the last-index ajusting
+  works.
+
+==== KMP (Knuth Morris Pratt) Pattern Searching
+
+* Explained in http://www.geeksforgeeks.org/searching-for-patterns-set-2-kmp-algorithm/[geeks for geeks]
++
+****
+lps[i] = the longest proper prefix of pat[0..i] 
+              which is also a suffix of pat[0..i]. 
+****
++
+* Having built this lps array, when a mismatch happens at a index, move the substring by the lps[i-1]th
+  spaces - as we know the prefix of that size is already found
+* But trick is to build lps array! I didn't get this fully. See at geeks site.
++
+----
+def compute kmp fail(P):
+  '''Utility that computes and returns KMP fail list.'''
+  m = len(P)
+  fail = [0]*m           # by default, presume overlap of 0 everywhere
+  j = 1
+  k = 0
+  while j < m:           # compute f(j) during this pass, if nonzero
+    if P[j] == P[k]:     # k + 1 characters match thus far
+      fail[j] = k + 1
+      j += 1
+      k += 1
+    elif k > 0:          # k follows a matching prefix
+      k = fail[k−1]      #  <-- This is what i dont follow
+                         #      Also note no increment of j
+    else:                # no match found starting at j
+      j += 1
+  return fail
+----
+
 == Sorting and Related Algorithms
 
 === Counting Inversions
