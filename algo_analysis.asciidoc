@@ -66,6 +66,192 @@ def compute kmp fail(P):
 
 == Binary Trees
 
+== Binary Search Tress
+
+* Each node is such that all the left nodes are lesser and right nodes are higher.
+* Note that if tree isnt balanced, there are many ways of building a tree for the
+  same set of numbers. Balancing is a different act.
+* Options for balancing
+** Red-Black Trees
+** AVL Trees
+** Splay Tress
+** B Trees
+
+=== Operations comparison
+
+[options="header"]
+|=========
+| Operations                   | Running time for BST  | Running time for sorted array  | Comment
+| Search                       | O(log n)              | O(log n)                       | Same
+| Select ith order statistic   | O(log n)              | O(1)                           | Bst costlier
+| Min/Max                      | O(log n)              | O(1)                           | Bst costlier
+| Predecessor/Successor        | O(log n)              | O(1)                           | Bst costlier
+| Rank                         | O(log n)              | O(log n)                       | Same
+| Output in sorted order       | O(n)                  | O(n)                           | Same
+| Insert                       | O(log n)              | O(n)                           | Bst cheap
+| Delete                       | O(log n)              | O(n)                           | Bst cheap
+|=========
+
+=== Operations
+
+==== Min/Max
+
+* Start from root.
+* Keep following left(or right) points until there is no left pointer. Return
+  the leaf node you are at, that has no left(right) child, which will be the minimum so far.
+
+==== Predecessor of a key k. (Turn words for Successor)
+
+* If left-child is non-empty, get the max element of this sub-tree (by travelling right pointers)
+* If left-child is empty, keep travelling up parent pointers, until u find a parent that is lesser
+  in value.
+** This node is higher than parent if its a right-child. In that case, parent is the lesser
+   valued node of interest.
+*** Why can't there be an element between this parent and this node? [red yellow-background]#Find out#
+** This node is lesser than parent (then parent is higher) and we are left child. So, keep moving up
+   until the current-node is a right-child.
+
+==== Deleting a node
+
+* Search node first if just key is given.
+* If node has no children, delete node.
+* If node has just one child, just replace that child in place of the node.
+* If node has 2 children, comupute k's predesscor (That is the right most node of left child)
+** Swap that predessor node and this node and remote it off.
+** This will equally work by using the successor.
+
+==== Selecting ith order statistic and Finding Rank
+
+* Store the size of tree below in every node.
+** Let size(a) be the size of tree at a given node.
+** By defn, sizeof(a) = 1 + sizeof(a->left) + sizeof(a->right)
+** sizeof(a->left) = 0 if a has no left child.
+* Algo
++
+----
+def get_ith_statistic(i,root):
+  ''' i is from 0 to n-1 '''
+  a=root
+  if i == sizeof(a->left):
+    return a
+  if i < sizeof(a->left):
+    get_ith_statistic(i,a->left)
+  else:
+    get_ith_statistic(i-(sizeof(left))-1,a->right)
+----
+* Rank (My own..not vetted from sources)
+** Find node first
+** Rank is simply sizeof(a->left)+1
+
+==== Rotations
+
+* Rotations are fundamental to any balancing of binary tress.
+* Its basically rewiring of pointers.
++
+----
+     y                   x
+    / \    right       /  \
+  x     C  ----->     A    y
+ / \       <-----         / \
+A   B      left          B   C
+
+Note that in both arrangements:   A < x < B < y < C
+----
+
+
+=== Red Black Trees
+
+==== Rules
+
+* Each node is red or black
+* Root is black
+* No 2 reds come in row
+** [red node => black children]
+* Every root->NULL (leaf path, like in unsuccessful search) will have equal
+  number of black nodes.
+
+==== Observations
+
+* Because of the rules, there can be utmost log(n+1) black nodes in every path.
+* Because of the rules, there can be utmost log(n+1) red nodes stuffed in between
+  black nodes.
+* So the tree is utmos 2 log (n+1) height tall.
+* Note a fully black tree is also a valid RB tree.
+
+==== Inserting in a RB Tree
+
+* We will refer the node to insert as N, parent as P, grand-parent as G and
+  sibling of P as uncle(U)
+* We just Regular node insert in a BST and color this node N red (except in
+  case 1).
+* Case 1
+** Tree is empty. N is the root and is black
+* Case 2: Parent(P) is black.
+** No property is disturbed by adding a Red child N.
+* Case 2: Parent and Uncle are both Red.
+** If parent(P) is red, we are violating - as there are 2 consecutive reds. However,
+   note that here grand-parent(G) definitely exists and is black, by RB-tree rules.
+   Root has to be black - so there is definitely one parent to P. G, by definition
+   has to be Black, as P is already red.
++
+----
+         G-B
+       /   \
+     P-R    U-R
+     /
+   N-R             (N could be placed anywhere in the 4 slots, its holds good)
+----
++
+** recolor P and U as Black and G as red. This wont break the rule-4 (equal
+    blacks on path, we are only bringing black one level below)
++
+----
+         G-R
+       /   \
+     P-B    U-B
+     /
+   N-R             (N could be placed anywhere in the 4 slots, its holds good)
+----
++
+** But rule-3 of no red's together may or may not be broken. If we are lucky,
+   G's parent is Black, then we can stop. If not, we need to repeat this
+   treating G as the new node added. (Beneath G rule-4 is preserved)
+* Case 4: Parent is R, and Uncle is B. N is added as a left child of parent,
+  which is a right child of G. (Or vice versa)
+** (Self note:) This arrangement can never happenw when we start, as at a level
+   how can there originally be a P-node as leaf and red, with its sibling a
+   black. Isn't this violiating rule-4? Perhaps this is a possible configuration
+   as we iterate on case-3 above and proceed to top?
+** In this case, we rotate N and P and make it same as case-5 below
++
+----
+         G-B                    G-B
+       /   \                  /   \
+     P-R    U-B   ==>       N-R    U-B
+    /  \     / \           /  \     / \
+   A   N-R  D   E        P-R   C   D   E
+       / \               /\
+      B   C             A  B
+----
++
+* Case 5: Parent is R, and Uncle is B. N is added as a left child of parent,
+    which is a left child of G.
+** Rotate as shown below. Note that originally G-U path had 2 blacks and that
+   is still maintained. This wasn't violoatd when we started with (what was
+   violated was 2 consecutive reds and that is now fixed)
++
+----
+         G-B                         P-R
+       /   \                       /   \
+     P-R    U-B                  N-R    G-R
+    /  \     / \     ==>        /  \     / \
+  N-R   C   D   E              A    B   C   U-B
+  /\                                       / \
+ A  B                                     D   E
+----
+
+==== Deletion
+
 
 == Terneray Search Tress
 
@@ -79,6 +265,121 @@ def compute kmp fail(P):
 === Links to read
 
 * http://www.drdobbs.com/database/ternary-search-trees/184410528[Dobbs journal]
+
+== Heaps
+
+* A simple binary tree-like looking structure where the only condition is that
+  the parent node is less(or greater) than its children. This ensure the root
+  is the min(or max) element
+** The tree is naturally full-complete or partially complete
+** There are many ways of arranging a given set of numbers in a heap - as the
+   only condition is the heap-property.
+* Two main operations that it supports
+** insert
+** extract-min
+* The next operations are
+** heapify
+*** This will prepare a heap from a random collection of items.
+*** The standard way will take n $$*$$ log n time. But, there is a
+    slick way to do it in O(n), if all numbers are available apriori.
++
+This is explained in this http://stackoverflow.com/a/9755805/2587153[stack overflow answer]
+and is further explained why heapify is O(n) and heap-sort is still O(nlogn) in this
+http://stackoverflow.com/a/18742428/2587153[answer]
++
+**** The idea is that when you heapfiy from the leaf nodes, n/2 nodes have 
+     0 operations, n/2 have 1 operation, n/4 have 2,.. and only the root has
+     log(n) operations. So is accepted to be O(n)
++
+****
+(0 * n/2) + (1 * n/4) + (2 * n/8) + ... + (h * 1).
+****
++
+**** However, in case of heap sort itself, work for each node decreases by size of 1.
+
+=== Uses of heap
+** Heap sort
+** find median in a collection of number
+** Any algo that needs to keep picking minimum, like Dijkstra's shortest path
+   algo
+
+=== Implemetation
+
+* Heaps are usually implemented as trees. But array way of representing heaps are 
+  more common.
+* In a 0-based array
++
+----
+For, index i
+2i+1 and 2i+2 are its 2 children
+i-1/2 is its parent
+----
++
+* For sifting up, add a node to the end of tree. Shift it up, till it is at the
+  right position. This is part of the heapfiy operation.
+* Extract min is simply taking the root first. Now swap the last node of the
+  heap as root and bubble down.
+
+== Hashes
+
+* Every effective of lookups / insertions / deletions
+* Can't handle the sort/ordering of keys
+** min-max, next/prev, select/rank are out.
+* Typically the Universe(U) of all possible elements is too huge and we deal
+  with a small subset of elements(S) at a given time.
+** Hash has number of bins that is comparable to the cardinality of S
+* It takes just sqrt(n) elements to have a 50% probability of collision, even if
+  n elements have equal probability of coming.
+** What that means is , even if u have 10K buckets in your hash, and ur universe
+   is pretty HUGE and there is a probability for an element to take any of the
+   10K buckets, then it still takes only 100+ elements to have a 50% probability
+   for collision!
+* Prevelant options for handling collisions
+** Chaining
+** Open addressing
++
+The algo-video is pretty hazy here. It says about a hash-sequence which gives a
+sequence of hash-funcitons to suggest buckets
++
+*** Linear probing
++
+Just keep searching n+1....Nth.0th..n-1th slots after nth slot is taken.
++
+*** Double hashing.
++
+Improvement over Linear probing, where a second hash-function gives an offset.
+This liner probing has a offset of always 1. But how to do stop searching on
+a lookup?!!
++
+** The only adv of open-addressing is that it is space-effective. (doest waste
+   linked list keeping)
+* Load of a Hash-table
++
+----
+
+  Load = No of elements
+        -----------------
+         No of buckets
+----
+For a load > 1, open-addressing is not possible. Only chaining is possible
++
+* Another bell and whistle is to adjust size of hash table.
+
+=== Hash functions
+
+* Easy to make mistakes
+** For eg, taking 3 MSB numbers for telephones is a very bad choice.  Bad choices
+   may expose patterns of numbers that aren't visible to naked eye.
+** Memory address are mostly always multple of 4. So if the lsb 2  bits are used
+   as is, 3/4th of hash-buckets will be unused!
+** If all data is multple of N and hash-buket-number is a multiple of N, we may
+   have unfilled buckets.
+* For a simple modulus like hash-function, choosing number of buckets(n) to be a
+  prime closest to our desired N range.
+** The prime shouldnt be too close to a power of 2 or power of 10
+
+=== Universal Hashing
+
 
 
 == Graphs
