@@ -66,6 +66,21 @@ def compute kmp fail(P):
 
 == Binary Trees
 
+* A tree is also a graph. Any undirected graph, where any 2 vertices are
+  connected in exactly one path is a tree. In other words any connected
+  graph, without simple cycles is a tree.
+
+=== Diameter of a binary tree
+
+* Treating a tree as a graph, the diameter is the longest path from one
+  leaf node to another leaf node.
+* To find a the diameter of a tree, try this algorithm as 
+  explained in this
+  http://www.geeksforgeeks.org/diameter-of-a-binary-tree/[geek-for-geek]
+* If you are given a graph and u want to find the diameter, try this
+  http://stackoverflow.com/questions/25649166/linear-algorithm-of-finding-tree-diameter[stack-overflow]
+  idea.
+
 == Binary Search Tress
 
 * Each node is such that all the left nodes are lesser and right nodes are higher.
