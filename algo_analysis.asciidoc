@@ -393,6 +393,41 @@ For a load > 1, open-addressing is not possible. Only chaining is possible
   prime closest to our desired N range.
 ** The prime shouldnt be too close to a power of 2 or power of 10
 
+
+==== A sample hash function for a generic string
+
+Taken from http://stackoverflow.com/questions/2624192/good-hash-function-for-strings[a stack overflow answer]
+
+* Note the choice of 2 primes.
+* First prime (7) adds some init-value. The second one is the multiplication factor.
+* We multiply second-prime with previous result so far and then add the current char.
+
+
+----
+int hash = 7;
+for (int i = 0; i < strlen; i++) {
+   hash = hash*31 + charAt(i);
+}
+----
+
+==== A sample hash function for integers
+
+Taken from http://stackoverflow.com/questions/664014/what-integer-hash-function-are-good-that-accepts-an-integer-hash-key[a stack overflow answer]
+
+* Knuth's multiplicative method
+
+----
+hash(i)=i*2654435761 mod 2^32
+----
+
+* In general, you should pick a multiplier that is in the order of your hash
+  size (2^32^ in the example) and has no common factors with it
+* The biggest *disadvantage* of this hash function is that it preserves
+  divisibility, so if your integers are all divisible by 2 or by 4 (which is
+  uncommon), their hashes will be too. This is a problem in hash tables
+  - you can end up with only 1/2 or 1/4 of the buckets being used.
+** (my own?)This can be avoided with a modulo that is a prime.
+
 === Universal Hashing
 
 
