@@ -1,0 +1,18 @@
+Notes from 23.401
+=================
+
+Currently reading: 4.3.5.2
+
+== Mobility mgmt Functions
+
+=== Reacheability mgmt
+
+==== IDLE state UE
+
+* can remain with same MME, as long as its within the TA-List
+* periodic RAU/TAU timer
+* E-UTRAN deactivate timer
++
+This is to track how long the UE can remain without sending the periodic TAU.
++
+

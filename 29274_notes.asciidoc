@@ -1,6 +1,11 @@
 Notes from 29.274
 =================
 
+Well Defined ports
+------------------
+
+* Control port is 2123
+
 Teid Components
 ---------------
 
