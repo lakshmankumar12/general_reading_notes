@@ -43,6 +43,18 @@ If this is not known, as in the case of a target virtual machine that the VTEP
 has not targeted before,  a discovery process needs to be done by originating
 VTEP.  This is done in a couple of steps:
 
+* Destination IP is replaced with the IP multicast group corresponding to the
+  VNI of the originating virtual machine
+* All VTEPs that have subscribed to the IP multicast group receive the frame
+  and decapsulate it learning the mapping of source virtual machine MAC address
+  and host VTEP
+* The host VTEP of the destination virtual machine will then send the virtual
+  machines response to the originating VTEP using its destination IP address as
+  it learned this from the original multicast frame
+* The Source VTEP adds the new mapping of VTEP to virtual machine MAC address
+  to its tables for future packets
+
+(Nothing very magical here!)
 
 
 Links to read
