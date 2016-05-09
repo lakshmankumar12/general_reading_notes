@@ -1,0 +1,25 @@
+Notes from reading Network Warrior
+==================================
+
+Diff between Hub and Router
+---------------------------
+
+* Hub simply replicates everything on all ports
+* Switch learns which port has which mac. This is typically on a CAM.
+* Hubs can easily cause loops - making collision detect messy. Switches dont suffer
+
+AutoNegotiation
+---------------
+
+* Negotiates both Speed and Duplex mode
+* (My thinking:) Too low level stuff, move on
+
+
+VLAN
+----
+
+* Origianl VLAN simply represents grouping physical ports at switches w/o any knowledge to end machines, that still send normal ethernet pkts
+* Trunk is a special port which carries pkts from all VLANs from one switch to another. The pkts in this trunk are encapsulated in a ISL protocol header.
+* 802.1Q is a newer introduction, where end uses themeselves tag their pkts.
+
+
