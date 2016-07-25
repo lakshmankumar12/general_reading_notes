@@ -7,6 +7,21 @@ Algorithm Analysis
 n! << 2^n^  << n^3^  << n^2^  << n log n << n << log n << 1
 =====
 
+== Master Method
+
+-----
+T(n) =  a T(n/b) + O(n^d^)
+-----
+
+cases
+~~~~~
+
+case1: a=b^d^   : T(n) = O(n^d^logn)
+case2: a<b^d^   : T(n) = O(n^d^)
+case3: a>b^d^   : T(n) = O(n^logba)
+
+
+
 == Strings
 
 === Substring
