@@ -14,6 +14,21 @@ n^0.5^ or square-root of n
 0.5^n^ vs plain-n
 2^sqrt(n)^
 
+== Master Method
+
+-----
+T(n) =  a T(n/b) + O(n^d^)
+-----
+
+cases
+~~~~~
+
+case1: a=b^d^   : T(n) = O(n^d^logn)
+case2: a<b^d^   : T(n) = O(n^d^)
+case3: a>b^d^   : T(n) = O(n^logba)
+
+
+
 == Strings
 
 === Substring
