@@ -1,7 +1,7 @@
 Notes from 23.401
 =================
 
-Currently reading: 4.3.5.2
+Currently reading: 4.3.5.3
 
 == Mobility mgmt Functions
 
@@ -11,8 +11,18 @@ Currently reading: 4.3.5.2
 
 * can remain with same MME, as long as its within the TA-List
 * periodic RAU/TAU timer
-* E-UTRAN deactivate timer
 +
-This is to track how long the UE can remain without sending the periodic TAU.
+At this expiry, UE sends the periodic TAU
 +
+* MME has a mobile-reacheability-timer, which is slightly greater than the periodic TAU timer. After this PPF is cleared and implicit detach timer is started. THis should
+  be sufficiently long and greater than the E-UTRAN-deactivate-timer(in case of ISR), so that the mobile has a chance to get back and notify itself
+
+==== ISR
+
+* Broad idea is that UE can stay attached in both GERAN and UERAN.
+* It sends periodic RAU/TAU to both as long its connected in both places.
+* When it moves out of coverage in one RAT, it starts the lost-RAT-deactivate timer. If the UE gets back in coverage before this time, it sends the periodic-LAU/TAU as appropriate.
+* If the UE still hasn't contacted the lost RAT upon expiry of the lost-RAT-deactivate-timer, then the UE removes its ISR status.
+* Upon handover from RAT-Src-to-Dest, the UE re-starts its periodic-src-RAT timer, so that it can perform periodic-(R/T)AU on the old RAT.
+
 
