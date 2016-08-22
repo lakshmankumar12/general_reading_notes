@@ -1,0 +1,4 @@
+Things on Linux
+===============
+
+* sendmmsg() is a system call to send multiple message, with each message itself in a iovec array

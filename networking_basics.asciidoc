@@ -1,0 +1,20 @@
+Simple networking facts
+========================
+
+Ethernet
+---------
+
+* MAC address is 6 octets
+
+
+IP
+---
+
+* 4 octets
+* Networking/Host part
+* Broadcast is when host-part is all-ones.
+
+TCP
+---
+
+* Unique by (src-ip,src-port,dest-ip,dest-port)

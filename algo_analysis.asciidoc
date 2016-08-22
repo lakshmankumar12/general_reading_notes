@@ -27,6 +27,11 @@ case1: a=b^d^   : T(n) = O(n^d^logn)
 case2: a<b^d^   : T(n) = O(n^d^)
 case3: a>b^d^   : T(n) = O(n^logba)
 
+a and b^d^ are the opposing forces.
+a is the bad force, which tracks how the sub-problem proliferates. More a its bad.
+b^d^ is the good force. It tracks how much work is there are a given level. More 
+this work, more we gain, as each level is working in as much smaller set.
+
 
 
 == Strings
@@ -449,6 +454,15 @@ hash(i)=i*2654435761 mod 2^32
   uncommon), their hashes will be too. This is a problem in hash tables
   - you can end up with only 1/2 or 1/4 of the buckets being used.
 ** (my own?)This can be avoided with a modulo that is a prime.
+
+=== Consistent Hasing
+
+This is the case where the number of buckets is dynamic.
+
+http://www.tom-e-white.com/2007/11/consistent-hashing.html[Good link]
+
+Idea is that each hashed value lies in a circle. And select points in the circle
+are buckets points. Each hash gets put in the bucket next in clock-wise direction.
 
 === Universal Hashing
 
