@@ -2,6 +2,41 @@ SAE and LTE General Understanding
 ==================================
 :toc:
 
+== List of interfaces
+
+* S1   -  Data plane from Enb to SGW
+* S2   -
+* S2a  -  Trusted non-3GPP to PGW (can be PMIP or TWAG)
+* S2b  -  Non-Trusted non-3GPP to PGW (ePDG)
+* S3   -  S4-SGSN to MME
+* S4   -  S4-SGSN to SGW
+* S5   -  SGW to PGW
+* S6   -
+* S6a  -  MME to HSS
+* S6d  -  S4-SGSN to HSS
+* S7   -  NOT_DEFINED
+* S8   -  inter-plmn S5->S9
+* S9   -  home PCRF to visited PCRF
+* S10  -  inter MME
+* S11  -  MME to SGW
+* S12  -  Direct Tunnel RNC->SGW
+* S13  -  MME to EIR
+* S14  -  NOT_DEFINED
+* S15  -  NOT_DEFINED
+* S16  -  S4-SGSN to S4-SGSN
+* S101
+* SGi
+
+Gx -  PCRF to PGW
+Gy -  offline charging to PGW
+Gz -  online charging to PGW
+
+UMTS
+
+Iu
+Gr
+Gi
+
 == Policy and Bearers
 
 * The PGW and PCRF maintain session-level contexts.
