@@ -16,6 +16,8 @@ n^0.5^ or square-root of n
 
 == Master Method
 
+* Applies when all subproblems are of same size.
+
 -----
 T(n) =  a T(n/b) + O(n^d^)
 -----
@@ -29,9 +31,8 @@ case3: a>b^d^   : T(n) = O(n^logba)
 
 a and b^d^ are the opposing forces.
 a is the bad force, which tracks how the sub-problem proliferates. More a its bad.
-b^d^ is the good force. It tracks how much work is there are a given level. More 
-this work, more we gain, as each level is working in as much smaller set.
-
+b^d^ is the good force. It tracks by how much work gets reduced(b) at a given level.
+This raised to d, more we gain, as each level is working in as much smaller set.
 
 
 == Strings

@@ -59,5 +59,16 @@ log x  =   log x        # Way to convert a log to a different base. Here we need
 ****
 
 
+== Random Variables
+
+Linearity of Expectation.
+
+Even if R1,R2 are independant variables.
+E(R1+R2) = E(R1) + E(R2)
+
+Only if R1, R2 are independant:
+E(R1*R2) = E(R1) * E(R2)
+
+
 
 
