@@ -443,11 +443,11 @@ for (int i = 0; i < strlen; i++) {
 Taken from http://stackoverflow.com/questions/664014/what-integer-hash-function-are-good-that-accepts-an-integer-hash-key[a stack overflow answer]
 
 * Knuth's multiplicative method
-
++
 ----
 hash(i)=i*2654435761 mod 2^32
 ----
-
++
 * In general, you should pick a multiplier that is in the order of your hash
   size (2^32^ in the example) and has no common factors with it
 * The biggest *disadvantage* of this hash function is that it preserves
@@ -455,6 +455,17 @@ hash(i)=i*2654435761 mod 2^32
   uncommon), their hashes will be too. This is a problem in hash tables
   - you can end up with only 1/2 or 1/4 of the buckets being used.
 ** (my own?)This can be avoided with a modulo that is a prime.
++
+* Another one:
++
+----
+unsigned int hash(unsigned int x) {
+  x = ((x >> 16) ^ x) * 0x45d9f3b;
+  x = ((x >> 16) ^ x) * 0x45d9f3b;
+  x = (x >> 16) ^ x;
+  return x;
+}
+----
 
 === Consistent Hasing
 
