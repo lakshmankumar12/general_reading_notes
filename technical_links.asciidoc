@@ -1,0 +1,11 @@
+
+Socket Programming
+------------------
+
+http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html[beej guide on network programming]
+
+Linux Kernel Networking:
+-------------------------
+
+https://www.youtube.com/watch?time_continue=3028&v=3XG9-X777Jo[Kernel network stack challenges at increasing speeds - youtube]
+
