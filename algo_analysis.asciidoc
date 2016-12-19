@@ -629,8 +629,8 @@ is a min-cut.
 .Skienna code
 ----
 BFS(G,s)
-  for each vertex u ∈ V [G] − {s} do
-    state[u] = "undiscovered"
+  for each vertex u ∈ V [G] − {s} do                    /* Each node has 3 states - "undiscovered", "discovered", "processed" */
+    state[u] = "undiscovered"                           /*     Depending on ur alog, u may/may-not need the processed state */
     p[u] = nil, i.e. no parent is in the BFS tree
   state[s] = "discovered"
   p[s] = nil
