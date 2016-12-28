@@ -57,8 +57,8 @@ This raised to d, more we gain, as each level is working in as much smaller set.
 * Explained in http://www.geeksforgeeks.org/searching-for-patterns-set-2-kmp-algorithm/[geeks for geeks]
 +
 ****
-lps[i] = the longest proper prefix of pat[0..i] 
-              which is also a suffix of pat[0..i]. 
+lps[i] = the longest proper prefix of pat[0..i]
+              which is also a suffix of pat[0..i].
 ****
 +
 * Having built this lps array, when a mismatch happens at a index, move the substring by the lps[i-1]th
@@ -102,7 +102,7 @@ def compute kmp fail(P):
 
 * Treating a tree as a graph, the diameter is the longest path from one
   leaf node to another leaf node.
-* To find a the diameter of a tree, try this algorithm as 
+* To find a the diameter of a tree, try this algorithm as
   explained in this
   http://www.geeksforgeeks.org/diameter-of-a-binary-tree/[geek-for-geek]
 * If you are given a graph and u want to find the diameter, try this
@@ -330,7 +330,7 @@ This is explained in this http://stackoverflow.com/a/9755805/2587153[stack overf
 and is further explained why heapify is O(n) and heap-sort is still O(nlogn) in this
 http://stackoverflow.com/a/18742428/2587153[answer]
 +
-**** The idea is that when you heapfiy from the leaf nodes, n/2 nodes have 
+**** The idea is that when you heapfiy from the leaf nodes, n/2 nodes have
      0 operations, n/2 have 1 operation, n/4 have 2,.. and only the root has
      log(n) operations. So is accepted to be O(n)
 +
@@ -348,7 +348,7 @@ http://stackoverflow.com/a/18742428/2587153[answer]
 
 === Implemetation
 
-* Heaps are usually implemented as trees. But array way of representing heaps are 
+* Heaps are usually implemented as trees. But array way of representing heaps are
   more common.
 * In a 0-based array
 +
@@ -651,6 +651,27 @@ BFS(G,s)
     state[u] = "processed"
 ----
 
+.Interview-Bit code
+----
+public void bfs(Node *rootNode) {
+    Queue q = new LinkedList();
+    q.add(rootNode);
+    processNode(rootNode);
+    rootNode->visited = true;
+    while(!q.isEmpty()) {
+        Node *n = q.remove();
+        Node *child = null;
+        while((child = getUnvisitedChildNode(n)) != null) {   <-- This basically iterates every node of n and returns unvisited nodes
+            child.visited = true;
+            processNode(child);
+            q.add(child);
+        }
+    }
+    //Clear visited property of nodes
+    clearNodes();
+}
+----
+
 * Whatever is marked processed at the end of BFS is what is reacheable from s.
 
 *Applications*
@@ -708,6 +729,31 @@ DFS(G,u)                                   |    DFS(G,u)
   state[u] = "processed"                   |
   exit[u] = time                           |
   time = time + 1                          |
+----
+
+.Interview-Bit code
+----
+public void dfs(Node *rootNode) {
+    //DFS uses Stack data structure
+    Stack s = new Stack();
+    s.push(rootNode);
+    rootNode.visited = true;
+    processNode(rootNode);
+    while(!s.isEmpty()) {
+        Node n = (Node)s.peek();
+        Node child = getUnvisitedChildNode(n);  // Essentially this function goes through the neighbors of n, and finds the one with node.visited = false
+        if(child != null) {
+            child.visited = true;
+            processNode(child); // print the node as you like.
+            s.push(child);
+        }
+        else {
+            s.pop();              /* No child left. So done with n */
+        }
+    }
+    //Clear visited property of nodes
+    clearNodes();
+}
 ----
 
 * The notion of parent is looking superfluous to me.
