@@ -26,3 +26,37 @@ At this expiry, UE sends the periodic TAU
 * Upon handover from RAT-Src-to-Dest, the UE re-starts its periodic-src-RAT timer, so that it can perform periodic-(R/T)AU on the old RAT.
 
 
+== Handovers
+
+=== Three types
+
+We have X2, S1 and Idle-mode RAU. The X2 and S1 happen in connectd mode and are referred as handovers. The X2 happens when there is a X2 connection between the 2 enode-Bs, and the MME doesn't change. The S1 handover happens when either X2 is absent or MME has to change. In all cases, SGW can change or not change. So we have these 10 possibilities
+
+1.  X2            without SGW change
+2.  X2            with    SGW change
+3.  S1            without MME/SGW change
+4.  S1            with    MME only change
+5.  S1            with    SGW only change
+6.  S1            with    both MME/SGW change
+7.  Idle-mode TAU without MME/SGW change
+8.  Idle-mode TAU with    MME only change
+9.  Idle-mode TAU with    SGW only change
+10. Idle-mode TAU with    both MME/SGW change
+
+=== How a SGW can distinguish each?
+
+In case of no SGW change, SGW gets a MB-Req from MME. There is no distinction between X2/S1 if UE is connected state. In Idle mode TAU, SGW isn't notified at all.
+
+When there is a SGW change, new SGW gets a CS-Req. The SGW knows its a handover by the presence of PGW TEID. And then it looks at OI bit and S1-Teid.
+
+----
+                      OI-bit
+                       /    \
+                 = zero      = one
+               S1-handover       Is S1-TEID present
+              (No S1-TEID)            /   \
+                                     /     \
+                              X2 Handover  Idle-mode TAU
+----
+
+

@@ -37,7 +37,7 @@ X2 Handover
 * X2 reference point is necessary.
 * If no-sgw change, SGW receives a MABR or MBR. Signalling to PGW is
   typically not needed. (Unless required for other reasons like ULI)
-* If sgw change, receives a CS-Req with S1-U Teid. No MBR to PGW
+* If sgw change, receives a CS-Req with S1-U Teid. MBR is sent right away to PGW
 ** In this case, its assumed tgt-enb can contact src-Sgw. If not S1-HO
    is required
 
