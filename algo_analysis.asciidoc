@@ -92,6 +92,41 @@ def compute kmp fail(P):
 * This is same as merge sort. As part of merging, just count inversions.
 * Remember, u should also do sorting alongside.
 
+=== Max-sum contiguous array
+
+* Kadane's algorithm. 
+** Keep tracking contiguous sum. If that falls below zero, the prefix so
+   far is no good and doesn't contribute to answer. So, start window
+   from next index.
+** Otherwise, keep including current index. Keep updating best answer
+   at every point
+** The following impl gives the max-sum assuming its positive, otherwise
+   zero. If you want to include 0/-ve numbers in your answer, you will
+   have to add updates in the go-negative part
+
+----
+
+def max_contiguos_subarray(A):
+    max_ending_here = max_so_far = 0
+    bs = bl = 0  #best start, last
+    cs = cl = 0  #curr_start, last
+    for i,x in enumrate(A):
+        max_ending_here = max(0, max_ending_here + x)
+        if not max_ending_here:
+          cs = i+1
+          cl = i+1
+        else:
+          cl = i
+        if max_so_far < max_ending_here:
+          max_so_far = max_ending_here
+          bs = cs
+          bl = cl
+    if max_so_far:
+      return (max_so_far, bs, bl)
+    else:
+      return (0, None, None)
+----
+
 == Binary Trees
 
 * A tree is also a graph. Any undirected graph, where any 2 vertices are
