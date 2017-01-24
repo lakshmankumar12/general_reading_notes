@@ -33,9 +33,9 @@ Gz -  online charging to PGW
 
 UMTS
 
-Iu
-Gr
-Gi
+Iu - RNC to SGSN
+Gr - SGSN to HLR
+Gi - GGSN to IP-Network
 
 == Policy and Bearers
 
