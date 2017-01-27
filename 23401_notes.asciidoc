@@ -21,9 +21,13 @@ At this expiry, UE sends the periodic TAU
 
 * Broad idea is that UE can stay attached in both GERAN and UERAN.
 * It sends periodic RAU/TAU to both as long its connected in both places.
-* When it moves out of coverage in one RAT, it starts the lost-RAT-deactivate timer. If the UE gets back in coverage before this time, it sends the periodic-LAU/TAU as appropriate.
-* If the UE still hasn't contacted the lost RAT upon expiry of the lost-RAT-deactivate-timer, then the UE removes its ISR status.
-* Upon handover from RAT-Src-to-Dest, the UE re-starts its periodic-src-RAT timer, so that it can perform periodic-(R/T)AU on the old RAT.
+* When it moves out of coverage in one RAT, it starts the lost-RAT-deactivate
+  timer. If the UE gets back in coverage before this time, it sends the
+  periodic-LAU/TAU as appropriate.
+* If the UE still hasn't contacted the lost RAT upon expiry of the
+  lost-RAT-deactivate-timer, then the UE removes its ISR status.
+* Upon handover from RAT-Src-to-Dest, the UE re-starts its periodic-src-RAT
+  timer, so that it can perform periodic-(R/T)AU on the old RAT.
 
 
 == Handovers

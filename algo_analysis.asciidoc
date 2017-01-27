@@ -508,11 +508,27 @@ This is the case where the number of buckets is dynamic.
 
 http://www.tom-e-white.com/2007/11/consistent-hashing.html[Good link]
 
+When the buckets are dynamic, tradition mod%N can't be employed as N is changing.
+
+* We have the keys - which are hashed from 0 to K. This range is mapped on to a
+  circle
+* We have the nodes(buckets). Now based on another hashing strategy each node
+  is also randomly assigned points in the circle.
+* Now when we ahve a key, we go to the circle and pick the node that appears 
+  next in the clock-wise direction.
+
+Thus when a node leaves, since its present in mulitiple points in the circle,
+all these points disappear, and the load is distributed to rest of nodes as
+the next successor for each of its previous point
 Idea is that each hashed value lies in a circle. And select points in the circle
 are buckets points. Each hash gets put in the bucket next in clock-wise direction.
 
 === Universal Hashing
 
+This is a case where the hash functions are also many and we pick our hash
+function itself from the family of functions and then hash!
+
+Not sure I understand this. Need some simple explanation from somewhere.
 
 
 == Graphs
@@ -848,3 +864,18 @@ DFS(G,u)
 * Articulate edge detection
 ** Given in skienna.
 ** I didn't follow it
+
+=== Prim's Algorithm
+
+Find the minimum spanning tree.
+
+* Pick any node.
+* Pick the least weighted edge going out. Consume this node.
+* Now among all outbound edges, pick the least weighted node.
+* Keep repeating till the whole graph is covered.
+
+Order of running:
+
+* Assuming the edges are all maintained in a heap, we have O(|E|log(|V|))
+
+===

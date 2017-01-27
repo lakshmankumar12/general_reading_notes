@@ -5,6 +5,8 @@ Well Defined ports
 ------------------
 
 * Control port is 2123
+* Data port is 2152
+* V0-used 3386. GTPP' uses 3386
 
 Teid Components
 ---------------
@@ -19,7 +21,7 @@ Teid-uniqueness on various interfaces
 * PGW-side of things:  One TEID for one PDN-session
 ** S5, S8, S2a, S2b
 * SGSN/MME side of things: One TEID per UE
-** S3, S10, S16
+** S3, S10, S16, S11
 
 General notes
 --------------
