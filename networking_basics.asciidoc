@@ -60,10 +60,44 @@ SYN-options
 * Timestamp:
 
 ----
-
-
-
+                       CLOSED---------------+                                                       ;
+                         |                  |                                                       ;
+                  (serv-passive-open)       |                                                       ;
+                         |             (client-opn/send-syn)                                        ;
+                         V                  |                                                       ;
+                       LISTEN               |                                                       ;
+                                            |                                                       ;
+        (syn-rcvd/send-synack)              V                                                       ;
+          SYN_RCVD                      SYN_SENT                                                       ;
+                                                                                                    ;
+                                                                                                    ;
+                      ESTABLISHED         CLOSE_WAIT  (recv-FIN/send-ACK)                           ;
+                                                                                                    ;
+                                                                                                    ;
+                                           LAST_ACK   (app-closes/send-FIN)                         ;
+      FIN_WAIT    CLOSING                                                                           ;
+                                                                                                    ;
+      FIN_WAIT_2  TIME_WAIT                                                                         ;
+                                                                                                    ;
+                                                                                                    ;
+                                                                                                    ;
 ----
+
+* Note that when we get FIN, we immediately close. However, if we did clsoe (and got FIN too) we wait
+  on TIME_WAIT. This is because only one end needs to wait. Thus its chosen for the first intiator
+  of the close to wait on this state. (While the other party isn't waiting, the connection per-se
+  isn't possible, as still one-party is holding the 4-tuple)
+* Timewait state is for 2MSL -> Max Segment LifeTime is 
+
+Nagle Algorithm
+++++++++++++++++
+
+* The algo is very simple. At a given point in time, only one outstanding tinygram can be present
+  w/o an ack.
+* This algo is naturally self-clocking. It accumulates lots of tiny grams in case of delaying
+  networks, but kind of becomes non-felt in fast connections.
+* Sometimes, this needs to switched off (like in X-window systems, where each tiney mouse-adjustment
+  needs to be send for quick feedback). TCP_NODELAY options switches this off.
 
 
 SCTP
