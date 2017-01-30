@@ -209,20 +209,31 @@ connect
     * For UDP, creates the default dest addr. (can be changed by another call to connect)
 shutdown
   int shutdown(int sockfd, int how);
-    *
+    * useful for half-close (either cloase reading or writing)
 close
   int close(int fd);
     * closes the fd, w.r.t this process.
     * Upon all process counts to this fd comign to 0,
       The kernel however will flush all to-send data and send FIN
 send
+  ssize_t send(int sockfd, const void *buf, size_t len, int flags);
+  ssize_t sendto(int sockfd, const void *buf, size_t len, int flags, const struct sockaddr *dest_addr, socklen_t addrlen);
+  ssize_t sendmsg(int sockfd, const struct msghdr *msg, int flags);
+  int sendmmsg(int sockfd, struct mmsghdr *msgvec, unsigned int vlen, unsigned int flags);
+    * send shoudl be called only on conneced sockets where dest is unknown. In connected sockets, dst if passed is ingored or
+      EISCONN returned
 receive
-
+  ssize_t recv(int sockfd, void *buf, size_t len, int flags);
+  ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *src_addr, socklen_t *addrlen);
+  ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags);
+  int recvmmsg(int sockfd, struct mmsghdr *msgvec, unsigned int vlen, unsigned int flags, struct timespec *timeout);
+    * recvmmsg extends both on multi-messages + a extra timeout.
+    * See readv for how iovecs are used.
 
 Server:
-  socket, bind, listen, accept,   read/write,
+  socket, bind, listen, accept,   recv/send, close
 
 Client:
-  socket, optional-bind, connect,   read/write,
+  socket, optional-bind, connect,   recv/send, close
 
 
