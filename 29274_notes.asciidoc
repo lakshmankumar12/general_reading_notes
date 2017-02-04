@@ -15,6 +15,15 @@ Teid Components
 * one IP is mandatory. Both may be present.
 * port is not there. So, you can't demux by port. (But you have a free run to choose local-port if you are initiating the message)
 
+TEID is commucated in
+~~~~~~~~~~~~~~~~~~~~~
+
+* "Sender F-TEID for Control Plane" IE,
+* "PGW S5/S8/S2a/S2b F-TEID for PMIP based interface or for GTP based Control Plane interface" IE,
+* "MSC Server Sv TEID for Control Plane" IE,
+* "S3/S16/S10 Address and TEID for Control Plane" IE, or
+* "MME/SGSN Sv TEID for Control Plane" IE.
+
 Teid-uniqueness on various interfaces
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -22,6 +31,41 @@ Teid-uniqueness on various interfaces
 ** S5, S8, S2a, S2b
 * SGSN/MME side of things: One TEID per UE
 ** S3, S10, S16, S11
+
+Headers
+---------
+
+V1:
+
+Version | PT | spare | E| S| PN
+Type
+Len (2 Octet)
+Teid (4 Octet)
+Seq Num (if S bit, 2 Octet)
+N-Pdu (if PN bit, 1 octet)
+Next Hdr Type (if E bit)
+
+V2:
+
+Version | P | T | spare
+MessageType
+Len (2 Octet)
+Teid (if T, 4 octets)
+Seq Num (2 Octet)
+
+P - Piggybacked message present (Create-Bearer-Req piggybacked on Create-Session-Resp)
+T - Triggered response
+
+
+V1-headers
+----------
+
+Len, Type, content.
+
+The first 2 bits tell if comprehension is reqd by intermediary/end-point node.
+
+As of now, there are suspend req/rsp, pdcp pdu num, msinfo change reporting indication, mbms support ind
+
 
 General notes
 --------------

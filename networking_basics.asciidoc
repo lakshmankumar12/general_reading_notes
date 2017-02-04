@@ -68,7 +68,7 @@ SYN-options
                        LISTEN               |                                                       ;
                                             |                                                       ;
         (syn-rcvd/send-synack)              V                                                       ;
-          SYN_RCVD                      SYN_SENT                                                       ;
+          SYN_RCVD                      SYN_SENT                                                    ;
                                                                                                     ;
                                                                                                     ;
                       ESTABLISHED         CLOSE_WAIT  (recv-FIN/send-ACK)                           ;
@@ -83,35 +83,223 @@ SYN-options
                                                                                                     ;
 ----
 
-* Note that when we get FIN, we immediately close. However, if we did clsoe (and got FIN too) we wait
+* Note that when we get FIN, we immediately close. However, if we did close (and got FIN too) we wait
   on TIME_WAIT. This is because only one end needs to wait. Thus its chosen for the first intiator
   of the close to wait on this state. (While the other party isn't waiting, the connection per-se
   isn't possible, as still one-party is holding the 4-tuple)
-* Timewait state is for 2MSL -> Max Segment LifeTime is 
+* Timewait state is for 2MSL -> Max Segment LifeTime is the time spent by a pkt in the network
+  from client to server.
 
 Nagle Algorithm
 ++++++++++++++++
 
-* The algo is very simple. At a given point in time, only one outstanding tinygram can be present
+* The algo is very simple. At a given point in time, only one outstanding tinygram can be sent
   w/o an ack.
 * This algo is naturally self-clocking. It accumulates lots of tiny grams in case of delaying
   networks, but kind of becomes non-felt in fast connections.
-* Sometimes, this needs to switched off (like in X-window systems, where each tiney mouse-adjustment
+* Sometimes, this needs to switched off (like in X-window systems, where each tiny mouse-adjustment
   needs to be send for quick feedback). TCP_NODELAY options switches this off.
 
 
 SCTP
 ----
 
+Reading from : http://www.slideshare.net/PeterREgli/overview-of-sctp-transport-protocol
+
 * reliable
 * message boundaries
-* sequenced delivery
-* flow-control
+* multiple-streamed, provides a way to minimize head-of-line blocking
+** sequenced delivery
 * transport level support for multihoming
-* provides a way to minimize head-of-line blocking
+** preforms HeartBeats to check liveliness of every PATH.
+* DOS protection
+* Fragmentation
+* flow-control/congestion-avoidance
 
 * Call associations
-* Has multiiple streams, each with its own stream identifier
+* Chunks (Sctp's own ctrl chunks and user-data chunks)
+* Bundling -> putting multiple chunks in the same pkt.
+* Endpoint -> hosts participating in an association
+* Streams -> one uni-directional logical channel transporting application-data
+** sctp-ctrl-chunks (like init,init-ack are stream agnostic)
+** Has multiiple streams, each with its own stream identifier
+** app has to use 2 streams in each dir if they need full-duplex communication
+
+* Like RST for TCP, ABORT is sent for SCTP when nobody is listening on the prot.
+* no halfway-close like in tcp. Whoever initiates shutdown will follow 3 way close.
+  It possible for both sides to initiate shutdown. Then both sides follow same 3way
+  seq (as well responding to peer)
+* Every Data has a unique TSN (global for the assoc)
+
+header
+++++++
+
+src-prt | dst-prt
+verification-tag
+checksum
+chunk1
+..
+chunkN
+
+chunk:
+type| flags | len
+data
+
+Data-chunk:                   Flags
+type=0 | UBE | CL             U - Unordered Data (Seq num is ignored and data prsented immdly)
+TSN                           B - Beginnning of Fragment
+StreamID| StreamSeqNum        E - End of Fragment
+Upper-Prot-Id
+Data
+
+Some chunk types
+++++++++++++++++
+
+DATA, INIT, INIT_ACK, COOKIE_ECHO, COOKIE_ACK, SACK, HB, HB_ACK, ABORT, SHUTDOWN, SHUTDOWN_ACK, SHUTDOWN_COMP
+
+
+
+
+State-Diag for assoc-setup
++++++++++++++++++++++++++++
+
+client: CLOSED -> COOKIE_WAIT  -> COOKIE_ECHOED -> ESTABLISHED
+server: CLOSED -> ESTABLISHED
+
+* On a simul open on both sides, both sides follow client-style.
+
+----
+    ESTABLISHED
+
+SHUTDOWN        SHUTDOWN-RECEIVED
+PENDING
+
+SHUTDOWN        SHUTDOWN_ACK SENT
+SENT
+
+
+       CLOSED
+----
+
+STuff in INIT
++++++++++++++
+
+* Initial TSN
+* a_rwnd
+
+Multiple-path
+++++++++++++++
+(Read more on this)
+
+* SCTP has multiple IPs. However, one IP-IP is designated as primary path.
+  Unless this is down, SCTP doesn't switch to secondary pathss.
+
+Fragmentation
++++++++++++++
+
+* Reassembly MUST be supported. Sender fragments. If sender side support
+  isn't available, then a big pkt should be rejected to upper layer.
+* Each fragment has B/E bit set appropriately to 10(begin), 00(middle), 01(end)
+* Each fragment has a separate TSN, but the same SSN (stream seq num). This
+  is how fragments are associated to the same datagram.
+
+(How is path MTU learnt?)
+
+Flow control
+++++++++++++
+
+* Like TCP there is a receiver window
+** rwnd -> Actual receive window size at receiver. Default is 1500
+** a_rwnd -> Advertized rwnd. Value sent by sender. Sender stops sending data
+   when it gets a a_rwnd == 0. It cant' send more than a_rwnd.
+** cwnd -> congestion window. Amount of data in flight(sent but not acked)
+    must not exceed cwnd
+* If a receiver has sent a a_rwnd(0), and a subsequent SACK with non-zero a_rwnd,
+  is lost, then sender is blocked forever (as only SACK carries a_rwnd). To
+  overcome this dead-loack, the sender sends zero-window-probes after RTO is
+  elapsed and a_rwnd is still 0 and there are no outstanding SACKs, and if
+  cwnd is not 0.
+* Delayed-ack. Send ack for every other data, no later than 200ms
+
+Bundling policy
++++++++++++++++
+
+* Bundle size shuldnt exceed associtiation path MTU.
+* bundle SACKs with highest prio.
+* after SACK, if a_rwnd and cwnd permit, bundle as many retrans-DATA chunks
+* Then bundle new DATA chunks
+
+
+General algorithms
+------------------
+
+Silly Window Syndrom
+~~~~~~~~~~~~~~~~~~~~~
+
+* SCTP has it. RFC 1122. Avoid advertising small a_rwnd and sender stop sending
+  small pkts. This will result in poor connection throughput.
+
+Congestion Avoidance
+~~~~~~~~~~~~~~~~~~~~
+
+SLOW_START  --> Congestion-Avoidance
+
+Slow start
+++++++++++
+
+* In RFC 2001 (Stevens)
+* While we know the receive window size, we still dont know about the network
+  between sender and receiver. So, what if routers dont have enough queue capacity.
+  So, Instead of just blasting pkts to the advertised window-size, we start slow
+  and then catup to rwnd.
+* Adds another window to sender tcp - cwnd. cwnd is initially set to 1 Segment
+  size. On every ACK, cwnd is increased by one segment. senders sends the
+  minimum of rwnd,cwnd. This ensure, we start with one outstanding segment and
+  gradually increase till rwnd.
+* Note that the actual increase is liner on every ack, but in effect it will
+  increase exponentially, as initially 1 outstanding, then 2 outstanding, then
+  we get 2 acks, so we send 3 outstanding etc.. But if the receiver clubs ACKs
+  then the increase is not really exponential
+
+Congestion Avoidance
+++++++++++++++++++++
+
+* Congestion happens when a big PIPE connects to a smaller pipe or the o/p of
+  a router doesn't match sum of inputs. There are two indications of packet 
+  loss:  a timeout occurring and the receipt of duplicate ACKs.
+* While congestion avoidance and Slow-start are indepedant in theory, their
+  implementation is intertwined.
+* We have one more variable - ssthred (slow start threshold)
+
+* Initially ssthres = 65535 (max-window size?)
+* When congestion occurs i.e Either of timeout or dup ack
+   set ssthres = half of curr-win(min of a_rwnd, cwnd)
+                 But always min of 2*seg-size
+  If it was timeout
+   set cwnd = 1 segment (This is when we really stop sending much)
+* Now on every ACK, we keep increasing cwnd (subject to no loss/timeout)
+* Now, whether we slow-start (exponentially or linearly) depends on following:
+  if cwnd <= ssthres, its slow-start (normal case)
+  otherwise congestion avoidance.
+* If its slow-start, we increase cwnd for every ACK. But in congestion
+  avoidance, we increase only segsize*segsize/cwnd each time an ACK is recvd.
+  This is linear.
+
+
+Fast-restranmit
++++++++++++++++
+
+* Normally a receiver sends a ACK immdly out in case it sees a out-of-order.
+* This could have happend because of a re-order or a lost segment. If re-order
+  nothing is reqd from sender.
+* So sender when it sees a duplicat-ack, doesn't send out immdly, but rather
+  waits to see 2 or 3 dup-ack and then sends a retrans before the timeout.
+
+Fast-recovery
++++++++++++++
+
+
+
 
 Well known Ports
 -----------------
@@ -202,6 +390,7 @@ accept
     * returns the fd of the new connection. The addr is a o/p field that stores the addr of the remote party
     * may block or not block depending on connection availble.
     * in case of tcp, only fully handshaked connections are notified in accept.
+    * flags are NON_BLOCK/CLOSONEXEC
 connect
   int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
     * connects to a remote server mentioned.
@@ -237,3 +426,10 @@ Client:
   socket, optional-bind, connect,   recv/send, close
 
 
+* tcp client, should add the just connect-issued socket to the write list to test for HS complete (to confirm)
+* tcp server, should add the listen-fd to the READ-list to check for incoming connections and issuing accept.
+
+Some libraries that bypass kernel network processing
+----------------------------------------------------
+
+netmap(BSD), DPDK
