@@ -871,11 +871,39 @@ Find the minimum spanning tree.
 
 * Pick any node.
 * Pick the least weighted edge going out. Consume this node.
-* Now among all outbound edges, pick the least weighted node.
+* Now among all outbound edges from the current set of picked notes,
+  and pick the least weighted node.
 * Keep repeating till the whole graph is covered.
 
 Order of running:
 
 * Assuming the edges are all maintained in a heap, we have O(|E|log(|V|))
 
-===
+=== Kruskal's Algorithm
+
+Find the minimu spanning tree
+
+* pick the cheapest edge as long as its
+  not creating cycles, i.e it shoudln't connect
+  2 edges that are already connected
+
+----
+sort edges in order of increasing cost
+T = NULL
+for i = 1 to m
+  if T,[i] is not creating cycle
+    add i to T
+return T
+----
+
+Order of running:
+
+* Sort of edges takes O(mlogm) == O(mlogn), m-no of edges > n-no of vertices. But we
+  can utmost m=n-power-2 number of edges, so, O(mlogm) = O(mlogn)
+* Now, there are O(m) iterations, and each iteration takes O(1) to find if edge i
+  is going to create a cycle or not.
+* THere will be utmost log-n leader updates and each update is O(n). so there will
+  be upto O(nlogn)  updates)
+
+So, total = O(mlogn) + O(m) + O(nlogn) = O(mlogn), which is same as Prim
+  .
