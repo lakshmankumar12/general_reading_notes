@@ -33,9 +33,28 @@ Gz -  online charging to PGW
 
 UMTS
 
-Iu - RNC to SGSN
+Ga - {GGSN,SGSN,SGW,PGW} -> CGF
+Gb - SGSN to BSS
+Gc - GGSN to HLR
+Gd - SMSC to SGSN
+Gf - SGSN to EIR
+Gn/Gp - SGSN to GGSN
 Gr - SGSN to HLR
+Gs - SGSN to MSC/VLR
+Iu - RNC to SGSN
 Gi - GGSN to IP-Network
+
+== Spec list
+
+23.401 - 4G general architecture
+29.274 - GTP
+
+23.060 - 3G general architecture
+24.008 - GMM
+25.413 - RANAP
+29.060 - GTPv1
+
+
 
 == Policy and Bearers
 

@@ -70,5 +70,12 @@ Only if R1, R2 are independant:
 E(R1*R2) = E(R1) * E(R2)
 
 
+== Prime Numbers
 
+=== A number should have all its prime factors less than sqrt(n) and utmost one prime-factor greater than sqrt(n).
 
+* To prove this, we need to first prove every composite number has atleast one prime factor less than sqrt(n).
+
+* So, if we walk over till sqrt-n, we weed out all prime-factors till sqrt-n 499894395
+
+k
