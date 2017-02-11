@@ -907,3 +907,9 @@ Order of running:
 
 So, total = O(mlogn) + O(m) + O(nlogn) = O(mlogn), which is same as Prim
   .
+* Kruskal's algorithm'ish can also be used to do a clustering algo.
+  Clustering algo is to group n vertices into k clusters/groups so
+  that the closest are together.
+* Just as how kruskal tries to fuse vertices to build a spanning tree, we
+  will fuse vertices till the cluster count comes down to k!
+
