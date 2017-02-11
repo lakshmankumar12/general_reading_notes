@@ -913,3 +913,44 @@ So, total = O(mlogn) + O(m) + O(nlogn) = O(mlogn), which is same as Prim
 * Just as how kruskal tries to fuse vertices to build a spanning tree, we
   will fuse vertices till the cluster count comes down to k!
 
+
+Union-Find Data Structure
+--------------------------
+
+* O(1) to tell if a given node is in a group
+* O(nlogn) to work for n unions
+** Note that there will utmost log-n leader updates and each update is O(n)
+   update
+
+Lazy unions
+~~~~~~~~~~~
+
+* Find: O(logn)  [ Only if we unionize by the rank ]
+* Union: O(1) + 2*Find
+
+Rank: Maximum length of the root->parent path. When fusing, choose the tree
+      with the higher rank as the new parent.
+
+Rank lemma: (Controls the population of a given rank)
+For an arbitraty size, the utmost n/(2-power-r) objects with rank r.
+
+Path Compression
+~~~~~~~~~~~~~~~~~
+
+* Every find re-writes its path, so that over time, a previous find
+  will give us O(1) in future
+
+Hopcroft-Ullman Theorm: If you do path-compression, then a sequence
+of m operations(union and find) will cost O(mlog*n) time.
+
+Tarjan's Bound: *Same as above*, will cost O(m-alpha(n)) time.
+alpha(n) is inverse Ackermann function
+
+Weight-Independant Set in Path Graph
+--------------------------------------
+
+* path graph is a liner graph
+* Given a graph with weights associated to vertices, find the
+  subset of vertices that are not adjacent and the sum of weights
+  is maximum
+
