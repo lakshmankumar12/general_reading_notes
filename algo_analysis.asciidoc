@@ -553,6 +553,14 @@ Not sure I understand this. Need some simple explanation from somewhere.
 ** A degree of a vertex, is referred as the number of edges that start out from that
    vertex.
 
+Directed Graph
+~~~~~~~~~~~~~~
+
+* Strongly connected: If you can reach any vertex from any other vertex, following the
+                      edges in thier given direction.
+* Weakly connected: If you can reach any vertex from any other vertex, following the
+                      edges in any direction (i.e assuming the graph as undirected
+                      check if u can reach all vertices)
 
 === Numerical Facts
 
@@ -953,4 +961,15 @@ Weight-Independant Set in Path Graph
 * Given a graph with weights associated to vertices, find the
   subset of vertices that are not adjacent and the sum of weights
   is maximum
+
+* O(n) time. A[0] = 0 , A[1] = 1
+             A[i] = max{ A[i-2] + Vi , A[i-1] }
+
+Dynamic Programming
+--------------------
+
+* Identiy a small number of sub-problems
+* Correctly solve the bigger problem given the solutions of the sub-problem
+* Ensure, the final solution is availabe by solving the sub-problems
+
 
