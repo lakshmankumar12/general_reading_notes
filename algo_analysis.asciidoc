@@ -922,6 +922,11 @@ So, total = O(mlogn) + O(m) + O(nlogn) = O(mlogn), which is same as Prim
   will fuse vertices till the cluster count comes down to k!
 
 
+== Reservoir Sampling
+
+
+
+
 Union-Find Data Structure
 --------------------------
 
