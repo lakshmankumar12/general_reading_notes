@@ -886,6 +886,17 @@ Find the minimum spanning tree.
 Order of running:
 
 * Assuming the edges are all maintained in a heap, we have O(|E|log(|V|))
+** Use a min-heap to pick the next edge.
+** Pick any first node. Now sort the other edges that reach from this vector
+   and build the heap. Nodes that arent' directly reachable are value inf.
+** Pick the cheapest edge. The thing is once you pick, the vertices values
+   change as they are now even more reacheable.
+** Each heap operation is log(vertex) sized. There will be utmost Edge
+   number of operations. Because at each iteration, we adjust those
+   vertices, there are reachable from the newly added vertex
+** so, its O(|E|log(|V|)). THere is a heapify up front, but thats O(|V|).
+   So we can ignore that.
+
 
 === Kruskal's Algorithm
 

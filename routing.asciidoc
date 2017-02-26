@@ -17,3 +17,80 @@ Hierarchy
 * Exterior Gateway Protocols
 ** BGP
 *** path vector
+
+
+BGP
+---
+https://www.youtube.com/watch?v=ZucnfoJiFr8[Good link]
+
+* BGP is optimzied for scalability, not convergence time
+* BGP had advanced filtering rules, foreg, you can say i dont want routes using AS-xyz/
+* uses AS-path list to avoid loops
+* number of AS-hops as a universal metric
+
+* Only 4 message types - OPEN/KEEPALIVE/UPDATE/NOTIFICATION
+* Only 6 states
+* many filtering options
+
+* Uses TCP/179. Explicit router to router connection. No multicast/broadcast. Routers are known by config. No dynamic learning
+* remote pkts are accepted only from configured peers
+
+* Open message
+** BGP version, sender AS number, Hold time (def: 180s), highest loopback, optinal params
+** Done like open, send notifications
+
+* Keep Alive
+* 1/3rd of hold time, 60s def
+
+* Update
+** NLRI(Network Layer Reacheability Info) - just a complicated way of saing ip/prefix
+** Path updates
+** Withdrawn routes
+
+* Notification
+** terminates/rejects a BGP
+** Can include error message
+
+* Neighbour states
+** IDLE - start up or some bgp error occured
+** CONNECT - Initiated a TCP connection
+** ACTIVE - Repeated attempting a connection
+** OPEN-SENT - TCP established, sent open message
+** OPEN-CONFIRM - received open back
+** ESTABLISHED - received a KA or update
+
+* EBGP session and IBGP sessions
+** Typically EBGP runs on a physical IP as we want EBGP to go down on a link-down.
+** However, IBGP typically runs on loopback, as there may be other paths to the peer.
+** IBGP peers neednt be directly connected
+** IBGP neighbors can be acroos hops (TTL of 255 is used), however, EBGP neighbors should be next-hop (TTL of 1 is used)
+** In cisco config, we dont explicity distinguish IBGP/EBGP. We configure remote-peer -ip and their AS. Sam AS => IBGP, diff AS => EBGP
+
+* Attributes
+** Each advertised route has attributes
+** well-known attributes - defined by protocol, understood by all routers
+** 2 types of well-known: madatory and discretionary (ma not be included in every update)
+** Optional - Transitive (pass it on even if you dont understand) / Non-transitive (drop it if you dont undertand)
+
+* Well-Known Madatory
+** Origin Attribute
+*** IGP - route learnt from IGP (configured routes)
+*** EGP - learnt from the obsolte protocol EGP
+*** Incomplete - real origin not known
+** AS-Path
+*** List of AS that the route passed through
+** Next-Hop
+*** IP address to forward to
+
+* Well-known discretionary
+** Local preference
+*** Route prioritization. Higher => better, Default 100
+** Atomic Agreegate -  route was summarized
+
+* Transitive Option
+** Aggregator: Identifies AS/router that did the aggregatin
+** Community: Message in the udpate
+
+* Non-Transitive 
+** MED - Multi Exit Discriminator (didnt understand that)
+
