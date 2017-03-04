@@ -94,3 +94,9 @@ https://www.youtube.com/watch?v=ZucnfoJiFr8[Good link]
 * Non-Transitive 
 ** MED - Multi Exit Discriminator (didnt understand that)
 
+* Works atop TCP, port 179
+* Has a keep alive every 60s, and dead times at 180s
+* Has 13/14 attributes
+* IBGP administrative distance is 200
+  EBGP administrative distance is 20
+* EBGP pkts are sent with TTL of 1. They should be directly connected.
