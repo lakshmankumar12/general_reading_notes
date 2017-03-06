@@ -1,6 +1,8 @@
 Simple networking facts
 ========================
 
+For Routing (BGP, iptables -- refer to routing.asciidoc)
+
 Ethernet
 ---------
 
