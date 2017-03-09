@@ -988,4 +988,53 @@ Dynamic Programming
 * Correctly solve the bigger problem given the solutions of the sub-problem
 * Ensure, the final solution is availabe by solving the sub-problems
 
+Knapsack Problem
+----------------
+
+Problem:
+
+We have a knapsack with integral weight W.
+We have n items, each with value vi and weight wi.
+We need to maximize our value, but at same time not exceed weight of knapsack.
+
+Algo:
+
+Let A=2D-array   # x-axis represents item-0..n, y-axis represents weight 1..W
+# set first column to all 0 (0th item doesn't exist)
+Initialize A[0,x] = 0 for all x=0,1...W
+For i = 1...n
+  For x = 0..W
+    A[i,x] = max{A[i-1,x], A[i-1,x-wi] + vi}  # first one drop this item, second one picks this item
+Return A[n,W]
+
+Sequence Alignment Problem
+---------------------------
+
+Problem:
+Strings X = x1 ... xm, Y = y1 ... yn over some alphabet Σ (like {A,C,G,T})
+  - Penalty αgap for inserting a gap,
+  - αab for matching a & b [presumably αab = 0 of a = b]
+
+Find the alignment with minimum possible penalty.
+
+Solution:
+
+Notation: Pij = penalty of optimal alignment of Xi & Yj.
+Recurrence:
+For all i = 1 ... m and j = 1 ... n:
+          Pij = min +-- (1) αxiyj  + Pi−1,j−1       #Edit the last char
+                    |   (2) αgap   + Pi−1,j         #insert a char in Xi
+                    +-- (3) αgap   + Pi,j−1         #insert a char in Yj
+
+
+Algorithm:
+
+A = 2-D array.
+A[i;0] = A[0; i] = i · αgap; ∀ i ≥ 0
+For i = 1 to m
+   For j = 1 to n
+      A[i; j] = min +-- (1) A[i-1,j-1] + αxi yj
+                    |   (2) A[i-1,j] + αgap
+                    +-- (3) A[i,j-1] + αgap
+
 

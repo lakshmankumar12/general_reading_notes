@@ -6,13 +6,14 @@ SAE and LTE General Understanding
 
 * S1   -  Data plane from Enb to SGW
 * S2   -
-* S2a  -  Trusted non-3GPP to PGW (can be PMIP or TWAG)
+* S2a  -  Trusted non-3GPP to PGW (can be PMIP or TWAG(Gtp))
 * S2b  -  Non-Trusted non-3GPP to PGW (ePDG)
 * S3   -  S4-SGSN to MME
 * S4   -  S4-SGSN to SGW
 * S5   -  SGW to PGW
 * S6   -
 * S6a  -  MME to HSS
+* S6b  -  PGW to AAA
 * S6d  -  S4-SGSN to HSS
 * S7   -  NOT_DEFINED
 * S8   -  inter-plmn S5->S9
@@ -24,12 +25,24 @@ SAE and LTE General Understanding
 * S14  -  NOT_DEFINED
 * S15  -  NOT_DEFINED
 * S16  -  S4-SGSN to S4-SGSN
-* S101
+* S101 -  eHRPD to MME (Pmip?)
+* S103 -  HSGW to SGW (Pmip?)
 * SGi
 
-Gx -  PCRF to PGW
-Gy -  offline charging to PGW
-Gz -  online charging to PGW
+* X2 - eNodeb to eNode
+
+Rx  -  PCRF to PDN-applications (like PCSCF)
+Gx  -  PCRF to PGW
+Gxa -  HSGW(pmip) to PCRF
+Gxc -  PCRF to SGW
+Gy  -  online  charging to PGW
+Gz  -  offline charging to PGW
+
+SWu                   - UE to ePDG
+SWm  (diam)           - ePDG to AAA(untrusted)
+SWw  (radius)
+STa  (diam or radius) - HSGW(Pmip) to AAA
+SWx                   - AAA to HSS
 
 UMTS
 
