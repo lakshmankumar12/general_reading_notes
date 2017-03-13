@@ -1,7 +1,7 @@
 Algorithm Analysis
 ===================
 
-== Asymtotic analysis
+== Asymptotic analysis
 
 =====
 n! << 2^n^  << n^3^  << n^2^  << n log n << n << log n << 1
@@ -16,13 +16,13 @@ n^0.5^ or square-root of n
 
 == Master Method
 
-* Applies when all subproblems are of same size.
+* Applies when all sub-problems are of same size.
 
 -----
 T(n) =  a T(n/b) + O(n^d^)
 -----
 
-cases
+Cases
 ~~~~~
 
 case1: a=b^d^   : T(n) = O(n^d^logn)
@@ -43,13 +43,13 @@ This raised to d, more we gain, as each level is working in as much smaller set.
 
 * Explained in Goodrich/Tamassia/Goldwasser
 * Idea is to build a hash for each char, the last index it appears
-  in pattern. If a char is non-existant, then make it -1.
+  in pattern. If a char is non-existent, then make it -1.
 * So, when a mismatch happens, we check if the mismatching char is
   present in sub-string or not. If not we slide the sub-string
   fully past there. If not, we slide the string till the index
   we know its present.
 * Since we store the last index, we start matching from end of
-  pattern to beg of pattern - so that the last-index ajusting
+  pattern to beg of pattern - so that the last-index adjusting
   works.
 
 ==== KMP (Knuth Morris Pratt) Pattern Searching
@@ -94,13 +94,13 @@ def compute kmp fail(P):
 
 === Max-sum contiguous array
 
-* Kadane's algorithm. 
+* Kadane's algorithm.
 ** Keep tracking contiguous sum. If that falls below zero, the prefix so
    far is no good and doesn't contribute to answer. So, start window
    from next index.
 ** Otherwise, keep including current index. Keep updating best answer
    at every point
-** The following impl gives the max-sum assuming its positive, otherwise
+** The following implementation gives the max-sum assuming its positive, otherwise
    zero. If you want to include 0/-ve numbers in your answer, you will
    have to add updates in the go-negative part
 
@@ -137,7 +137,7 @@ def max_contiguos_subarray(A):
 
 * Treating a tree as a graph, the diameter is the longest path from one
   leaf node to another leaf node.
-* To find a the diameter of a tree, try this algorithm as
+* To find the diameter of a tree, try this algorithm as
   explained in this
   http://www.geeksforgeeks.org/diameter-of-a-binary-tree/[geek-for-geek]
 * If you are given a graph and u want to find the diameter, try this
@@ -147,7 +147,7 @@ def max_contiguos_subarray(A):
 == Binary Search Tress
 
 * Each node is such that all the left nodes are lesser and right nodes are higher.
-* Note that if tree isnt balanced, there are many ways of building a tree for the
+* Note that if tree isn't balanced, there are many ways of building a tree for the
   same set of numbers. Balancing is a different act.
 * Options for balancing
 ** Red-Black Trees
@@ -194,8 +194,8 @@ def max_contiguos_subarray(A):
 * Search node first if just key is given.
 * If node has no children, delete node.
 * If node has just one child, just replace that child in place of the node.
-* If node has 2 children, comupute k's predesscor (That is the right most node of left child)
-** Swap that predessor node and this node and remote it off.
+* If node has 2 children, compute k's predecessor (That is the right most node of left child)
+** Swap that predecessor node and this node and remote it off.
 ** This will equally work by using the successor.
 
 ==== Selecting ith order statistic and Finding Rank
@@ -253,7 +253,7 @@ Note that in both arrangements:   A < x < B < y < C
 * Because of the rules, there can be utmost log(n+1) black nodes in every path.
 * Because of the rules, there can be utmost log(n+1) red nodes stuffed in between
   black nodes.
-* So the tree is utmos 2 log (n+1) height tall.
+* So the tree is utmost 2 log (n+1) height tall.
 * Note a fully black tree is also a valid RB tree.
 
 ==== Inserting in a RB Tree
@@ -296,9 +296,9 @@ Note that in both arrangements:   A < x < B < y < C
    treating G as the new node added. (Beneath G rule-4 is preserved)
 * Case 4: Parent is R, and Uncle is B. N is added as a left child of parent,
   which is a right child of G. (Or vice versa)
-** (Self note:) This arrangement can never happenw when we start, as at a level
+** (Self note:) This arrangement can never happen when we start, as at a level
    how can there originally be a P-node as leaf and red, with its sibling a
-   black. Isn't this violiating rule-4? Perhaps this is a possible configuration
+   black. Isn't this violating rule-4? Perhaps this is a possible configuration
    as we iterate on case-3 above and proceed to top?
 ** In this case, we rotate N and P and make it same as case-5 below
 +
@@ -315,7 +315,7 @@ Note that in both arrangements:   A < x < B < y < C
 * Case 5: Parent is R, and Uncle is B. N is added as a left child of parent,
     which is a left child of G.
 ** Rotate as shown below. Note that originally G-U path had 2 blacks and that
-   is still maintained. This wasn't violoatd when we started with (what was
+   is still maintained. This wasn't violated when we started with (what was
    violated was 2 consecutive reds and that is now fixed)
 +
 ----
@@ -331,7 +331,7 @@ Note that in both arrangements:   A < x < B < y < C
 ==== Deletion
 
 
-== Terneray Search Tress
+== Ternary Search Tress
 
 * Each node has a data-member (one char - or trie's equivalent), and an optional end-of-word marker.
   The end of word doesn't necessarily imply termination of search. For eg, cat, cats will
@@ -359,13 +359,13 @@ Note that in both arrangements:   A < x < B < y < C
 ** heapify
 *** This will prepare a heap from a random collection of items.
 *** The standard way will take n $$*$$ log n time. But, there is a
-    slick way to do it in O(n), if all numbers are available apriori.
+    slick way to do it in O(n), if all numbers are available a-priori.
 +
 This is explained in this http://stackoverflow.com/a/9755805/2587153[stack overflow answer]
 and is further explained why heapify is O(n) and heap-sort is still O(nlogn) in this
 http://stackoverflow.com/a/18742428/2587153[answer]
 +
-**** The idea is that when you heapfiy from the leaf nodes, n/2 nodes have
+**** The idea is that when you heapify from the leaf nodes, n/2 nodes have
      0 operations, n/2 have 1 operation, n/4 have 2,.. and only the root has
      log(n) operations. So is accepted to be O(n)
 +
@@ -381,7 +381,7 @@ http://stackoverflow.com/a/18742428/2587153[answer]
 ** Any algo that needs to keep picking minimum, like Dijkstra's shortest path
    algo
 
-=== Implemetation
+=== Implementation
 
 * Heaps are usually implemented as trees. But array way of representing heaps are
   more common.
@@ -394,7 +394,7 @@ i-1/2 is its parent
 ----
 +
 * For sifting up, add a node to the end of tree. Shift it up, till it is at the
-  right position. This is part of the heapfiy operation.
+  right position. This is part of the heapify operation.
 * Extract min is simply taking the root first. Now swap the last node of the
   heap as root and bubble down.
 
@@ -408,16 +408,16 @@ i-1/2 is its parent
 ** Hash has number of bins that is comparable to the cardinality of S
 * It takes just sqrt(n) elements to have a 50% probability of collision, even if
   n elements have equal probability of coming.
-** What that means is , even if u have 10K buckets in your hash, and ur universe
+** What that means is , even if u have 10K buckets in your hash, and your universe
    is pretty HUGE and there is a probability for an element to take any of the
    10K buckets, then it still takes only 100+ elements to have a 50% probability
    for collision!
-* Prevelant options for handling collisions
+* Prevalent options for handling collisions
 ** Chaining
 ** Open addressing
 +
 The algo-video is pretty hazy here. It says about a hash-sequence which gives a
-sequence of hash-funcitons to suggest buckets
+sequence of hash-functions to suggest buckets
 +
 *** Linear probing
 +
@@ -448,13 +448,13 @@ For a load > 1, open-addressing is not possible. Only chaining is possible
 * Easy to make mistakes
 ** For eg, taking 3 MSB numbers for telephones is a very bad choice.  Bad choices
    may expose patterns of numbers that aren't visible to naked eye.
-** Memory address are mostly always multple of 4. So if the lsb 2  bits are used
+** Memory address are mostly always multiple of 4. So if the lsb 2  bits are used
    as is, 3/4th of hash-buckets will be unused!
-** If all data is multple of N and hash-buket-number is a multiple of N, we may
+** If all data is multiple of N and hash-bucket-number is a multiple of N, we may
    have unfilled buckets.
 * For a simple modulus like hash-function, choosing number of buckets(n) to be a
   prime closest to our desired N range.
-** The prime shouldnt be too close to a power of 2 or power of 10
+** The prime shouldn't be too close to a power of 2 or power of 10
 
 
 ==== A sample hash function for a generic string
@@ -502,7 +502,7 @@ unsigned int hash(unsigned int x) {
 }
 ----
 
-=== Consistent Hasing
+=== Consistent Hashing
 
 This is the case where the number of buckets is dynamic.
 
@@ -514,10 +514,10 @@ When the buckets are dynamic, tradition mod%N can't be employed as N is changing
   circle
 * We have the nodes(buckets). Now based on another hashing strategy each node
   is also randomly assigned points in the circle.
-* Now when we ahve a key, we go to the circle and pick the node that appears 
+* Now when we have a key, we go to the circle and pick the node that appears
   next in the clock-wise direction.
 
-Thus when a node leaves, since its present in mulitiple points in the circle,
+Thus when a node leaves, since its present in multiple  points in the circle,
 all these points disappear, and the load is distributed to rest of nodes as
 the next successor for each of its previous point
 Idea is that each hashed value lies in a circle. And select points in the circle
@@ -537,7 +537,7 @@ Not sure I understand this. Need some simple explanation from somewhere.
 * Terminology
 ** Vertices or nodes
 ** Edges
-*** Careful. Dont confuse edge (having smaller spelling for a vertex, having a bigger
+*** Careful. Don't confuse edge (having smaller spelling for a vertex, having a bigger
     spelling!)
 ** Directed or Undirected edges
 *** In directed, first is tail and second is head. That is direction is from tail to head.
@@ -549,7 +549,7 @@ Not sure I understand this. Need some simple explanation from somewhere.
    or may not be meaningful to a given problem
 ** Typically m is number of edges, and n is number of vertices. (Mnemonic: m>>n, we
    have far more edges than there are vertices. Number of lines in m(3) is more than n(2)!
-   Alternatively, m is O(n) to upto O(n^2^) to classify sparse/dense)
+   Alternatively, m is O(n) to up to O(n^2^) to classify sparse/dense)
 ** A degree of a vertex, is referred as the number of edges that start out from that
    vertex.
 
@@ -557,7 +557,7 @@ Directed Graph
 ~~~~~~~~~~~~~~
 
 * Strongly connected: If you can reach any vertex from any other vertex, following the
-                      edges in thier given direction.
+                      edges in their given direction.
 * Weakly connected: If you can reach any vertex from any other vertex, following the
                       edges in any direction (i.e assuming the graph as undirected
                       check if u can reach all vertices)
@@ -568,20 +568,20 @@ Directed Graph
   n-1 edges to have all the vertices connected (in one line) and utmost ~n~C~2~ = n(n-1)/2
   number of edges (where all edge is connected to the other edge) in a undirected graph
 * If there are n vertices in a graph, we can have up 2^n^-2 possible cuts for this graph.
-  Each vertex can be in either set A or B independant of the choice of other vertices. We
+  Each vertex can be in either set A or B independent of the choice of other vertices. We
   just subtract 2 as we can't have all vertices in each set.
 
 === Graph Representations
 
 ==== Adjacency Matrix
 
-* We have nxn matrix (verticesxvertices matrix).
-* Each non-primary diagnal represents a possible Edge. Its 0/1 based on if that edge exists.
-* Add bells and whistles to what the matrix element is to accomodate directed (+ve/-ve),
+* We have NxN matrix (vertices x vertices matrix).
+* Each non-primary diagonal represents a possible Edge. Its 0/1 based on if that edge exists.
+* Add bells and whistles to what the matrix element is to accommodate directed (+ve/-ve),
   parallel edges, weighted edges
 * Super waste of memory for a sparse graph.
 
-==== Adjancenty List
+==== Adjacency List
 
 * Algo course style
 ** Have 2 different lists - one for vertices and one for edges
@@ -590,14 +590,14 @@ Directed Graph
 *** Each vertex points to all edges incident on it. The vertex thus should have
     a list of edge-pointers.
 *** Note that the sum of cross-references from edges to vertices is exactly
-    same as vertices to edges. The edges to vertices are exaclty 2 per edge,
+    same as vertices to edges. The edges to vertices are exactly 2 per edge,
     while in vertices to edges, it varies on degree of each vertex.
 
 * Skiena book style
 ** Kind of a 2D linked list.
 ** We have a linked-list of vertices.
 ** For each vertex, we have a list of edges that originate from that vertex.
-** For unidirected, the edge appears twice, once is each vertex's list. For directed
+** For undirected, the edge appears twice, once is each vertex's list. For directed
   graph, it appears in the vertex which is its tail.
 ** Here we show the list of vertices as an array and the vertices as linked-list.
 +
@@ -649,7 +649,7 @@ suggests to keep the actual vertices and edges separately in lists of their own.
 ==== Minimum cuts
 
 Given a graph, find the cut that has the minimum number of cross-over edge (Min-cut)
-This is useful, to find closesly related vertices in a graph.
+This is useful, to find closely related vertices in a graph.
 
 ===== Karger Algorithm
 
@@ -665,11 +665,11 @@ The solution allows parallel edges for this graph. This goes as follows:
 But this is just a random algo. There is no guarantee that the resulting cut
 is a min-cut.
 
-===== Analysis of this algorithem
+===== Analysis of this algorithm
 
 * If a edge that should remain as part of min-cut, ends up getting randomly
   chosen, then the algo will fail.
-* But if run a few times, this algorithem will succeed with a high degree of
+* But if run a few times, this algorithm will succeed with a high degree of
   probability.
 
 ==== Graph Traversal
@@ -743,7 +743,7 @@ public void bfs(Node *rootNode) {
    graph.
 ** This could be done DFS way also (my own observation!)
 * Find distance of each vertex from source vertex s.
-** This is easily achived by storing the distance in each vertex - as part of processing
+** This is easily achieved by storing the distance in each vertex - as part of processing
    of node.
 * Find the path to each vertex from source vertex s.
 ** If we build the parent of each node info in our BFS, we can use recursive approach
@@ -763,13 +763,13 @@ find_parent(parents_arr, parent_desired, node)
 ----
 +
 * Find if a graphs is bipartite (can you assign vertices either of 2 colors, such
-  that no two adjancent vertex is of same color)
+  that no two adjacent vertex is of same color)
 ** Keep running BFS and see if you can successfully finish BFS.
 
 ===== Depth First Traversal
 
 * It just goes all in into one path
-* We can technically modify BFS slightly by replaceing Queue with stack, or
+* We can technically modify BFS slightly by replacing Queue with stack, or
   leverage recursion to naturally achieve our stacking.
 
 .Skienna code Vs Standford-algo-course-code
@@ -830,13 +830,13 @@ public void dfs(Node *rootNode) {
 ** Topological sort is the ordering of what should be completed before
    another.
 ** Topological order is possible only if there are no cycles. Further
-   this implies that acyclic graphs should have atleast one sink vertex.
+   this implies that acyclic graphs should have at least one sink vertex.
 *** *A sink vertex* is a vertex that has no outgoing edges. If there
     are no sink vertices in a graph, then it definitely cyclic.
 ** You can start DFS at any vertex. You will end up walking all nodes
-   from this. But some vertices may have higher precendence(before)
+   from this. But some vertices may have higher precedence(before)
    than the chosen vertex.
-** THere are 2 solutions.
+** There are 2 solutions.
 *** First
 **** Start with a sink vertex(you need to find this some how). Give
      this the value N (no of vertices in graph). This has to be done
@@ -888,22 +888,21 @@ Order of running:
 * Assuming the edges are all maintained in a heap, we have O(|E|log(|V|))
 ** Use a min-heap to pick the next edge.
 ** Pick any first node. Now sort the other edges that reach from this vector
-   and build the heap. Nodes that arent' directly reachable are value inf.
+   and build the heap. Nodes that aren't directly reachable are value inf.
 ** Pick the cheapest edge. The thing is once you pick, the vertices values
-   change as they are now even more reacheable.
+   change as they are now even more reachable.
 ** Each heap operation is log(vertex) sized. There will be utmost Edge
    number of operations. Because at each iteration, we adjust those
    vertices, there are reachable from the newly added vertex
-** so, its O(|E|log(|V|)). THere is a heapify up front, but thats O(|V|).
+** so, its O(|E|log(|V|)). There is a heapify up front, but that's O(|V|).
    So we can ignore that.
 
 
 === Kruskal's Algorithm
 
-Find the minimu spanning tree
+Find the minimum spanning tree
 
-* pick the cheapest edge as long as its
-  not creating cycles, i.e it shoudln't connect
+* pick the cheapest edge as long as its not creating cycles, i.e it shouldn't connect
   2 edges that are already connected
 
 ----
@@ -921,7 +920,7 @@ Order of running:
   can utmost m=n-power-2 number of edges, so, O(mlogm) = O(mlogn)
 * Now, there are O(m) iterations, and each iteration takes O(1) to find if edge i
   is going to create a cycle or not.
-* THere will be utmost log-n leader updates and each update is O(n). so there will
+* There will be utmost log-n leader updates and each update is O(n). So there will
   be upto O(nlogn)  updates)
 
 So, total = O(mlogn) + O(m) + O(nlogn) = O(mlogn), which is same as Prim
@@ -956,7 +955,7 @@ Rank: Maximum length of the root->parent path. When fusing, choose the tree
       with the higher rank as the new parent.
 
 Rank lemma: (Controls the population of a given rank)
-For an arbitraty size, the utmost n/(2-power-r) objects with rank r.
+For an arbitrary size, the utmost n/(2-power-r) objects with rank r.
 
 Path Compression
 ~~~~~~~~~~~~~~~~~
@@ -970,7 +969,7 @@ of m operations(union and find) will cost O(mlog*n) time.
 Tarjan's Bound: *Same as above*, will cost O(m-alpha(n)) time.
 alpha(n) is inverse Ackermann function
 
-Weight-Independant Set in Path Graph
+Weight-Independent Set in Path Graph
 --------------------------------------
 
 * path graph is a liner graph
@@ -984,9 +983,9 @@ Weight-Independant Set in Path Graph
 Dynamic Programming
 --------------------
 
-* Identiy a small number of sub-problems
+* Identify a small number of sub-problems
 * Correctly solve the bigger problem given the solutions of the sub-problem
-* Ensure, the final solution is availabe by solving the sub-problems
+* Ensure, the final solution is available by solving the sub-problems
 
 Knapsack Problem
 ----------------
@@ -1055,15 +1054,15 @@ Goal: Compute a valid search tree that minimizes the weighted (average) search t
 
 Notes:
 * We can't work like huffman as we need to preserve order.
-* We can't greedily pick the top occuring as root - as that may be a sub-optimal choice.
+* We can't greedily pick the top occurring as root - as that may be a sub-optimal choice.
   Consider 1(0.01), 2(0.34), 3(0.33), 4(0.32). Here 3 should be root, although 2 is
-  indeed the highest occuring frequency.
+  indeed the highest occurring frequency.
 
 Solution:
 
 * The trick here is to pick the root. Assume if root is correct, then Left and right sides have to be
-  optimal binary trees themselves. Thus we need to build optimal binary trees for every continguous
-  subset in the given input. And we evaulate the cost of picking every element as root.
+  optimal binary trees themselves. Thus we need to build optimal binary trees for every contiguous
+  subset in the given input. And we evaluate the cost of picking every element as root.
 
 Recurrence: For every 1 ≤ i ≤ j ≤ n:
                   Cij =       min     { Σ (k over i to j)  pk + C(i,r−1) + C(r+1,j) }
@@ -1102,13 +1101,13 @@ Building the optimal substructures
 * We build up on the number of edges in our solution.
 * At a given iteration, we update the shortest source of all edges
   based on 1+in-degree of that vertex.
-** Either the old soln itself is better.
-** Or one of the indegree is better.
+** Either the old solution itself is better.
+** Or one of the in degree is better.
 
 Running time:
 * n iterations (1 for each edge addition from none to max(n-1))
 * In each iteration, we have upto n * (in-degree) lookups. This
-  n * (in-degree-of-each-ertex) is essentially the number of
+  n * (in-degree-of-each-vertex) is essentially the number of
   edges in that graph. Thus each iteration we do work totalling
   number of edges.
 So final running time is O(nm)
@@ -1130,10 +1129,67 @@ Detecting cycle:
   to any vertex at all, then you can stop early.
 
 Space optimization:
-* By defin, we need O(n-square) space.
-* But note that we can discard a prev iteration, ater we update all
+* By defn, we need O(n-square) space.
+* But note that we can discard a prev iteration, after we update all
   vertices. So we need only O(n) space.
 * Also you can store predecessor points to reconstruct the actual path.
 * To find a -ve cycle, use DFS to find the predecessor path has a cycle.
   This cycle will be a -ve cost cycle.
+
+Internet routing is more-or-less bellman-ford in action, as each router
+updates its route-info from its previous hop. (Distance vector protocol -
+like RIP that just worry about the distance cost). But this has flaw like
+the counting to infinity, where we update a route, in which we participate
+ourself, but has failed. BGP - path-vector protocol builds up using full
+paths (?) is resilient to this.
+
+
+All Pair Shortest Path
+----------------------
+
+* Run Single-Source-Shortest-Path n times.
+** If Dijkstra, then for sparse graph {O(m) =~ O(n)}, for dense graphs {O(m) =~ O(n-square)}
+   APSP running time is O(n-square.log-n) and O(n-cube.log-n) respectively.
+** If Bellmanford, then, APSP running time is O(n-cube) and O(n-power-4) respectively!
+* Note that we should also report if there exists atleast 1 -ve cycle in the whole graph
+
+Floyd-Warshall Algorithm:
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Runs in O(n-cube) .. thus better than Dijkstra is 2 cases, Competitive in 1 case.
+
+Subproblem structure:
+
+* Name vertices arbitrarily. Each iteration, you start by adding one vertex in consideration.
+  k = 1..n is the outer iteration.
+* Each iteration, goes over all n-C-2 pairs updating their shortest path.
+* However, at each iteration, you can only use vertices from 1 to k (the outer interation).
+Now, the sub-structure has 2 cases
+* the new k is not part of the Shortest path between the 2 nodes under consideration
+* the new k is part of the shortest path.
+To evaluate both, we just need to know u-to-k,k-to-w, both sub-problems definitely already
+known from previous iterations.
+
+Algo:
+
+Let A = 3-D array (indexed by i, j, k)
+Base cases: For all i, j ∈ V : 
+            +-- 0   if i = j
+A[i,j,0] =  |   cij if (i,j) ∈ E
+            +-- +∞  otherwise
+For k = 1 to n
+  For i = 1 to n
+    For j = 1 to n
+      A[i, j, k] = min ( A[i, j, k-1]                   # k not part
+                         A[i, k, k-1] + A[k, j, k-1] )  # k part.
+
+If graph has -ve cycles, then our algo will report some
+A[i,i] path (i.e the diagnal of final result) is -ve, instead of 0.
+
+To reconstruct, have another B[i,j] which stores the last updated k of case-2.
+We can then use this to reconstruct a shortest path.
+
+Johnson's Algorithm
+~~~~~~~~~~~~~~~~~~~
+
 
