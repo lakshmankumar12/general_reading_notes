@@ -1038,3 +1038,102 @@ For i = 1 to m
                     +-- (3) A[i,j-1] + αgap
 
 
+Optimal Binary Tree
+-------------------
+
+Problem in English:
+We have to construct a binary tree, but we are also given a bunch of weights
+against every item.  We need to construct most optimal tree, so that search
+costs are minimal.
+
+Formal Statement:
+
+Input: Frequencies p1, p2, ..., pn for items 1, 2, ..., n.
+       [Assume items in sorted order, 1 < 2 < ... < n]
+Goal: Compute a valid search tree that minimizes the weighted (average) search time.
+       C(T) = Σ (over all items i)  pi * [search time for i in T]   #The search time is the depth of i in T.
+
+Notes:
+* We can't work like huffman as we need to preserve order.
+* We can't greedily pick the top occuring as root - as that may be a sub-optimal choice.
+  Consider 1(0.01), 2(0.34), 3(0.33), 4(0.32). Here 3 should be root, although 2 is
+  indeed the highest occuring frequency.
+
+Solution:
+
+* The trick here is to pick the root. Assume if root is correct, then Left and right sides have to be
+  optimal binary trees themselves. Thus we need to build optimal binary trees for every continguous
+  subset in the given input. And we evaulate the cost of picking every element as root.
+
+Recurrence: For every 1 ≤ i ≤ j ≤ n:
+                  Cij =       min     { Σ (k over i to j)  pk + C(i,r−1) + C(r+1,j) }
+                       (r over i to j)
+            { Recall C(T) = Σk pk + C(T1) + C(T2) }
+
+Algorithm:
+* Solve smallest subproblems (with fewest number (j − i + 1) of items) first.
+
+Let A = 2-D array. {A[i,j] represents opt BST value of items {i...j}
+For s = 0 to n − 1 [s represents j − i]
+  For i = 1 to n   [so i + s plays role of j]
+     A[i, i + s] =     min          { Σ (k over i to i+s)  pk + A(i,r−1) + C(r+1,s) }
+                   (r over i to i+s)
+Return A[1,n]
+                       Interpret as 0 if 1st index > 2nd index. Available for O(1)-time lookup
+
+Running time
+* O(n-square) number of sub-problems
+* O(j-i) time to compute A[i,j]
+* O(n-cubed) overall running time.
+
+Single Source Shortest Path - Bellman Ford Algorithm
+-----------------------------------------------------
+
+* Dijkstra's algo computes Single-Source-Shortest-Path in O(m log-n),
+  but it will only compute it for non-negative edge weights
+* We will not define the shortest path when there are negative cycles,
+  as we can loop around the cycle any number of times.
+* Note that for any shortest path w/o -ve edges, there will be utmost
+  (n-1) edges for any 2 vertices in that graph.
+
+Building the optimal substructures
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* We build up on the number of edges in our solution.
+* At a given iteration, we update the shortest source of all edges
+  based on 1+in-degree of that vertex.
+** Either the old soln itself is better.
+** Or one of the indegree is better.
+
+Running time:
+* n iterations (1 for each edge addition from none to max(n-1))
+* In each iteration, we have upto n * (in-degree) lookups. This
+  n * (in-degree-of-each-ertex) is essentially the number of
+  edges in that graph. Thus each iteration we do work totalling
+  number of edges.
+So final running time is O(nm)
+
+Algorithm:
+
+Let A = 2-D array (indexed by i and v)
+Base case: A[0,s] = 0; A[0,v] = +∞ for all v != s.
+For i = 1, 2, ..., n-1
+  For each v ∈ V
+    A[i, v] =   min  +-- A[i-1,v]
+                     |    min    A[i-1,w] + C(w,v)
+                     +-- (w,v) ∈ V
+
+Detecting cycle:
+* If you run the algo one more time, and if the costs change, then
+  you have a -ve edge. Otherwise no.
+* By virtue of above, actually if in a iteration, there is no change
+  to any vertex at all, then you can stop early.
+
+Space optimization:
+* By defin, we need O(n-square) space.
+* But note that we can discard a prev iteration, ater we update all
+  vertices. So we need only O(n) space.
+* Also you can store predecessor points to reconstruct the actual path.
+* To find a -ve cycle, use DFS to find the predecessor path has a cycle.
+  This cycle will be a -ve cost cycle.
+

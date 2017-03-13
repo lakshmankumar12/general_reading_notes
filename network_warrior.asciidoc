@@ -29,7 +29,21 @@ Notes from Routing TCP-IP - Vol I Cisco press
 Static route
 ------------
 
-* Key componets are ip/mask , next-hop-ip, [ administrative-distance ]
-* next hop ip can be an interface for directly reachable sub-nets
-* Administrative dist is 1 for routes and 0 for direct subnets. Optionally i can be configured to a higher number (typically 50)  
+* Simple static routes
+** Key componets are ip/mask , next-hop-ip, [ administrative-distance ]
+** next hop ip can be an interface for directly reachable sub-nets
+* Summary routes
+** Collapse masks together
+* Alternate route
+** Routes needn't be bi-directionally symmetric.
+* Floating static routes
+** *Administrative distance* is 1 for routes and 0 for direct subnets. Optionally it can be
+   configured to a higher number (typically 50). These are floating routes, that serve as
+   backup routes.
+** Dynamic routes administrative distances are always more than 1, so that static routes have precedence.
+   But its not clear of precedence with these floating routes.
+** This is pure-backup set, not load-sharing.
+* Load sharing
+** To acheive load-sharing, each route has another parameter called - *cost*
+** Again lower cost -> preferred more.
 
