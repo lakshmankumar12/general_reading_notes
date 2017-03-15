@@ -1192,4 +1192,21 @@ We can then use this to reconstruct a shortest path.
 Johnson's Algorithm
 ~~~~~~~~~~~~~~~~~~~
 
+* Runs one iteration of Bellman-Ford and n iterations of Dijkstra.
+* The idea is to run the Bellman-Ford and covert all edge weights to +ve.
+* Note that we can't just like that add a positive weight, as that will
+  displace paths with unequal number of edges in them.
 
+Idea to reweight edges:
+* Reweighting using vertex weights {Pv} adds the same amount (namely, ps - pt) 
+  to every s-t path
+* Reweighting always leaves the shortest path unchanged
+* Image a new vertex and a path from here to every other vertex of value 0.
+  These edges are invisible to the original Graph.
+* Run Bellman-Ford on this new graph. The shortest path from S to every node
+  is now the weight of that n
+
+
+Find out weights to every vertex
+Re-adjust cost of every edge from:
+ newL = L + Ps - Pt
