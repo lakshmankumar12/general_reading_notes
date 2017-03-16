@@ -1210,3 +1210,62 @@ Idea to reweight edges:
 Find out weights to every vertex
 Re-adjust cost of every edge from:
  newL = L + Ps - Pt
+
+Question in Quiz: (To see discussion forum)
+
+Polynomial Time Solvable Problem
+--------------------------------
+
+Definition: A problem is polynomial-time solvable if there is an
+algorithm that correctly solves it in O(n-power-k) time, for some constant
+k.
+Where n = input length]
+Yes, even k = 10,000 is sufficient for this definition
+Comment: Will focus on deterministic algorithms, but to first order doesn’t matter.
+
+Class-P is the set of polynomial time solvable problems.
+
+Examples of NP:
+* Detect shortest path in graphs, with negative cycles, that don't form cycles.
+* Knapsack, where n is proportional to O(log-W) [Weights are way too high]
+* Travelling Salesman problem
+
+Reduction
+~~~~~~~~~~
+
+[A little informal] Problem Π1 reduces to problem Π2 if: given a
+polynomial-time subroutine for Π2, can use it to solve Π1 in polynomial time.
+
+Completeness
+~~~~~~~~~~~~
+
+Let C be a set of problems. The problem PI is C-Complete, if 
+* PI ∈ C, and
+* everything in C, reduces to PI
+(That is: PI is the hardest problem of C)
+
+Note:
+TSP is not as hard as halting problem. But TSP is as hard as any brute-force
+only solvable problems.
+
+Class NP
+~~~~~~~~
+(Non Deterministic Polynomial)
+
+A problem is in NP if:
+(1) Solutions always have length polynomial in the input size
+(2) Purported solutions can be verified in polynomial time
+
+Algorithmic Approaches
+~~~~~~~~~~~~~~~~~~~~~~
+
+* Focus on special cases
+  * Knapsack where W is polynomial (and not exponential) proportional to N
+  * 2SAT (P) instead of 3SAT (NP)
+  * Vertex cover when OPT is small.
+* Heuristics
+* Solve in exp time, but faster then brute force
+
+Vertex Cover Problem
+~~~~~~~~~~~~~~~~~~~~
+
