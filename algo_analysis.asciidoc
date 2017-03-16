@@ -1,6 +1,8 @@
 Algorithm Analysis
 ===================
 
+:toc:
+
 == Asymptotic analysis
 
 =====
@@ -34,12 +36,13 @@ a is the bad force, which tracks how the sub-problem proliferates. More a its ba
 b^d^ is the good force. It tracks by how much work gets reduced(b) at a given level.
 This raised to d, more we gain, as each level is working in as much smaller set.
 
+== Data Structures
 
-== Strings
+=== Strings
 
-=== Substring
+==== Substring Algorithms
 
-==== Boyer-Moore
+===== Boyer-Moore
 
 * Explained in Goodrich/Tamassia/Goldwasser
 * Idea is to build a hash for each char, the last index it appears
@@ -52,7 +55,7 @@ This raised to d, more we gain, as each level is working in as much smaller set.
   pattern to beg of pattern - so that the last-index adjusting
   works.
 
-==== KMP (Knuth Morris Pratt) Pattern Searching
+===== KMP (Knuth Morris Pratt) Pattern Searching
 
 * Explained in http://www.geeksforgeeks.org/searching-for-patterns-set-2-kmp-algorithm/[geeks for geeks]
 +
@@ -935,18 +938,39 @@ So, total = O(mlogn) + O(m) + O(nlogn) = O(mlogn), which is same as Prim
 == Reservoir Sampling
 
 
+== Greedy Algorithms
+
+Definition: Iteratively make "myopic" decisions, hope everything works out at the end.
+
+* Easy to propose
+* Easy run-time analysis
+* Hard to establish Correctness
+* Danger: Most times, can be wrong.
+
+To Establish proof:
+
+* Use Induction
+* Exchange Argument.
+* Whatever works
+
+Optimal-caching: Didn't really follow why this came up.
+* Furthest in future
+* Is clairvoyant.
+* Useful as a guide to analyze other algo?
+
+=== Scheduling Problem
+
+Problem: You
 
 
-Union-Find Data Structure
---------------------------
+== Union-Find Data Structure
 
 * O(1) to tell if a given node is in a group
 * O(nlogn) to work for n unions
 ** Note that there will utmost log-n leader updates and each update is O(n)
    update
 
-Lazy unions
-~~~~~~~~~~~
+=== Lazy unions
 
 * Find: O(logn)  [ Only if we unionize by the rank ]
 * Union: O(1) + 2*Find
@@ -957,8 +981,7 @@ Rank: Maximum length of the root->parent path. When fusing, choose the tree
 Rank lemma: (Controls the population of a given rank)
 For an arbitrary size, the utmost n/(2-power-r) objects with rank r.
 
-Path Compression
-~~~~~~~~~~~~~~~~~
+=== Path Compression
 
 * Every find re-writes its path, so that over time, a previous find
   will give us O(1) in future
@@ -969,8 +992,7 @@ of m operations(union and find) will cost O(mlog*n) time.
 Tarjan's Bound: *Same as above*, will cost O(m-alpha(n)) time.
 alpha(n) is inverse Ackermann function
 
-Weight-Independent Set in Path Graph
---------------------------------------
+== Weight-Independent Set in Path Graph
 
 * path graph is a liner graph
 * Given a graph with weights associated to vertices, find the
@@ -980,15 +1002,13 @@ Weight-Independent Set in Path Graph
 * O(n) time. A[0] = 0 , A[1] = 1
              A[i] = max{ A[i-2] + Vi , A[i-1] }
 
-Dynamic Programming
---------------------
+== Dynamic Programming
 
 * Identify a small number of sub-problems
 * Correctly solve the bigger problem given the solutions of the sub-problem
 * Ensure, the final solution is available by solving the sub-problems
 
-Knapsack Problem
-----------------
+=== Knapsack Problem
 
 Problem:
 
@@ -1006,8 +1026,7 @@ For i = 1...n
     A[i,x] = max{A[i-1,x], A[i-1,x-wi] + vi}  # first one drop this item, second one picks this item
 Return A[n,W]
 
-Sequence Alignment Problem
----------------------------
+=== Sequence Alignment Problem
 
 Problem:
 Strings X = x1 ... xm, Y = y1 ... yn over some alphabet Σ (like {A,C,G,T})
@@ -1037,8 +1056,7 @@ For i = 1 to m
                     +-- (3) A[i,j-1] + αgap
 
 
-Optimal Binary Tree
--------------------
+=== Optimal Binary Tree
 
 Problem in English:
 We have to construct a binary tree, but we are also given a bunch of weights
@@ -1085,8 +1103,7 @@ Running time
 * O(j-i) time to compute A[i,j]
 * O(n-cubed) overall running time.
 
-Single Source Shortest Path - Bellman Ford Algorithm
------------------------------------------------------
+=== Single Source Shortest Path - Bellman Ford Algorithm
 
 * Dijkstra's algo computes Single-Source-Shortest-Path in O(m log-n),
   but it will only compute it for non-negative edge weights
@@ -1095,8 +1112,7 @@ Single Source Shortest Path - Bellman Ford Algorithm
 * Note that for any shortest path w/o -ve edges, there will be utmost
   (n-1) edges for any 2 vertices in that graph.
 
-Building the optimal substructures
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== Building the optimal substructures
 
 * We build up on the number of edges in our solution.
 * At a given iteration, we update the shortest source of all edges
@@ -1144,8 +1160,7 @@ ourself, but has failed. BGP - path-vector protocol builds up using full
 paths (?) is resilient to this.
 
 
-All Pair Shortest Path
-----------------------
+=== All Pair Shortest Path
 
 * Run Single-Source-Shortest-Path n times.
 ** If Dijkstra, then for sparse graph {O(m) =~ O(n)}, for dense graphs {O(m) =~ O(n-square)}
@@ -1153,8 +1168,7 @@ All Pair Shortest Path
 ** If Bellmanford, then, APSP running time is O(n-cube) and O(n-power-4) respectively!
 * Note that we should also report if there exists atleast 1 -ve cycle in the whole graph
 
-Floyd-Warshall Algorithm:
-~~~~~~~~~~~~~~~~~~~~~~~~~
+==== Floyd-Warshall Algorithm:
 
 * Runs in O(n-cube) .. thus better than Dijkstra is 2 cases, Competitive in 1 case.
 
@@ -1173,7 +1187,7 @@ known from previous iterations.
 Algo:
 
 Let A = 3-D array (indexed by i, j, k)
-Base cases: For all i, j ∈ V : 
+Base cases: For all i, j ∈ V :
             +-- 0   if i = j
 A[i,j,0] =  |   cij if (i,j) ∈ E
             +-- +∞  otherwise
@@ -1189,8 +1203,7 @@ A[i,i] path (i.e the diagnal of final result) is -ve, instead of 0.
 To reconstruct, have another B[i,j] which stores the last updated k of case-2.
 We can then use this to reconstruct a shortest path.
 
-Johnson's Algorithm
-~~~~~~~~~~~~~~~~~~~
+==== Johnson's Algorithm
 
 * Runs one iteration of Bellman-Ford and n iterations of Dijkstra.
 * The idea is to run the Bellman-Ford and covert all edge weights to +ve.
@@ -1198,7 +1211,7 @@ Johnson's Algorithm
   displace paths with unequal number of edges in them.
 
 Idea to reweight edges:
-* Reweighting using vertex weights {Pv} adds the same amount (namely, ps - pt) 
+* Reweighting using vertex weights {Pv} adds the same amount (namely, ps - pt)
   to every s-t path
 * Reweighting always leaves the shortest path unchanged
 * Image a new vertex and a path from here to every other vertex of value 0.
@@ -1213,8 +1226,7 @@ Re-adjust cost of every edge from:
 
 Question in Quiz: (To see discussion forum)
 
-Polynomial Time Solvable Problem
---------------------------------
+== Polynomial Time Solvable Problem
 
 Definition: A problem is polynomial-time solvable if there is an
 algorithm that correctly solves it in O(n-power-k) time, for some constant
@@ -1230,16 +1242,14 @@ Examples of NP:
 * Knapsack, where n is proportional to O(log-W) [Weights are way too high]
 * Travelling Salesman problem
 
-Reduction
-~~~~~~~~~~
+=== Reduction
 
 [A little informal] Problem Π1 reduces to problem Π2 if: given a
 polynomial-time subroutine for Π2, can use it to solve Π1 in polynomial time.
 
-Completeness
-~~~~~~~~~~~~
+=== Completeness
 
-Let C be a set of problems. The problem PI is C-Complete, if 
+Let C be a set of problems. The problem PI is C-Complete, if
 * PI ∈ C, and
 * everything in C, reduces to PI
 (That is: PI is the hardest problem of C)
@@ -1248,16 +1258,14 @@ Note:
 TSP is not as hard as halting problem. But TSP is as hard as any brute-force
 only solvable problems.
 
-Class NP
-~~~~~~~~
+=== Class NP
 (Non Deterministic Polynomial)
 
 A problem is in NP if:
 (1) Solutions always have length polynomial in the input size
 (2) Purported solutions can be verified in polynomial time
 
-Algorithmic Approaches
-~~~~~~~~~~~~~~~~~~~~~~
+== Algorithmic Approaches
 
 * Focus on special cases
   * Knapsack where W is polynomial (and not exponential) proportional to N
@@ -1266,6 +1274,5 @@ Algorithmic Approaches
 * Heuristics
 * Solve in exp time, but faster then brute force
 
-Vertex Cover Problem
-~~~~~~~~~~~~~~~~~~~~
+=== Vertex Cover Problem
 
