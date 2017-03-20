@@ -43,7 +43,60 @@ Static route
 ** Dynamic routes administrative distances are always more than 1, so that static routes have precedence.
    But its not clear of precedence with these floating routes.
 ** This is pure-backup set, not load-sharing.
+** Administrative-distance is telling how the route is learnt (the source of the route). Here are
+   some common sources and their administrative-distances.
++
+----
+SOURCE OF THE ROUTE                               DEFAULT DISTANCE
+
+Connected Interface or static route to an Interface   0
+Static route to an IP Address                         1
+EIGRP Summary                                         5
+BGP External                                          20
+EIGRP Internal                                        90
+IGRP                                                  100
+OSPF                                                  110
+IS-IS                                                 115
+RIP                                                   120
+EIGRP External                                        170
+BGP Internal                                          200
+Unknown Source                                        255
+----
++
 * Load sharing
-** To acheive load-sharing, each route has another parameter called - *cost*
+** To acheive load-sharing, each route has a - *cost*. Cost is a generic term to whatever
+   metric the routing protocol uses.
 ** Again lower cost -> preferred more.
+** Routing protocols can be either equal cost routing protocols - always choosing the
+   best cost route (or) unequal cost routing protocols (can choose routes with every
+   cost value proportionally).
+** Load sharing is either per-destination or per-pkt. (former is called as fast-switching
+   and later is process-switching)
+
+* Recursie lookup
+** A next-hop router need not be directly connected. In that case, the router does a
+   lookup for the next-hop once again to resolve recursively, until the directly connected
+   route is available.
+** Naturally, this kills forwarding times. But this gives to normalization of routes, so
+   that minimal changes are needed on topology changes.
+
+* TroubleShooting
+** Ensure both forward and return paths are good when debugging routing.
+
+Proxy Arp: A router answers to a ARP query of another host. It then collects the traffic and
+           forwards it to the host.
+
+Dynamic Routing
+---------------
+
+Every dynamic routing protocol should have the following characteristics:
+* A procedure for passing reachability information about networks to other routers.
+* A procedure for receiving reachability information from other routers
+* A procedure for determining optimal routes based on the reachability information it
+  has and for recording this information in a route table
+* A procedure for reacting to, compensating for, and advertising topology changes
+  in an internetwork
+
+Issues common to all routing protocols:
+path determination, metrics, convergence, and load balancing.
 
