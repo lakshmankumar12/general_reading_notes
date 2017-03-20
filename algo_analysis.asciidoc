@@ -886,6 +886,16 @@ Find the minimum spanning tree.
   and pick the least weighted node.
 * Keep repeating till the whole graph is covered.
 
+==== Pseudo code
+
+Initialize X = {s} [s ∈ V chosen arbitrarily]
+- T = ∅ ;          [invariant: X = vertices spanned by tree-so-far T]
+- While X ≠ V
+  - Let e = (u,v) be the cheapest edge of G with u ∈ X, v ∉ X.
+  - Add e to T
+  - Add v to X.
+
+
 Order of running:
 
 * Assuming the edges are all maintained in a heap, we have O(|E|log(|V|))
@@ -900,6 +910,8 @@ Order of running:
 ** so, its O(|E|log(|V|)). There is a heapify up front, but that's O(|V|).
    So we can ignore that.
 
+Some useful lemmas for proof
+---------------------------
 
 === Kruskal's Algorithm
 
@@ -937,6 +949,13 @@ So, total = O(mlogn) + O(m) + O(nlogn) = O(mlogn), which is same as Prim
 
 == Reservoir Sampling
 
+Design Paradigm
+--------------
+
+* Divide & Conquer
+* Randomized Algorithms
+* Greedy Algorithms
+* Dynamic Programming
 
 == Greedy Algorithms
 
@@ -957,10 +976,21 @@ Optimal-caching: Didn't really follow why this came up.
 * Furthest in future
 * Is clairvoyant.
 * Useful as a guide to analyze other algo?
+* Serves as a benchmark for caching algo.
 
 === Scheduling Problem
 
-Problem: You
+Problem:
+
+* Each job has length(li) and weight(wi).
+* Completion time (Ci) is the wait-time and length. Thus first job has C1 = l1, while C2 = (l1+l2) etc..
+* Minimize Sum Σ Ciwi across all jobs
+
+greedy soln:
+
+* Sort each item by wi/li.
+** More the weight it comes first, lesser the time time, it comes first.
+* Schedule in that order.
 
 
 == Union-Find Data Structure
