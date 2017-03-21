@@ -1306,3 +1306,101 @@ A problem is in NP if:
 
 === Vertex Cover Problem
 
+Input: An undirected graph G = (V ; E).
+
+Goal: Compute a minimum-cardinality vertex cover { a subset
+S ⊆ V that contains at least one endpoint of each edge of G}
+
+Comments in lecture: This problem was probably better named as Edge cover,
+as actually, its all the edges the we are trying to get covered!
+
+To get the picture, note that the vertex cover of a star-graph is just the
+central vertex and the vertex cover of the clique (every vertex connected to
+every other vertex) graph has a size n-1.
+
+While vertex-cover is generally NP complete, the following special cases
+are polynomial
+* Tree (looks like dynamic programming)
+* Bipartite graphs (classify vertices in 2 sets and no edge connects vertices
+                    from same set.)
+* When optimal soln itself is small (log(n) or less).
+
+Say, there exists a soln of size k. To pick k vertices out of n vertices, it
+takes n-C-k (and we try from 1...k, too), so this brute force solution itself
+is O(n-power-k)
+
+==== Substructure Lemma
+
+Consider graph G, edge (u, v) ∈ G, integer k ≥ 1.
+
+Let Gu = G with u and its incident edges deleted (similarly, Gv).
+Then G has a vertex cover of size k ⇔ Gu or Gv (or both) has a vertex cover of size (k − 1)
+
+In English: If you take one vertex out and all its incident edges, then the remaining
+graph, will have a vertex cover of size k-1. Note that either side may hold good for
+the arbitrarily chosen edge.
+
+==== Algorithm to solve vertext cover
+
+Given undirected graph G = (V , E), integer k
+Ignore base cases
+* Pick an arbitrary edge (u, v) ∈  E.
+* Recursively search for a vertex cover S of size (k − 1) in Gu
+    (G with u + its incident edges deleted).
+  If found, return S ∪ u
+* Recursively search for a vertex cover S of size (k − 1) in Gv.
+  If found, return S ∪ v
+* FAIL. [G has no vertex cover with size k]
+
+
+==== Run time Analysis
+
+* We have 2-power-k recursions. (Each iteration we reduce k by 1)
+* We have O(m) work per iteration. (m = No of edges)
+
+Running time is O(2-power-k*m). Since k is less =~ O(log-n), we
+can say this is polynomial time.
+Definitely way better than O(n-power-k)
+
+=== Travelling Salesman Problem
+
+Input: A complete undirected graph with nonnegative edge costs.
+Output: A minimum-cost tour (i.e., a cycle that visits every vertex exactly once)
+        (Self-note: You dont have to return to source vertex)
+
+Brute force takes n! time
+Dynamic programming can take O(n-power-2 * 2-power-n) time.
+
+Remember Bellman-ford, we increase an edge in every interation.
+
+* Direclty using it doesn't solve the original problem. We can take an
+  arbitrary vertex to start, add edges. In any iteration, we may pick
+  a path that skips a vertex. So, in the end, we have a path that
+  does not include all vertices.
+* Even if we add a constraint that we need every iteration to have n
+  vertices, we may end up picking cycles.
+* If we add a constraint that we have n vertices in each iteration and
+  there shouldn't be repititions, we are okay.
+
+Thus we need to remember the actual path we used.
+
+Algorithm:
+
+Let A = 2-D array, indexed by subsets S ⊆ { 1,2,....,n } that contain 1
+                   and destinations   j ∈ { 1,2,....,n }
+
+Base case:
+
+A[S, 1] = +-- 0 if S == 1,
+          +-- ∞ otherwise  [no way to avoid visiting vertex (twice)]
+
+While we are building a 2D array, while one dimension is the size of problem m,
+the other index is the current-sub-set of S of size m. So the size of n-C-m
+
+For m = 2, 3, ...n [m = subproblem size]
+  For each set S ⊆ { 1, 2, ... , n} of size m that contains 1  <-- This is of size  n-C-m
+    For each j ∈ S, j != 1
+       A[S, j] = min k∈S,k!=j{A[S − {j}, k] + Ckj} [same as recurrence]
+Return min(j=2,....n){ A[{1, 2, ...., n}, j] + Cj1 }
+
+min cost from 1 to j visiting everybody once cost of final hop of tour
