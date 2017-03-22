@@ -766,8 +766,11 @@ find_parent(parents_arr, parent_desired, node)
 ----
 +
 * Find if a graphs is bipartite (can you assign vertices either of 2 colors, such
-  that no two adjacent vertex is of same color)
+  that no two adjacent vertex is of same color) [ Also note: bipartite graphs will
+  always have a cut, that has all edges traversing the cut! ]
 ** Keep running BFS and see if you can successfully finish BFS.
+** In each iteration, color RED/BLACK alternatively. If you successfully finish
+   this coloring, u have a bipartite graph.
 
 ===== Depth First Traversal
 
