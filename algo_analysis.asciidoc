@@ -1369,14 +1369,14 @@ Definitely way better than O(n-power-k)
 
 Input: A complete undirected graph with nonnegative edge costs.
 Output: A minimum-cost tour (i.e., a cycle that visits every vertex exactly once)
-        (Self-note: You dont have to return to source vertex)
+        and returns to the start.
 
 Brute force takes n! time
 Dynamic programming can take O(n-power-2 * 2-power-n) time.
 
 Remember Bellman-ford, we increase an edge in every interation.
 
-* Direclty using it doesn't solve the original problem. We can take an
+* Directly using it doesn't solve the original problem. We can take an
   arbitrary vertex to start, add edges. In any iteration, we may pick
   a path that skips a vertex. So, in the end, we have a path that
   does not include all vertices.
@@ -1406,9 +1406,19 @@ For m = 2, 3, ...n [m = subproblem size]
        A[S, j] = min k∈S,k!=j{A[S − {j}, k] + Ckj} [same as recurrence]
 Return min(j=2,....n){ A[{1, 2, ...., n}, j] + Cj1 }
 
+To understand that better:
 
-Question: We are only considering tours starting from vertex-1. Right? How about other vertices?
-Redo the same O(n) times?
+For m = 2, 3, ...n [m = subproblem size]
+  For each set S ⊆ { 1, 2, ... , n} of size m that contains 1  <-- This is of size  n-C-m
+    For each j ∈ S, j != 1
+       Let S* = S - {j}
+       A[S, j] = min of all k∈S*{A[S*, k] + Ckj} [Kind of same as Bellman-Ford. Just that
+                                                  this is an iteration on its own]
+Finally, we should complete our tour back to 1. So, run the minium of all last-round results.
+Return min(j=2,....n){ A[{1, 2, ...., n}, j] + Cj1 }
+
+Note: The tour is the cheapeast cycle having all vertices. So, source-vertex can be anything.
+We will have to complete the cycle anyway.
 
 My worked out example to understand the iterations above.
 ----
