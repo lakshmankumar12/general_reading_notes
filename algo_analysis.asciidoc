@@ -1549,4 +1549,9 @@ Inner loop - n times (There can by utmost n prev sub-problems)
 
 Total - O(n*2-power-n*n) = O(n-power-2 * 2-power-n)
 
+=== Knapsack with greedy hueristic
 
+Note that if we try to pick items sorted on Vi/Wi, we wont be picking the best.
+So, we can either pick items like this or pick the item with the most highest Value.
+
+It turns out that the last strategy is always alteast 50% of best solution!
