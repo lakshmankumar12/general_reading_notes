@@ -101,8 +101,10 @@ IP Tables
 * iptables is the command, netfilter is the kernel module. iptables work at layer-3.
 * TABLES by function. each table has CHAINS of RULES. rules consist of MATCHES and TARGETS
 ----
-     TABLES --> (CHAINS of RULES) --> MATCHES and TARGETS
+     TABLES --> (CHAINS of (RULES --> MATCHES and TARGETS))
 ----
+  Actually, its much more convenient to see as Chains --> (Tables), as pkt processing order
+  is chain-first and then tables that have that chain.
 * It is however only partially correct that chains belongs to tables. Neither belongs to the other.
   Tables represents types of processing, chains represent hook points.
 * Eg command:
@@ -120,7 +122,36 @@ iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 80 -j DNAT --to-destination
 * 5 hook points - PREROUTING, INPUT, FORWARD, POSTROUTING, OUTPUT.
 ** built in chains are attached to these hook points. (Chains == hook points in a way)
 ** we add a sequence of rules for each hook point. Each rule may affect or monitor a packet.
+** While iptables call it target, I find it convenient to read that as Action-to-take.
 
+Typical chain flow
+-------------------
+
+----
+R-D: Routing-Decision
+
++--------+    +--------+        +---+      +--------+                   +--------+
+|Ntwk    |--->|PRE     |--------|R-D|----->|INPUT   |------------------>|Local   |
+|Intf    |    |ROUTING |        +---+      |        |                   |Process |
++--------+    +--------+          |        +--------+                   +--------+
+                                  v          ^
+                              +--------+     |
+                              |FORWARD |     |
+                              |        |     |
+                              +--------+     |
+                                  |          |
++--------+    +--------+          v        +---+   +--------+  +---+   +--------+
+|Ntwk    |<---|POST    |<------------------|R-D|<--|OUTPUT  |<-|R-D|---|Local   |
+|Intf    |    |ROUTING |                   +---+   |        |  +---+   |Process |
++--------+    +--------+                           +--------+          +--------+
+----
+
+Note the normal flows:
+~~~~~~~~~~~~~~~~~~~~~~~
+* Inbound pkts from Intf: Intf --> PREROUTING --> INPUT --> Process
+* Outbound pkts to Intf:  Process --> OUTPUT --> POSTROUTING --> Intf
+* Routed pkts:            Intf --> PREROUTING --> FORWARD --> POSTROUTING --> Intf
+* Process-to-Process:     Process --> OUTPUT --> INPUT --> Process
 
 NAT Table chains
 ----------------
@@ -325,3 +356,53 @@ Sample application use-cases
 * Masquerading
 * Port forwarding
 * Load balancing
+
+Tun/Tap Interfaces
+-------------------
+
+http://backreference.org/2010/03/26/tuntap-interface-tutorial/
+
+* Software only interfaces.
+  * Kernel treats them as regular interfaces. But when it time to send the data "in the wire", the kernel gives it to the user-space process.
+  * User-space program receives the data using a special descriptor.
+* Its either
+  * Transient. Interface is gone, once the process that created it dies (even if it didn't explicitly delete the interface)
+  * Persistent. Process creates and can die. Another process can re-attach and send/recv data from the interface.
+* open('/dev/net/tun',O_RDWR) is the way to create a fd that represents the tun/tap interface. This is called the clone device.
+    * but we are are not done yet. ioctl(fd, TUNSETIFF, &(struct ifreq*)) tell the name and mode(tun/tap) of the interface.
+    * once done, we are ready. ioctl(fd, TUNSETPERSIST/TUNSETOWNER/TUNSETGROUP) are needed if u need persistency and allow user-space prog
+      to attach to the interface.
+* Name is optional. If not given kernel assigns the next available "tunN/tapN" name.
+* It name is already present, its assumed to be a reAttach-To-Existing interface call.
+
+Type of interfaces
+------------------
+
+This is not a standard classfiction -- just for my understanding. To some extent this is shown in 'ip addr show' listing.
+
+* Ethernet  - These are typically flagged as BROADCAST.  link/ether
+* tuntap    - If they are tap, then they are also shows as link/ether and are shown as ether.
+              If they are tun, then we see link/[65534]
+* loopback  - link/loopback
+* imq       - Not really a interface. Intermediary queue for traffic shaping. You create this q.
+              And make use of it using iptables rules -i <dev> -j IMQ --todev 0
+* gre       - link/gre
+* gretap    - gre over ethernet? link/ether
+* vti       - for ipsec, link/ipip
+
+So, when do u use them?
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* This interface is used in an upside-down fashion. Typical interfaces are where the kernel gets the pkt somehow (from wire) and does routing
+  and gives to application using socket-api. This interface is useful to grab all pkts from different interfaces using routes
+
+My Question:
+1. What if the given interface is already attached by another process?
+2. What happens on a fork? I presume, this is not a big deal -  just like
+   how a tcp socket is handled on fork. Whichever process does a read()
+   first collects pkt on the socket!
+
+Bridges
+-------
+
+
