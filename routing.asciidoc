@@ -15,8 +15,41 @@ Hierarchy
 *** distance vector
 *** Bandwidth, Delay, Load and Reliability (also called the K-values)
 * Exterior Gateway Protocols
-** BGP
+** *BGP*
 *** path vector
+
+Types of Routing Protocol
+--------------------------
+
+Nice article on the difference between link-state, distance-vector and path-vector : http://www.informit.com/articles/article.aspx?p=331613&seqNum=2
+
+* Distance-Vector
++
+Each router just advertises all routed reachable through it. These are both
+direct routes and that it got from others. Upon receipt of an advertisement, a
+router updates its routing table and passes on this in its future
+advertisement.
+
+Example protocols are RIP, EIGRP
++
+* Path-Vector
++
+Here again, each router updates its summarized info. However, in addition to
+giving a route and its metric(the distance), it also gives the path to that route.
+This helps in a receiving router to detect loops before it adds a path to its table.
+
+Eg protocols are BGP
+
+Figuratively, both distance and path-vector is update-by-rumor, as each router trusts the
+advertisement of routes themselves from their peers
++
+* Link state
++
+Here each router just updates their directly connected link information to every other
+router (both directly connected and not). Thus every router gets to develop the full
+network topology for itself. Each router then builds up the shortest path using some SPF
+algo like Djikstra. Eg are OSPF, IS-IS.
+
 
 
 BGP
@@ -325,6 +358,18 @@ Matches
 * Generic matches available with the kernel-compiled stuff
 * Extenstion possible with the -m option.
 
+Popular matches
+~~~~~~~~~~~~~~~
+
+----
+-d 1.30.3.2/32
+-s 192.168.2.0/24
+-i eth3
+-p gre
+-m udp --dport 4502
+-m icmp --icmp-type 3/4
+----
+
 
 Targets
 -------
@@ -344,6 +389,31 @@ RETURN  From a rule in a user-defined chain, discontinue processing this chain, 
 +
         From a rule in a built-in chain, discontinue processing the packet and apply the chain’s
         policy to it.
+
+Popular targets
+~~~~~~~~~~~~~~~~
+
+----
+mangle-PREROUTING   -- This is where we mark packets, so that this mark is leveraged on routing-decision.
+-j MARK --set-xmark <mark-value>
+
+filter-INPUT
+-j DROP #Discontinue processing the packet completely.
+        #Do not check it against any other rules, chains, or tables.
+        #If you want to provide some feedback to the sender, use the REJECT target extension.
+-j ACCEPT  #Let the packet through to the next stage of processing.
+           #Stop traversing the current chain, and start at the next stage
+-j QUEUE   #Send the packet to userspace (i.e. code not in the kernel).
+           #See the libipq manpage for more information.
+-j RETURN  #From a rule in a user-defined chain, discontinue processing this chain, and
+           #resume traversing the calling chain at the rule following the one that had this chain
+           #as its target.
+
+nat-OUTPUT
+-j SNAT --to-source 172.18.10.206
+-j DNAT --to-destination 172.18.10.230
+
+----
 
 Sample application use-cases
 -----------------------------
@@ -406,3 +476,12 @@ Bridges
 -------
 
 
+
+Links
+-------
+
+* Traffic-Control in Linux
+  http://linux-ip.net/articles/Traffic-Control-HOWTO/
+
+* Linux Advanced Routing & Traffic Control
+  http://lartc.org/howto/index.html

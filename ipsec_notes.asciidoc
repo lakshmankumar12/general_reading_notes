@@ -1,6 +1,17 @@
 Notes on IPSEC
 ==============
 
+IPSec Architecture
+--------------------
+
+* AH is for authentication
+   -> Sender is the one who sent it, pkt is received-as-is.
+* ESP is for encryption + optionally authentication
+* Both AH and ESP have headers that follow the IP header.
+  That is, they are the next-protocol in IP.
+* IKE is the way to negotiate a key to use dynamically.
+
+
 * AH versus ESP
 +
 "Authentication Header" (AH) and "Encapsulating Security Payload" (ESP) are the
@@ -51,6 +62,18 @@ some information is transmitted in cleartext.
 +
 
 
+Implementation of IPSEC
+-----------------------
+
+* SAD - Security association database
++
+Contains info on existing assocations (outer-source-ip, outer-dest-ip, SPI, keys to use for encryption)
++
+* SPD - Security policy database
++
+Contains the traffic patterns to match and which SPI to use.
+
+
 
 
 
@@ -59,3 +82,9 @@ Sources
 
 * http://www.unixwiz.net/techtips/iguide-ipsec.html
 * https://superuser.com/a/790598/544330
+* http://www.brocade.com/content/html/en/vrouter5600/40r1/vrouter-40r1-ipsecvpn/GUID-8BC898A5-9906-485E-BE44-7C8D38E8EB05.html
+
+Book
+-----
+
+* IPSEC - New security Standard, Intranets, VPN by Naganand Doraswamy, Dan Harkins
