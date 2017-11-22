@@ -33,6 +33,22 @@ IP
   ** 40 bytes (It has extensions)
   ** 128 bit addreses (16 octets)
 
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Version|  IHL  |Type of Service|          Total Length         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         Identification        |Flags|      Fragment Offset    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Time to Live |    Protocol   |         Header Checksum       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Source Address                          |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Destination Address                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Options                    |    Padding    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 
 UDP
 ---
@@ -92,6 +108,22 @@ SYN-options
 * Timewait state is for 2MSL -> Max Segment LifeTime is the time spent by a pkt in the network
   from client to server.
 
+PUSH and URG flags in TCP
++++++++++++++++++++++++++
+
+* PSH
+** sender intimates local TCP, to not wait for further data from application and transmit whatever is
+   in its send-buffer out. TCP then sets this flag and sends whatever it has.
+** At receiver, when a Pkt with this flag is set, the TCP immediately informs it app with that data.
+   Useful for RT-app exchanges like telnet, where each keystroke should be immediately tranferred.
+** Socket library doesn't provide a way to set this flag at send side. Kernel chooses to set this itself.
+
+* URG
+** This is out of band data. The urge pointer in tcp demarcates the URG-data from normal data. Byte 1
+  till urg-pointer is OOB data and rest are normal
+** MSG_OOB is the socket interface to set it.
+
+
 Nagle Algorithm
 ++++++++++++++++
 
@@ -101,6 +133,8 @@ Nagle Algorithm
   networks, but kind of becomes non-felt in fast connections.
 * Sometimes, this needs to switched off (like in X-window systems, where each tiny mouse-adjustment
   needs to be send for quick feedback). TCP_NODELAY options switches this off.
+
+
 
 
 SCTP
