@@ -400,6 +400,29 @@ Generally in a host/router
 (to draw fully)
 ----
 
+DHCP
+----
+
+4 main packets:
+
+* DHCP-DISCOVER
+    -- Src-IP: <??>  Dst-IP: 255.255.255.255
+* DHCP-OFFER
+    -- Src-IP: <dhcp-server> Dst-IP: <??>
+    -- contains the offered IP.
+* DHCP-REQUEST
+* DHCP-ACK
+
+In Ethereal, these are UDP-packets with port 67 - referred as BOOTP protocol
+
+Relaying DHCP
+~~~~~~~~~~~~~
+
+To-Read
+
+
+
+
 
 Socket programming call sequence
 -------------------------------
