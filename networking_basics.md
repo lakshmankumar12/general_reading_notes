@@ -3,13 +3,11 @@ Simple networking facts
 
 For Routing (BGP, iptables -- refer to routing.asciidoc)
 
-Ethernet
----------
+# Ethernet
 
 * MAC address is 6 octets
 
-List of protocols
------------------
+# List of protocols
 
 DataLink
 ARP, RARP
@@ -17,8 +15,7 @@ IPv4/ICMP, IPv6/ICMPv6,  IGMP (Group management, used for IPv4 for multicasting)
 TCP, SCTP, UDP
 
 
-IP
----
+# IP
 
 * 4 octets
 * Networking/Host part
@@ -26,13 +23,14 @@ IP
 * ICMP - Internet Control Message Protocol
 
 * IPv4 header
-  ** 20 bytes (It has options)
-  ** 32 bit address
+  * 20 bytes (It has options)
+  * 32 bit address
 
 * IPv6 header
-  ** 40 bytes (It has extensions)
-  ** 128 bit addreses (16 octets)
+  * 40 bytes (It has extensions)
+  * 128 bit addreses (16 octets)
 
+```
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -48,15 +46,14 @@ IP
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                    Options                    |    Padding    |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
 
 
-UDP
----
+# UDP
 
 * simple, unreliable, datagram protocol
 
-TCP
----
+# TCP
 
 * sophisticated, reliable byte-stream protocol
 
@@ -67,8 +64,7 @@ TCP
 * TCP provides flow-control . The receiver can tell how much its willing to get. This is the receive buffer.
   This is the amount of data it has received from peer, but not yet collect by local app.
 
-SYN-options
-+++++++++++
+##SYN-options
 
 * MSS - each end advertises its MSS to its peer.
        (My Q: But what if the intermediate MTU is lesser?)
@@ -77,7 +73,7 @@ SYN-options
     With scale option its now scalled by 14, enabling upto 1G.
 * Timestamp:
 
-----
+```
                        CLOSED---------------+                                                       ;
                          |                  |                                                       ;
                   (serv-passive-open)       |                                                       ;
@@ -99,33 +95,31 @@ SYN-options
                                                                                                     ;
                                                                                                     ;
                                                                                                     ;
-----
+```
 
-* Note that when we get FIN, we immediately close. However, if we did close (and got FIN too) we wait
+* Note that when we get FIN, we immediately close. However, if we did close [and got FIN too] we wait
   on TIME_WAIT. This is because only one end needs to wait. Thus its chosen for the first intiator
-  of the close to wait on this state. (While the other party isn't waiting, the connection per-se
-  isn't possible, as still one-party is holding the 4-tuple)
-* Timewait state is for 2MSL -> Max Segment LifeTime is the time spent by a pkt in the network
+  of the close to wait on this state. [While the other party isn't waiting, the connection per se
+  isnt possible, as still one party is holding the 4 tuple]
+* Timewait state is for 2MSL -- Max Segment LifeTime is the time spent by a pkt in the network
   from client to server.
 
-PUSH and URG flags in TCP
-+++++++++++++++++++++++++
+## PUSH and URG flags in TCP
 
 * PSH
-** sender intimates local TCP, to not wait for further data from application and transmit whatever is
-   in its send-buffer out. TCP then sets this flag and sends whatever it has.
-** At receiver, when a Pkt with this flag is set, the TCP immediately informs it app with that data.
-   Useful for RT-app exchanges like telnet, where each keystroke should be immediately tranferred.
-** Socket library doesn't provide a way to set this flag at send side. Kernel chooses to set this itself.
+    * sender intimates local TCP, to not wait for further data from application and transmit whatever is
+      in its send-buffer out. TCP then sets this flag and sends whatever it has.
+    * At receiver, when a Pkt with this flag is set, the TCP immediately informs it app with that data.
+      Useful for RT-app exchanges like telnet, where each keystroke should be immediately tranferred.
+    * Socket library doesn't provide a way to set this flag at send side. Kernel chooses to set this itself.
 
 * URG
-** This is out of band data. The urge pointer in tcp demarcates the URG-data from normal data. Byte 1
-  till urg-pointer is OOB data and rest are normal
-** MSG_OOB is the socket interface to set it.
+    * This is out of band data. The urge pointer in tcp demarcates the URG-data from normal data. Byte 1
+      till urg-pointer is OOB data and rest are normal
+    * MSG_OOB is the socket interface to set it.
 
 
-Nagle Algorithm
-++++++++++++++++
+## Nagle Algorithm
 
 * The algo is very simple. At a given point in time, only one outstanding tinygram can be sent
   w/o an ack.
@@ -133,21 +127,18 @@ Nagle Algorithm
   networks, but kind of becomes non-felt in fast connections.
 * Sometimes, this needs to switched off (like in X-window systems, where each tiny mouse-adjustment
   needs to be send for quick feedback). TCP_NODELAY options switches this off.
+*
 
-
-
-
-SCTP
-----
+# SCTP
 
 Reading from : http://www.slideshare.net/PeterREgli/overview-of-sctp-transport-protocol
 
 * reliable
 * message boundaries
 * multiple-streamed, provides a way to minimize head-of-line blocking
-** sequenced delivery
+    * sequenced delivery
 * transport level support for multihoming
-** preforms HeartBeats to check liveliness of every PATH.
+    * preforms HeartBeats to check liveliness of every PATH.
 * DOS protection
 * Fragmentation
 * flow-control/congestion-avoidance
@@ -157,9 +148,9 @@ Reading from : http://www.slideshare.net/PeterREgli/overview-of-sctp-transport-p
 * Bundling -> putting multiple chunks in the same pkt.
 * Endpoint -> hosts participating in an association
 * Streams -> one uni-directional logical channel transporting application-data
-** sctp-ctrl-chunks (like init,init-ack are stream agnostic)
-** Has multiiple streams, each with its own stream identifier
-** app has to use 2 streams in each dir if they need full-duplex communication
+    * sctp-ctrl-chunks (like init,init-ack are stream agnostic)
+    * Has multiiple streams, each with its own stream identifier
+    * app has to use 2 streams in each dir if they need full-duplex communication
 
 * Like RST for TCP, ABORT is sent for SCTP when nobody is listening on the prot.
 * no halfway-close like in tcp. Whoever initiates shutdown will follow 3 way close.
@@ -167,44 +158,50 @@ Reading from : http://www.slideshare.net/PeterREgli/overview-of-sctp-transport-p
   seq (as well responding to peer)
 * Every Data has a unique TSN (global for the assoc)
 
-header
-++++++
+## header
 
+```
 src-prt | dst-prt
 verification-tag
 checksum
 chunk1
 ..
 chunkN
+```
 
-chunk:
+### chunk
+
+```
 type| flags | len
 data
+```
 
-Data-chunk:                   Flags
+## Data-chunk:
+
+```
+                              Flags
 type=0 | UBE | CL             U - Unordered Data (Seq num is ignored and data prsented immdly)
 TSN                           B - Beginnning of Fragment
 StreamID| StreamSeqNum        E - End of Fragment
 Upper-Prot-Id
 Data
+```
 
-Some chunk types
-++++++++++++++++
+## Some chunk types
 
 DATA, INIT, INIT_ACK, COOKIE_ECHO, COOKIE_ACK, SACK, HB, HB_ACK, ABORT, SHUTDOWN, SHUTDOWN_ACK, SHUTDOWN_COMP
 
 
+### State-Diag for assoc-setup
 
-
-State-Diag for assoc-setup
-+++++++++++++++++++++++++++
-
+```
 client: CLOSED -> COOKIE_WAIT  -> COOKIE_ECHOED -> ESTABLISHED
 server: CLOSED -> ESTABLISHED
+```
 
 * On a simul open on both sides, both sides follow client-style.
 
-----
+```
     ESTABLISHED
 
 SHUTDOWN        SHUTDOWN-RECEIVED
@@ -215,23 +212,20 @@ SENT
 
 
        CLOSED
-----
+```
 
-STuff in INIT
-+++++++++++++
+## Stuff in INIT
 
 * Initial TSN
 * a_rwnd
 
-Multiple-path
-++++++++++++++
+## Multiple-path
 (Read more on this)
 
 * SCTP has multiple IPs. However, one IP-IP is designated as primary path.
   Unless this is down, SCTP doesn't switch to secondary pathss.
 
-Fragmentation
-+++++++++++++
+## Fragmentation
 
 * Reassembly MUST be supported. Sender fragments. If sender side support
   isn't available, then a big pkt should be rejected to upper layer.
@@ -241,15 +235,14 @@ Fragmentation
 
 (How is path MTU learnt?)
 
-Flow control
-++++++++++++
+## Flow control
 
 * Like TCP there is a receiver window
-** rwnd -> Actual receive window size at receiver. Default is 1500
-** a_rwnd -> Advertized rwnd. Value sent by sender. Sender stops sending data
-   when it gets a a_rwnd == 0. It cant' send more than a_rwnd.
-** cwnd -> congestion window. Amount of data in flight(sent but not acked)
-    must not exceed cwnd
+    * rwnd -> Actual receive window size at receiver. Default is 1500
+    * a_rwnd -> Advertized rwnd. Value sent by sender. Sender stops sending data
+      when it gets a a_rwnd == 0. It cant' send more than a_rwnd.
+    * cwnd -> congestion window. Amount of data in flight(sent but not acked)
+        must not exceed cwnd
 * If a receiver has sent a a_rwnd(0), and a subsequent SACK with non-zero a_rwnd,
   is lost, then sender is blocked forever (as only SACK carries a_rwnd). To
   overcome this dead-loack, the sender sends zero-window-probes after RTO is
@@ -257,8 +250,7 @@ Flow control
   cwnd is not 0.
 * Delayed-ack. Send ack for every other data, no later than 200ms
 
-Bundling policy
-+++++++++++++++
+## Bundling policy
 
 * Bundle size shuldnt exceed associtiation path MTU.
 * bundle SACKs with highest prio.
@@ -266,22 +258,18 @@ Bundling policy
 * Then bundle new DATA chunks
 
 
-General algorithms
-------------------
+# General algorithms
 
-Silly Window Syndrom
-~~~~~~~~~~~~~~~~~~~~~
+## Silly Window Syndrom
 
 * SCTP has it. RFC 1122. Avoid advertising small a_rwnd and sender stop sending
   small pkts. This will result in poor connection throughput.
 
-Congestion Avoidance
-~~~~~~~~~~~~~~~~~~~~
+## Congestion Avoidance
 
 SLOW_START  --> Congestion-Avoidance
 
-Slow start
-++++++++++
+## Slow start
 
 * In RFC 2001 (Stevens)
 * While we know the receive window size, we still dont know about the network
@@ -297,8 +285,7 @@ Slow start
   we get 2 acks, so we send 3 outstanding etc.. But if the receiver clubs ACKs
   then the increase is not really exponential
 
-Congestion Avoidance
-++++++++++++++++++++
+## Congestion Avoidance
 
 * Congestion happens when a big PIPE connects to a smaller pipe or the o/p of
   a router doesn't match sum of inputs. There are two indications of packet 
@@ -315,15 +302,14 @@ Congestion Avoidance
    set cwnd = 1 segment (This is when we really stop sending much)
 * Now on every ACK, we keep increasing cwnd (subject to no loss/timeout)
 * Now, whether we slow-start (exponentially or linearly) depends on following:
-  if cwnd <= ssthres, its slow-start (normal case)
+  if `cwnd <= ssthres`, its slow-start (normal case)
   otherwise congestion avoidance.
 * If its slow-start, we increase cwnd for every ACK. But in congestion
   avoidance, we increase only segsize*segsize/cwnd each time an ACK is recvd.
   This is linear.
+*
 
-
-Fast-restranmit
-+++++++++++++++
+## Fast-restranmit
 
 * Normally a receiver sends a ACK immdly out in case it sees a out-of-order.
 * This could have happend because of a re-order or a lost segment. If re-order
@@ -331,18 +317,20 @@ Fast-restranmit
 * So sender when it sees a duplicat-ack, doesn't send out immdly, but rather
   waits to see 2 or 3 dup-ack and then sends a retrans before the timeout.
 
-Fast-recovery
-+++++++++++++
+## Fast-recovery
 
 
 
-MP-TCP
-------
+# MP-TCP
 
 * Both parties need to support this (Confirm..)
 
-Well known Ports
------------------
+
+# ICMP
+
+* ICMP echo-req/rsp pkts have both a ID and seq-number. The ID is useful to enable NAT'ing - like port numbers for UDP.
+
+# Well known Ports
 
 FTP 21 - control (TCP)  Is there a UDP??
     20 - data
@@ -353,8 +341,7 @@ HTTP 80
 NTP 123
 HTTPS 443
 
-What all happen when you type a URL In a browser?
--------------------------------------------------
+# What all happen when you type a URL In a browser?
 
 
 In an extremely rough and simplified sketch, assuming the simplest possible
@@ -384,10 +371,9 @@ and the whole operation gets an order of magnitude more complex with HTTPS
 (certificates and ciphers and pinning, oh my!).
 
 
-Generally in a host/router
--------------------
+# Generally in a host/router
 
-----
+```
             IN-FROM-WIRE
                |
                |
@@ -398,10 +384,9 @@ Generally in a host/router
                v
             PROCESS
 (to draw fully)
-----
+```
 
-DHCP
-----
+# DHCP
 
 4 main packets:
 
@@ -415,19 +400,14 @@ DHCP
 
 In Ethereal, these are UDP-packets with port 67 - referred as BOOTP protocol
 
-Relaying DHCP
-~~~~~~~~~~~~~
+## Relaying DHCP
 
 To-Read
 
+# Socket programming call sequence
 
-
-
-
-Socket programming call sequence
--------------------------------
-
-socket
+## socket
+```
   int socket(int domain, int type, int protocol);
     domain - AF_INET, AF_INET6
     type - SOCK_STREAM, SOCK_DGRAM, SOCK_SEQPACKET, SOCK_RAW (SOCK_NONBLOCK, SOCK_CLOEXEC may also be bit-OREed)
@@ -439,60 +419,78 @@ socket
     LOCAL, STREAM/DGRAM/SEQPACKET  - Yes
     ROUTE, RAW - Yes   (Kernel routing table)
     KEY, RAW - Yes     (Cryptography)
-bind
+```
+## bind
+```
   int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+```
     * Used to bind the local addr to listend in case of servers.
     * Used for clients? Not needed the kernel picks a ephemeral port and some local ip.
       If you desire to pick one, u can use bind
-listen
+## listen
+```
   int listen(int sockfd, int backlog);
-    returns immdly. backlock is the number of pending connections.
-accept
+```
+    * returns immdly. backlock is the number of pending connections.
+## accept
+```
   int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
   int accept4(int sockfd, struct sockaddr *addr, socklen_t *addrlen, int flags);
+```
     * returns the fd of the new connection. The addr is a o/p field that stores the addr of the remote party
     * may block or not block depending on connection availble.
     * in case of tcp, only fully handshaked connections are notified in accept.
     * flags are NON_BLOCK/CLOSONEXEC
-connect
+## connect
+```
   int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+```
     * connects to a remote server mentioned.
     * For TCP/SCTP initiates the association. No response to handshacke, it returns timeout
     * For UDP, creates the default dest addr. (can be changed by another call to connect)
-shutdown
+## shutdown
+```
   int shutdown(int sockfd, int how);
+```
     * useful for half-close (either cloase reading or writing)
-close
+## close
+```
   int close(int fd);
+```
     * closes the fd, w.r.t this process.
     * Upon all process counts to this fd comign to 0,
       The kernel however will flush all to-send data and send FIN
-send
+## send
+```
   ssize_t send(int sockfd, const void *buf, size_t len, int flags);
   ssize_t sendto(int sockfd, const void *buf, size_t len, int flags, const struct sockaddr *dest_addr, socklen_t addrlen);
   ssize_t sendmsg(int sockfd, const struct msghdr *msg, int flags);
   int sendmmsg(int sockfd, struct mmsghdr *msgvec, unsigned int vlen, unsigned int flags);
+```
     * send shoudl be called only on conneced sockets where dest is unknown. In connected sockets, dst if passed is ingored or
       EISCONN returned
-receive
+## receive
+```
   ssize_t recv(int sockfd, void *buf, size_t len, int flags);
   ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *src_addr, socklen_t *addrlen);
   ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags);
   int recvmmsg(int sockfd, struct mmsghdr *msgvec, unsigned int vlen, unsigned int flags, struct timespec *timeout);
+```
     * recvmmsg extends both on multi-messages + a extra timeout.
     * See readv for how iovecs are used.
 
+```
 Server:
   socket, bind, listen, accept,   recv/send, close
 
 Client:
   socket, optional-bind, connect,   recv/send, close
+```
 
 
 * tcp client, should add the just connect-issued socket to the write list to test for HS complete (to confirm)
 * tcp server, should add the listen-fd to the READ-list to check for incoming connections and issuing accept.
 
-Some libraries that bypass kernel network processing
-----------------------------------------------------
+# Some libraries that bypass kernel network processing
 
 netmap(BSD), DPDK
