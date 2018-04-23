@@ -18,11 +18,15 @@
 * Outputs:
     * The final value.
 
-## excel's explanation
+### excel's explanation
 
 Calculates the future value of an annuity investment based on constant-amount periodic payments and a constant interest rate.
 
-## pv's excel's explanation
+## PV
+
+Same args as FV
+
+###  excel's explanation
 
 Calculates the present value of an annuity investment based on constant-amount periodic payments and a constant interest rate.
 
@@ -41,5 +45,5 @@ Calculates the present value of an annuity investment based on constant-amount p
 
 # Links
 
-* [s & p 500 investment calculator][https://dqydj.com/sp-500-dividend-reinvestment-and-periodic-investment-calculator/]
-* [Vangaurd price history][https://personal.vanguard.com/us/funds/tools/pricehistorysearch]
+* [s & p 500 investment calculator](https://dqydj.com/sp-500-dividend-reinvestment-and-periodic-investment-calculator/)
+* [Vangaurd price history](https://personal.vanguard.com/us/funds/tools/pricehistorysearch)

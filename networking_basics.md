@@ -53,7 +53,43 @@ TCP, SCTP, UDP
 
 * simple, unreliable, datagram protocol
 
+```
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          Source Port          |       Destination Port        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|            Length             |           Checksum            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   .... data ....                                              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
+
+
 # TCP
+
+```
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          Source Port          |       Destination Port        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Sequence Number                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Acknowledgment Number                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Data |           |U|A|P|R|S|F|                               |
+| Offset| Reserved  |R|C|S|S|Y|I|            Window             |
+|       |           |G|K|H|T|N|N|                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Checksum            |         Urgent Pointer        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Options                    |    Padding    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   .... data ....                                              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
+
 
 * sophisticated, reliable byte-stream protocol
 
@@ -64,7 +100,31 @@ TCP, SCTP, UDP
 * TCP provides flow-control . The receiver can tell how much its willing to get. This is the receive buffer.
   This is the amount of data it has received from peer, but not yet collect by local app.
 
-##SYN-options
+## Tcp's sliding window
+
+* Ack represents the next byte number receiver is expecing
+* Receiver window is how much the sender can send beyong the last ack.
+    * For a client, the SO_RCVBUF socket option must be set before calling connect.
+    * For a server, the SO_RCVBUF socket option must be set for the listening socket before calling listen.
+
+From fig 20.4 stevens:
+
+```
+                        <-----offered window adv by recver->
+                                         <--usable window-->
+
+                        +----------------+-----------------+
+       1      2     3   | 4     5     6  |  7     8     9  | 10    11     ...
+                        +----------------+-----------------+
+
+       --sent & ---->   <---sent but ---> <-can send asap--><---cant send ---
+          acked             not acked                           until window moves
+```
+
+
+
+
+## SYN-options
 
 * MSS - each end advertises its MSS to its peer.
        (My Q: But what if the intermediate MTU is lesser?)
@@ -72,6 +132,8 @@ TCP, SCTP, UDP
     Each SYN contains the window-size. Since this is originally 65K, its too small.
     With scale option its now scalled by 14, enabling upto 1G.
 * Timestamp:
+
+## State-Diagram
 
 ```
                        CLOSED---------------+                                                       ;
@@ -118,6 +180,11 @@ TCP, SCTP, UDP
       till urg-pointer is OOB data and rest are normal
     * MSG_OOB is the socket interface to set it.
 
+## Delayed ack
+
+* Just dont send ack right away, but wait for 200ms and see if there is local data to be sent. This way
+  ack can be piggy backed on the data.
+* Host requirements rfc states that ack should be sent utmost within 500ms.
 
 ## Nagle Algorithm
 
@@ -128,6 +195,13 @@ TCP, SCTP, UDP
 * Sometimes, this needs to switched off (like in X-window systems, where each tiny mouse-adjustment
   needs to be send for quick feedback). TCP_NODELAY options switches this off.
 *
+
+## slow start
+
+(Read this in sctp first)
+* In addition to receiver window, which is imposed by receiver, send maintains its own congestion
+  window
+* Initially its set to 1 segment-size. When an ack is receivd, cwnd is incrased by one.
 
 # SCTP
 
@@ -265,10 +339,6 @@ SENT
 * SCTP has it. RFC 1122. Avoid advertising small a_rwnd and sender stop sending
   small pkts. This will result in poor connection throughput.
 
-## Congestion Avoidance
-
-SLOW_START  --> Congestion-Avoidance
-
 ## Slow start
 
 * In RFC 2001 (Stevens)
@@ -284,6 +354,11 @@ SLOW_START  --> Congestion-Avoidance
   increase exponentially, as initially 1 outstanding, then 2 outstanding, then
   we get 2 acks, so we send 3 outstanding etc.. But if the receiver clubs ACKs
   then the increase is not really exponential
+
+* This site has a good graph on how slow-start and congestion-avoidance interact.
+  http://www.mathcs.emory.edu/~cheung/Courses/558a/Syllabus/6-transport/TCP.html
+* Another slide on these:
+  https://www.slideshare.net/engineerrd/tcp-congestion-avoidance<Paste>
 
 ## Congestion Avoidance
 
@@ -305,9 +380,9 @@ SLOW_START  --> Congestion-Avoidance
   if `cwnd <= ssthres`, its slow-start (normal case)
   otherwise congestion avoidance.
 * If its slow-start, we increase cwnd for every ACK. But in congestion
-  avoidance, we increase only segsize*segsize/cwnd each time an ACK is recvd.
-  This is linear.
-*
+  avoidance, we increase only `segsize*segsize/cwnd` each time an ACK is recvd.
+  This is linear. Basially its saying increase cwnd by MSS after ACKs for cwnd
+  worth of data are received.
 
 ## Fast-restranmit
 
@@ -419,7 +494,7 @@ To-Read
     LOCAL, STREAM/DGRAM/SEQPACKET  - Yes
     ROUTE, RAW - Yes   (Kernel routing table)
     KEY, RAW - Yes     (Cryptography)
-```
+```Nexus 32x Additions to the IL3 Setup
 ## bind
 ```
   int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
@@ -494,3 +569,19 @@ Client:
 # Some libraries that bypass kernel network processing
 
 netmap(BSD), DPDK
+
+# Token Bucket and Leaky Bucket
+
+* Token bucket is a traffic policer
+* Leaky bucket is a traffic shaper
+
+
+At a high level, a traffic policer limits traffic to a bandwidth. It either
+passes or drops. A traffic shaper, holds pkts in a buffer, and transmits it
+slowly.
+
+* In general, you can only control the traffic you send, not what you
+  receive.
+
+
+
