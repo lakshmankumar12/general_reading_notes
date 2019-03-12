@@ -51,6 +51,7 @@ TCP, SCTP, UDP
 
 # UDP
 
+* prot number = 17
 * simple, unreliable, datagram protocol
 
 ```
@@ -67,6 +68,8 @@ TCP, SCTP, UDP
 
 
 # TCP
+
+* prot number = 6
 
 ```
 0                   1                   2                   3
@@ -331,6 +334,31 @@ SENT
 * after SACK, if a_rwnd and cwnd permit, bundle as many retrans-DATA chunks
 * Then bundle new DATA chunks
 
+# GRE
+
+```
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |C|R|K|S|s|Recur|A|Flags  |Ver  |          Prot Type            |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   | Key payload len               |     Key CallID                |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |           Seq Num (optional)                                  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |           Ack Num (Optional)                                  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+C        - Checksum bit
+R        - Routing bit
+K 
+S
+s
+Recur
+A
+```
+
+
 
 # General algorithms
 
@@ -405,6 +433,29 @@ SENT
 
 * ICMP echo-req/rsp pkts have both a ID and seq-number. The ID is useful to enable NAT'ing - like port numbers for UDP.
 
+# DHCP
+
+4 main packets:
+
+This is popularly known as DORA
+
+* DHCP-DISCOVER
+    -- Src-IP: <??>  Dst-IP: 255.255.255.255
+* DHCP-OFFER
+    -- Src-IP: <dhcp-server> Dst-IP: <??>
+    -- contains the offered IP.
+* DHCP-REQUEST
+* DHCP-ACK
+
+In Ethereal, these are UDP-packets with port 67 - referred as BOOTP protocol
+
+## Relaying DHCP
+
+* The important field here is the Gateway-IP. The relay-agent puts in its gateway ip/Relay-agent-ip and forwards the broadcast as a unicast to the server.
+    * The gw-ip help the server in identifying which subnet to lease from.
+    * The reply goes back to gw-ip
+
+
 # Well known Ports
 
 FTP 21 - control (TCP)  Is there a UDP??
@@ -461,24 +512,6 @@ and the whole operation gets an order of magnitude more complex with HTTPS
 (to draw fully)
 ```
 
-# DHCP
-
-4 main packets:
-
-* DHCP-DISCOVER
-    -- Src-IP: <??>  Dst-IP: 255.255.255.255
-* DHCP-OFFER
-    -- Src-IP: <dhcp-server> Dst-IP: <??>
-    -- contains the offered IP.
-* DHCP-REQUEST
-* DHCP-ACK
-
-In Ethereal, these are UDP-packets with port 67 - referred as BOOTP protocol
-
-## Relaying DHCP
-
-To-Read
-
 # Socket programming call sequence
 
 ## socket
@@ -494,7 +527,7 @@ To-Read
     LOCAL, STREAM/DGRAM/SEQPACKET  - Yes
     ROUTE, RAW - Yes   (Kernel routing table)
     KEY, RAW - Yes     (Cryptography)
-```Nexus 32x Additions to the IL3 Setup
+```
 ## bind
 ```
   int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
