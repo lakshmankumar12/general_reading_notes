@@ -440,9 +440,9 @@ A
 This is popularly known as DORA
 
 * DHCP-DISCOVER
-    -- Src-IP: <??>  Dst-IP: 255.255.255.255
+    -- Src-IP: `<??>`  Dst-IP: 255.255.255.255
 * DHCP-OFFER
-    -- Src-IP: <dhcp-server> Dst-IP: <??>
+    -- Src-IP: `<dhcp-server>` Dst-IP: `<??>`
     -- contains the offered IP.
 * DHCP-REQUEST
 * DHCP-ACK
@@ -455,6 +455,11 @@ In Ethereal, these are UDP-packets with port 67 - referred as BOOTP protocol
     * The gw-ip help the server in identifying which subnet to lease from.
     * The reply goes back to gw-ip
 
+
+# SNMP
+
+mib-2 is a short for OID: .1.3.6.1.2.1
+iso(1) identified-organization(3) dod(6) internet(1) mgmt(2) mib-2(1)
 
 # Well known Ports
 
