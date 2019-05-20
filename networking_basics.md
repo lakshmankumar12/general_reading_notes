@@ -362,6 +362,10 @@ A
 
 # General algorithms
 
+Nice documentation in:
+* https://intronetworks.cs.luc.edu/1/html/tcp.html
+* http://squidarth.com/rc/programming/networking/2018/07/18/intro-congestion.html
+
 ## Silly Window Syndrom
 
 * SCTP has it. RFC 1122. Avoid advertising small a_rwnd and sender stop sending
