@@ -52,6 +52,8 @@ trusts the advertisement of routes themselves from their peers
 
 * https://www.kentik.com/blog/bgp-routing-tutorial-series-part-1/
 
+* Ongoing reading in bgp_rfc_reading.md
+
 * BGP is optimzied for scalability, not convergence time
 * BGP had advanced filtering rules, foreg, you can say i dont want routes using AS-xyz/
 * uses AS-path list to avoid loops

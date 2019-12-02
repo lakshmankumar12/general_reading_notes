@@ -48,6 +48,15 @@ TCP, SCTP, UDP
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 
+## Important ip protocol numbers
+
+1   - ICMP
+2   - IGMP
+6   - TCP
+17  - UDP
+47  - GRE
+
+
 
 # UDP
 
@@ -103,6 +112,14 @@ TCP, SCTP, UDP
 * TCP provides flow-control . The receiver can tell how much its willing to get. This is the receive buffer.
   This is the amount of data it has received from peer, but not yet collect by local app.
 
+## On sequence numbers and acknowledgements
+
+* Seq number is one for every byte. SYN, FIN consume a seq of their own.
+* The Seq number beings at a random number. Usually we talk of relative seq number, where 0 is the first. This is that of SYN.
+* The Seq number in a pkt is that of the first byte in the packet (if present or would have been there).
+* Ack of the first-SYN will always be 0. (We dont have the server's numbers yet)
+* Ack from SYN-ACK is also usually give relatively. The ACK is one more than the last received pkt.
+
 ## Tcp's sliding window
 
 * Ack represents the next byte number receiver is expecing
@@ -130,7 +147,9 @@ From fig 20.4 stevens:
 ## SYN-options
 
 * MSS - each end advertises its MSS to its peer.
-       (My Q: But what if the intermediate MTU is lesser?)
+       (My Q: But what if the intermediate MTU is lesser?
+        My A: TCP will begin with the MTU of the recipient and use a DF bit.
+              Thus it will send at the path MTU.)
 * Window scale Option.
     Each SYN contains the window-size. Since this is originally 65K, its too small.
     With scale option its now scalled by 14, enabling upto 1G.
@@ -205,6 +224,14 @@ From fig 20.4 stevens:
 * In addition to receiver window, which is imposed by receiver, send maintains its own congestion
   window
 * Initially its set to 1 segment-size. When an ack is receivd, cwnd is incrased by one.
+
+## PAWS
+
+Protection Against Wrapped Seq Number.
+
+* If the bandwidth (transfer rate) is high, the possibility of re-use of sequence number
+  is high on the same connection. For eg, in a 1Gbps connection, seqence number will be
+  reused every 17s!
 
 # SCTP
 
@@ -624,6 +651,4 @@ slowly.
 
 * In general, you can only control the traffic you send, not what you
   receive.
-
-
 
