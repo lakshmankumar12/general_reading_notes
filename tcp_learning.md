@@ -141,7 +141,7 @@ PMTU
 
 ### TSOPT
 
-* TSVal - sender timestamp, TSecr - Time Stamp Echo Reply
+* TSVal - sender timestamp, TSER/TSecr - Time Stamp Echo Reply
 * Recipient just echoes back the TSVal in its Ack in TSecr
     * Thus the actual RTT measured in 2 leg-times + time it took for the
       responder to send its ack.
@@ -314,7 +314,8 @@ But usually reboot times are higher than 2MSL's anyway.
         * When ACKs dont advance
         * When SACKs are received
 * R1 and R2
-    * R1 - number of retries before a -ve advice is sent to IP layer.
+    * defined in host-requirements rfc
+    * R1 - number of retries to send a segment before a -ve advice is sent to IP layer.
     * R2 - timeout to abort the connection.
     * net.ipv4.tcp_retries1/2
 
@@ -370,14 +371,20 @@ But usually reboot times are higher than 2MSL's anyway.
   algorithm for taking RTT samples:
 
 1. TSVal of a segment contains the current clock.
-2. TSRecent = TSVal to send in the next ACKthe ACK number
+2. TSRecent = TSVal to send in the next ACK
    LASTAck  = Next seq number to expect/last ack sent.
 3. When a new segment arrives,
-    if its Seq == LastACK, then update TSRecent
-4. Whenever the receiver sends an ACK, put in TSRecent.
+    if its Seq == LastACK, then update TSRecent (perfect valid segment to arrive)
+4. Whenever the receiver sends an ACK, put in TSRecent as TSER.
 5. A sender receiving an ACK that advances its window:
     RTT = `current_clock` - TSEcr
     * Note this discards getting RTT from window-update ACKs
+    * Say, we had a retransmission.
+        * if the ack was generated on first segment itself, then we are good
+          as this is indeed the RTT.
+        * if the first was lost and the retrans was what triggered the ack, then
+          also we are good, as this is indeed the RTT.
+        * Because in both cases, the TSecr is from the pkt that triggers the ack.
 
 ### The Linux Method
 
@@ -386,16 +393,21 @@ Too intensive.. Needs re-reading
 ### RTT measurement to Loss and re-ordering
 
 * Out of Order:
-    * The echoed value is that of the pkt that advanced window and not the new
-      out-of-order pkt.
-    * This results in the sender calculating a larger RTT.
+    * The echoed value by the receiver is that of the pkt that advanced window
+      and not the new out-of-order pkt.
+    * This results in the sender calculating a larger RTT. (as the in-order pkt
+      was the older pkt and its TSVal was the one echoed in the fast-retrans ack)
     * This is beneficial -- as the sender can know pkts are getting re-ordered
-        and not lost.
+        and not lost with the increated RTO.
 * Successful Retrans
     * When the gap is closed, the TSVal is that of the just-arrived segment.
         * Note that this can be the older TSVal.
     * This also helps in making the RTO appear longer, which is good.
 * Longer RTO make the sender hold on to retransmisstion in an Out-of-order case.
+
+* Timestamp should increase by 1 atleast for 1 RTT!
+* Timestamp shouldn't increase faster than by 1 for 59ns, as then it would wrap
+  before IP discards a pkt.
 
 ### Timer Based Retransmission
 
@@ -410,8 +422,11 @@ Too intensive.. Needs re-reading
 * The RTO timer based restransmission is usually a last-resort attempt to keep the
   connection going
 
+
 ### Fast Retrasmit
 
+* Not timer based. Based on feedback from receiver. Hence a efficient
+  retransmission strategy
 * Duplicate Ack:
     *  When an OOO packet is received, the receiver generates an ACK immediately
     *  If SACK is supported, then it also has SACK block(s)
@@ -419,6 +434,23 @@ Too intensive.. Needs re-reading
 * So sender waits for a dupthresh(typically 3) before retransmitting
 * In addition to retrasmitting pkts congestion control procedures are undertaken
   as well.
+
+* When a fast-retransmission is done, TCP notes the highest seq number sent
+  so far before the retransmission. Thi is called the recovery point.
+* TCP is said to be in recovery until a ACK for the recovery point arrives.
+* ACK that advances window, but not yet catching up recovery point are called
+  partial-ACKs.
+* On partial-ACKs TCP immediately transmits next segments.
+* This partial-ACK is part of New-Reno. Before that, any acceptable ack will
+  bring out of recovery.
+
+### Retransmission with Selective ACK
+
+* Gap between ACK and the in-window received pkts are called holes
+* There are 3 or 4 sack-blocks.
+* SACK is generated as soon a out of sequence is detected. It can be due to loss
+  or out-of-order arrival.
+* 
 
 # Question:
 

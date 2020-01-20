@@ -202,6 +202,10 @@ From fig 20.4 stevens:
       till urg-pointer is OOB data and rest are normal
     * MSG_OOB is the socket interface to set it.
 
+
+> NOTE
+>     Refer to tcp_learning.md for RFC notes.
+
 ## Delayed ack
 
 * Just dont send ack right away, but wait for 200ms and see if there is local data to be sent. This way
