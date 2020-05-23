@@ -498,14 +498,74 @@ iso(1) identified-organization(3) dod(6) internet(1) mgmt(2) mib-2(1)
 
 # Well known Ports
 
-FTP 21 - control (TCP)  Is there a UDP??
-    20 - data
-SSH 22 - TCP.
-Telnet 23
-SMTP  25
-HTTP 80
-NTP 123
-HTTPS 443
+FTP        | 21 - control (TCP)  Is there a UDP??
+           | 20 - data
+SSH        | 22 - TCP.
+Telnet     | 23
+SMTP       | 25
+DNS        | 53
+DHCPv4srv  | 67
+DHCPv4clt  | 68
+TFTP       | 69
+HTTP       | 80
+POP3       | 110
+NTP        | 123
+NetBios    | 137
+IMAP       | 143
+SNMP       | 161
+HTTPS      | 443
+DHCPv6srv  | 546
+DHCPv6clt  | 547
+
+* Note 1-1023 are considered well-known ports
+* 1024-65535 are called registered ports
+    * ephemeral ports are another name
+
+# Wifi Networks
+
+* SSIDs are case-sensitive
+* 802.11 b/g -> the 2.5 band
+* 802.11 n/ac -> the 5Ghz band
+* Auth types
+    * open
+        -- none at wifi-level
+    * PSK
+    * EAP
+* Encryption
+    * Wired Equivalency Protocol (WEP)
+        -- static key
+    * Wi-Fi Protected Access (WPA)
+        -- dynamic keys
+        -- WPA-PSK2 pre-shared key
+
+# Cabling types / slots
+
+Search: cable
+
+* SFP (small form-factor pluggable)
+* Enhanced high-speed wan interface card (EHWIC slots)
+* RJ-45 (cat-5, UTP(unshielded twisted pair))
+    * T568A or T568B -- std for the pairing on the 8 pins
+* RJ-11
+* DB-9
+* AUX port - Used for remote management of the router using a dial-up telephone line and modem.
+
+# Cisco led cues
+
+## Port Status, or STAT, the Default Port Mode:
+
+* Off: No link, or port was administratively shut down.
+* Green: Link present.
+* Blinking green: Port is transmitting or receiving data.
+* Alternating green-amber: Link fault. Error frames can affect connectivity, and errors such as excessive collisions, CRC errors, and alignment and jabber errors are monitored for a link-fault indication.
+* Amber: Port is blocked by Spanning Tree Protocol (STP) and is not forwarding data.
+* Blinking amber: Port is blocked by STP but continues to transmit and receive inter-switch information messages.
+
+## Speed - For 10/100/1000 ports
+
+* Off: Port is operating at 10 Mbps
+* Green: Port is operating at 100 Mbps.
+* Blinking green: Port is operating at 1000 Mbps.
 
 # What all happen when you type a URL In a browser?
 
@@ -656,3 +716,10 @@ slowly.
 * In general, you can only control the traffic you send, not what you
   receive.
 
+
+Virus protection
+Spyware protection
+Spam blockers
+Popup blockers
+Hardware Firewalls
+Software Firewalls
