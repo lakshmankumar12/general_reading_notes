@@ -22,31 +22,42 @@ Nice article on the difference between link-state, distance-vector and
 path-vector : http://www.informit.com/articles/article.aspx?p=331613&seqNum=2
 
 * Distance-Vector
+    * Example protocols are RIP, EIGRP
     * Each router just advertises all routed reachable through it. These are
       both direct routes and that it got from others. Upon receipt of an
       advertisement, a router updates its routing table and passes on this in
       its future advertisement.
-    * Example protocols are RIP, EIGRP
 
 * Path-Vector
+    * Eg protocols are BGP
     * Here again, each router updates its summarized info. However, in addition
       to giving a route and its metric(the distance), it also gives the path to
       that route. This helps in a receiving router to detect loops before it
       adds a path to its table.
-    * Eg protocols are BGP
 
 Figuratively, both distance and path-vector is update-by-rumor, as each router
 trusts the advertisement of routes themselves from their peers
 
 * Link state
+    * Eg are OSPF, IS-IS.
     * Here each router just updates their directly connected link information
       to every other router (both directly connected and not). Thus every
       router gets to develop the full network topology for itself. Each router
-      then builds up the shortest path using some SPF algo like Djikstra. Eg
-      are OSPF, IS-IS.
+      then builds up the shortest path using some SPF algo like Djikstra.
 
+## Autonomous System
+
+* One or more IP-prefixes run by one-administrative entity.
+* Has a single and clearly defined routing policy
+* Is identified by a 4-octet number
+    * Historically was 2-octet
 
 # BGP
+
+Rfc: 4271
+    Impl. report: 4276
+    operation experience: 4277
+
 
 [Good Link](https://www.youtube.com/watch?v=ZucnfoJiFr8)
 
@@ -56,14 +67,19 @@ trusts the advertisement of routes themselves from their peers
 
 * BGP is optimzied for scalability, not convergence time
 * BGP had advanced filtering rules, foreg, you can say i dont want routes using AS-xyz/
+    * Policy rich
 * uses AS-path list to avoid loops
+    * Ordered list
 * number of AS-hops as a universal metric
 
 * Only 4 message types - OPEN/KEEPALIVE/UPDATE/NOTIFICATION
 * Only 6 states
 * many filtering options
 
-* Uses TCP/179. Explicit router to router connection. No multicast/broadcast. Routers are known by config. No dynamic learning
+* Uses TCP/179. 
+    * Explicit router to router connection. No multicast/broadcast.
+    * Routers are known by config. No dynamic learning
+    * Only Incremental updates, as we know we are reliably connected.
 * remote pkts are accepted only from configured peers
 
 * Open message
@@ -97,6 +113,10 @@ trusts the advertisement of routes themselves from their peers
     * IBGP neighbors can be acroos hops (TTL of 255 is used), however, EBGP neighbors should be next-hop (TTL of 1 is used)
     * In cisco config, we dont explicity distinguish IBGP/EBGP. We configure remote-peer -ip and their AS. Sam AS => IBGP, diff AS => EBGP
 
+    * IBGP peers are usually fully-meshed.
+        * IBGP peers dont redistribute IBGP learnt routes to other IBGP peers.
+        * Advertise eBGP learnt routes to all IBGP peers.
+
 * Attributes
     * Each advertised route has attributes
     * There are about 13/14 attributes
@@ -125,6 +145,22 @@ trusts the advertisement of routes themselves from their peers
 
 * Non-Transitive
     * MED - Multi Exit Discriminator (didnt understand that)
+
+## Sample cisco config
+
+```
+router bgp 65001
+    bgp router-id 172.24.0.1
+    neighbour 172.20.0.5 remote-as 65000
+address-family ipv4 unicast
+    neighbour 172.20.0.5 activate
+
+# for ibgp
+router bgp 65001
+    bgp router-id 172.24.0.1
+    neighbour 172.20.0.5 remote-as 65000
+    neighbour 172.20.0.5 update-source loopback0     # will make bgp use loopback0 as the src-ip
+```
 
 # IP Tables
 

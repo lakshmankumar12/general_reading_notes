@@ -356,10 +356,12 @@ But usually reboot times are higher than 2MSL's anyway.
 
 * When retransmissions happen, we dont know if a ACK is that of first or retrans
     * Such ACKs that ack retransmitted data is not used for RTT calc.
-* TCP applies a backoff factor to the RTO, which doubles each time a subsequent
-  retransmission timer expires.
+* TCP applies a "backoff factor" to the RTO, which doubles each time a subsequent
+  retransmission timer expires. The actual RTO used, is `RTO*backoff_factor`
 * Doubling continues until an acknowledgment is received for a segment that was
-  not retransmitted. At this time, RTO is set to its old value.
+  not retransmitted. At this time, `backoff_factor` is set to 1, and RTO is set
+  to its old value.
+* When Timestamp options are used, this ambiguity doesnt exist.
 
 ### TSOPT
 
@@ -374,7 +376,9 @@ But usually reboot times are higher than 2MSL's anyway.
 2. TSRecent = TSVal to send in the next ACK
    LASTAck  = Next seq number to expect/last ack sent.
 3. When a new segment arrives,
-    if its Seq == LastACK, then update TSRecent (perfect valid segment to arrive)
+    if its Seq == LastACK, then update TSRecent
+        * perfect valid segment to arrive
+        * Or a retrans of that segment.
 4. Whenever the receiver sends an ACK, put in TSRecent as TSER.
 5. A sender receiving an ACK that advances its window:
     RTT = `current_clock` - TSEcr
@@ -401,8 +405,10 @@ Too intensive.. Needs re-reading
         and not lost with the increated RTO.
 * Successful Retrans
     * When the gap is closed, the TSVal is that of the just-arrived segment.
-        * Note that this can be the older TSVal.
-    * This also helps in making the RTO appear longer, which is good.
+        * Note that this is the newest and latest, although sequence number-wise
+          this segment is not the highest. But the ack it generates is the
+          highest possible (including that of the older segments having higher
+          sequence numbers)
 * Longer RTO make the sender hold on to retransmisstion in an Out-of-order case.
 
 * Timestamp should increase by 1 atleast for 1 RTT!
@@ -450,7 +456,46 @@ Too intensive.. Needs re-reading
 * There are 3 or 4 sack-blocks.
 * SACK is generated as soon a out of sequence is detected. It can be due to loss
   or out-of-order arrival.
-* 
+
+# RFC 5681: TCP Congestion Control
+
+## section 3.1
+
+* rwnd - advertized window of peer
+* cwnd - sender maintained window
+* ssthresh - value below which we do slow-start and above congestion-avoidance
+* IW - initial window. The value cwnd begins with
+* SMSS - sender Max Seg-Size (learnt by syn-exchange and path-mtu)
+* Flightsize - outstanding data in network
+* Higher ssthresh => more agressing sending.
+* During slow-start
+    * cwnd += min(N, SMSS)
+    * N is the number of new bytes acknowledged in incoming ack
+* During cong-avoidance, for every RTT:
+    * MAY increase cwnd by SMSS
+    * MUST not increase beyond that.
+    * SHOULD increase by min(N, SMSS).
+* If loss is detected and retrans-timer fires for first time,
+    * ssthresh = max(Flightsize/2, 2*SMSS)
+
+## section 3.2
+
+* Fast retransmit
+    * send out on 3rd dup-ack
+* Fast recovery
+    * transmission after the fast-retransmit till fresh ACK arrives.
+
+* When a 1st and 2nd dup-ack arrives:
+    * sender can send till cwnd + 2*MSS.
+    * no change to cwnd
+    * if SACK enabled, ack's MUST have SACK blocks.
+* when 3rd dup-ack arrives, reduce ssthresh
+    * ssthresh = max(Flightsize/2, 2*SMSS)
+* for each additional dup-ack, increase cwnd by SMSS per ack.
+    * This is called inflating window
+* when cwnd allows, you can send more unsent data.
+* when a new-data ACK arrives, set cwnd to that of step(2).
+    * This is called defalating window
 
 # Question:
 

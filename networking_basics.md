@@ -656,6 +656,8 @@ and the whole operation gets an order of magnitude more complex with HTTPS
     * connects to a remote server mentioned.
     * For TCP/SCTP initiates the association. No response to handshacke, it returns timeout
     * For UDP, creates the default dest addr. (can be changed by another call to connect)
+    * For TCP, connecting on a connected socket generates a RST (linux behavior!)
+        * This is one trick to generate a RST by application on a socket
 ## shutdown
 ```
   int shutdown(int sockfd, int how);
