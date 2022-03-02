@@ -66,3 +66,73 @@
     * Or any other activity that works your mind muscles.
 
 ### Rule-3 Quit Social Media
+
+* Any-benefit approach to tools selection is flawed
+* Use the craftsman approach to tools selection
+* Apply the law of vital few to your internet habits
+    * Have your list of personal goals
+    * Only orient your internet usage around your personal goals
+* Law of Vital Few - 80/20
+* Quit for a month
+* Dont use internet as entertainment
+
+
+### Rule-4 Drain the shallow
+
+* Be very picky of which shallow work you will do.
+    * They can easily eat into your time.
+* Schedule every minute of your day
+* Quantify the depth of each activity
+    * How long it would take for a fresh college grad to train
+      to do this in month.
+        `< 3` months - Shallow.
+* Ask your boss for a shallow work budget
+* Finish your work by five-thirty
+* Become hard to reach
+    * Make people who send email to you do more work.
+    * Do more work when you send email or reply to email
+* Dont respond to email if it doesn't matter
+    * ambiguous or hard to give a reasonable response
+    * not a question/proposal that interests you
+    * no good/bad would happen by responding
+
+# Great At Work - Morten T Hansen
+
+* There are 7 principles - 4 for mastering your own work, and 3 for mastering working with groups
+
+## Principle 1 : Do Less and then Obsess
+
+* Choosing to focus on a self few is only half the problem.
+  The next harsh requirement is to obsess on the one you
+  have chosen to focus
+* 3 strategies
+    * Wield the Razor : As few as you can, as many as you must.
+        * Shave off as much as you can
+    * Tie yourself to the Mast : Plan to not have distractions
+    * Say no to your boss
+        * Explain that you can't de-focus.
+        * Set clear priorities with your boss
+
+### when you shouldn't focus to a few
+
+* When you want to generate more ideas
+* When you are not sure what to focus on
+
+## Principle 2 : Redesign your work
+
+* Understand value
+    * outside-in view - how it benefits others
+    * inside-out view - internal metrics
+* Productivity = output-of-work / time-spent (not a great metric)
+* ValueOfWork = benefitToOthers * quality * efficiency
+    * All 3 are needed. Any one is zero makes value 0
+* Note that beyond 50 hours of work a week, your output will tank out.
+  No point in squeezing the orange beyond this
+* To create value
+    * Less Fluff - Remove non-essential items out of work
+    * More Right Stuff - Increase high-value activities
+    * More Gee Whiz - Create new activities
+    * Improve quality of existing stuff
+    * Faster, Cheaper - Do high value activities faster and efficiently
+* How to redesign
+    * Identify pain points
