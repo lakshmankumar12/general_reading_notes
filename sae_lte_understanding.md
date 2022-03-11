@@ -2,7 +2,7 @@ SAE and LTE General Understanding
 ==================================
 :toc:
 
-== List of interfaces
+# List of interfaces
 
 * S1   -  Data plane from Enb to SGW
 * S2   -
@@ -44,7 +44,7 @@ SWw  (radius)
 STa  (diam or radius) - HSGW(Pmip) to AAA
 SWx                   - AAA to HSS
 
-UMTS
+## UMTS
 
 Ga - {GGSN,SGSN,SGW,PGW} -> CGF
 Gb - SGSN to BSS
@@ -57,7 +57,7 @@ Gs - SGSN to MSC/VLR
 Iu - RNC to SGSN
 Gi - GGSN to IP-Network
 
-== Spec list
+# Spec list
 
 23.401 - 4G general architecture
 29.274 - GTP
@@ -69,43 +69,40 @@ Gi - GGSN to IP-Network
 
 
 
-== Policy and Bearers
+# Policy and Bearers
 
 * The PGW and PCRF maintain session-level contexts.
 * Each session is identified at PGW by (IMSI,APN-requested,Access-type) and so is it as PCRF
 * The following is the hierarchy of information exchanged between PGW and PCRF
-** Session-level
-*** Default-Bearer's QCI/ARP
-*** AMBR for session
-** Bunch of Rules. Each rule has the following
-*** Match criteria
-*** Action.
-+
-This could be just gating/drop or apply some Qos. Qos is specified in terms of a QCI/ARP. Another action
-is to classify this traffic into a (Rating-Grounp,service-id) for charging.
-+
+    * Session-level
+        * Default-Bearer's QCI/ARP
+        * AMBR for session
+    * Bunch of Rules. Each rule has the following
+        * Match criteria
+        * Action.
+            This could be just gating/drop or apply some Qos. Qos is specified in terms of a QCI/ARP. Another action
+            is to classify this traffic into a (Rating-Grounp,service-id) for charging.
 * The PCRF and PGW are in sync about the current session that is ongoing, and
   the rules that are applied/in-progress
   for that session.
 * The PCRF may at any point add a new rule to a session, delete a rule or edit a rule.
 * Note that there is no notion of bearer per se, between PCRF and PGW
 
-=== Understanding a Rule
+## Understanding a Rule
 
 * Rules have priority amongst them. So Rules with higher priority are evaluated first.
 * Within a rule there are multiple match-criteria. These are natually ordered in the order
   in which PCRF specified them.
-+
-For eg, Say Rule R1 has M1,M2,M3 and Rule R2 has M4,M5  and R1 has highter priority, then a
-PGW will apply M1,M2,M3,M4 and M5 in that order
+    For eg, Say Rule R1 has M1,M2,M3 and Rule R2 has M4,M5  and R1 has highter priority, then a
+    PGW will apply M1,M2,M3,M4 and M5 in that order
 
 
-=== PGW job of mapping Rules to Bearers
+## PGW job of mapping Rules to Bearers
 
 * PGW basically decides to create a new bearer if any new rule has a different (QCI/ARP) from
   other existing rules. This is because each bearer has a unique (QCI/ARP) for itself.
 
-=== Open Questions?
+## Open Questions?
 
 * Is APN-AMBR really session level?
 * Is there a UE-AMBR? Does SGW apply it then?
