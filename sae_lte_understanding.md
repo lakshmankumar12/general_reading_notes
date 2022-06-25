@@ -25,6 +25,7 @@ SAE and LTE General Understanding
 * S14  -  NOT_DEFINED
 * S15  -  NOT_DEFINED
 * S16  -  S4-SGSN to S4-SGSN
+* S17  -  MME to UCMF
 * S101 -  eHRPD to MME (Pmip?)
 * S103 -  HSGW to SGW (Pmip?)
 * SGi
@@ -60,13 +61,39 @@ Gi - GGSN to IP-Network
 # Spec list
 
 23.401 - 4G general architecture
+
+24.301 - Nas Signalling
 29.274 - GTP
+
+36.300 - eNodeb
 
 23.060 - 3G general architecture
 24.008 - GMM
 25.413 - RANAP
 29.060 - GTPv1
 
+23.501 - 5G
+23.502
+
+
+# IDs
+
+* PLMN-ID   = MCC + MNC
+* MMEI      = MMEC + MMEGI
+    * MME-code (one mme withing the group)
+    * MME-group-identifier
+* GUMMEI    = PLMN-ID + MMEI
+    * Globally unique MMEI
+* TAI       = PLMN-ID + TAC
+* EGCI      = PLMN-ID + ECI
+    * EUTRAN (global) cell identifier
+* S-TMSI    = MMEC + M-TMSI
+    * S-TMSI, identifies TMSI within pool-area
+    * M-TMSI, identifies TMSI within MME
+* GUTI      = PLMN-ID + MMEGI + S-TMSI
+    * Globally unique Temporary Identifier
+
+Has good info on IDS - https://www.prodevelopertutorial.com/lte-chapter-6-identifiers-in-lte/
 
 
 # Policy and Bearers
@@ -107,4 +134,28 @@ Gi - GGSN to IP-Network
 * Is APN-AMBR really session level?
 * Is there a UE-AMBR? Does SGW apply it then?
 * Does matches have bit-rates apart from QCI/ARP. How does that work?
+
+# Security
+
+* Very good break-down in https://www.prodevelopertutorial.com/lte-chapter-10-lte-security/
+
+# from tutorials
+
+Dump:
+
+```
+Evolved Packet System (EPS) bearers provide one-to-one correspondence with RLC radio bearers and provide support for Traffic Flow Templates (TFT). There are four types of EPS bearers:
+* GBR Bearer resources permanently allocated by admission control
+* Non-GBR Bearer no admission control
+* Dedicated Bearer associated with specific TFT (GBR or non-GBR)
+* Default Bearer Non GBR, catch-all for unassigned traffic
+
+
+A home eNB (HeNB) is a base station that has been purchased by a user to provide femtocell coverage within the home. A home eNB belongs to a closed subscriber group (CSG) and can only be accessed by mobiles with a USIM that also belongs to the closed subscriber group.
+
+```
+
+* https://www.tutorialspoint.com/lte/index.htm
+* https://go.radisys.com/rs/radisys/images/paper-lte-protocol-signaling.pdf
+
 
