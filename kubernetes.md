@@ -3,8 +3,10 @@
 youtube link: https://www.youtube.com/watch?v=d6WC5n9G_sM&t=2s&ab_channel=freeCodeCamp.org
         Current at 9:22
 
-coursera purchsed course:
-https://www.coursera.org/learn/kubernetes-basic-architecture-first-deployment/ungradedLti/BDxG6/kubernetes-basic-architecture-and-first-deployment
+https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/
+https://kubernetes.io/docs/concepts/overview/components/
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+https://kubernetes.io/docs/concepts/architecture/nodes/
 
 # terminology
 
@@ -26,6 +28,7 @@ https://www.coursera.org/learn/kubernetes-basic-architecture-first-deployment/un
         * api-server (front-ends all kubectl commands)
         * controller
         * scheduler
+            * assigns pods to nodes 
         * cluster store(kv)
             * runs etcd
     * worker node. The first 3 are mandatory in all nodes.
@@ -45,12 +48,68 @@ https://www.coursera.org/learn/kubernetes-basic-architecture-first-deployment/un
 Minikube is a lightweight Kubernetes implementation that creates a VM on your
 local machine and deploys a simple cluster containing only one node.
 
+```
+minikube start
+
+minikube service servicename
+
+```
+
+
 # Sample deployment file
 
 ```yml
 apiVersion: apps/v1
-kind: 
+kind: Deployment
+metadata:
+  name: anything-say-ngnix-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ngnix-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: ngnix-app
+    spec:
+      containers:
+      - name: nginx
+        image: ngnix:1.14.2
+        ports:
+        - containerPort: 80
+```
 
+```yml
+apiVerson: apps/v1
+kind: service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+```
+
+# kubectl commands
+
+
+```
+#deploy
+kubectl apply -f deployment.yml
+kubectl delete deployment deploymentname
+kubectl rollout restart deploy deploymentname
+
+kubectl get pods
+kubectl get pods -o wide
+
+kubectl describe pod
+kubectl describe service
+
+kubectl get service
 
 ```
 
