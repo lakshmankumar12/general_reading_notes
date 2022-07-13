@@ -1,5 +1,38 @@
 # Prometheus
 
+
+## Basics
+
+query .. @ time
+ -- Gives you one more more (for each label-combination) SINGLE-INSTANT value
+counter {label-combination l1="a", l2="x", l3="0"}
+counter {label-combination l1="b", l2="y", l3="0"}
+
+query_range .. @start,end,step
+ -- Gives you one more more (for each label-combination) INSTANT-VECTOR value
+counter {label-combination l1="a", l2="x", l3="0"}
+    (time,value) .. (time,value) ...
+counter {label-combination l1="b", l2="y", l3="0"}
+    (time,value) .. (time,value) ...
+
+RANGE-VECTOR:
+    adding a [timeinterval] to the above -- goives a range vector
+counter {label-combination l1="a", l2="x", l3="0"}
+    - [ (t1,v1),(t2,v2).... (tn,vn) ] , [   ] , [   ] , [   ] , [   ] , [   ]
+        |                         |
+        |                         |
+        +------range values ------+
+         (spread over the [..] interval)
+
+FUNCTION that collapse a range-vector back to instant-vector:
+
+increase(), rate(), irate() , idelta(), sum_over_time()
+    -- are functions that work on each range-value and bring the range back to instant.
+
+AGGREGATION:
+sum()
+    -- if you have multiple label-combinations, then sum collapses them into one time-series.
+
 # Run a prometheus docker
 
 ## Bare minimal config
@@ -20,7 +53,6 @@ scrape_configs:
 ```
 cfg_file=/home/lakshman/host_c/Data/work/prometheus_try/prometheus.yml
 data_dir=/mnt/other_disk/prometheus
-docker run -p 9090:9090 -v $cfg_file:/etc/prometheus/prometheus.yml -v $data_dir:/prometheus prom/prometheus
 
 dirclean() {
     data_dir=/mnt/other_disk/prometheus
@@ -47,7 +79,24 @@ bash dump_data.sh > $data_dir/values
 
 ```
 
+# Understanding promqa
+
+Simple count for a given duration from a increasing_counter:
+```
+http://localhost:9090/api/v1/query?query=increase(my_study_counters{type=%22monotonic%22}[5m])&time=1657688400
+```
+If you need 'N' samples spread across time - eg: attaches count ever 1 hour for the last 24 hours:
+
+```
+http://localhost:9090/api/v1/query_range?query=increase(my_study_counters{type=%22monotonic%22}[1h])&start=1657602000&end=1657688400&step=3600
+http://localhost:9090/api/v1/query_range?query=increase(my_study_counters{type="monotonic"}[1h])&start=1657602000&end=1657688400&step=3600
+```
+
+
+
 # Links
 
 https://devopscube.com/install-configure-prometheus-linux/
 https://medium.com/tlvince/prometheus-backfilling-a92573eb712c
+https://stackoverflow.com/questions/47138461/get-total-requests-in-a-period-of-time
+
