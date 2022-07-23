@@ -86,7 +86,245 @@
   burden of storing all details on the client.
 
 
+## Key Exchange
 
-# dump notes
+* In TLS, the security of the session depends on a 48-byte shared key called
+  the master secret.
+* The goal of key exchange is to generate another value, the premaster secret,
+  which is the value from which the master secret is constructed.
+* No matter which key exchange is used, the server has the opportunity to speak
+  first by sending its ServerKeyExchange message
+
+## Interesting Extension fields
+
+* SNI
+    * Server name Information
+    * Wireshark filter - `tls.handshake.extensions_server_name == 'gxc.io'`
+
+# PKI
+
+## Entities
+
+* subscriber who provide secure services
+    * wants to share his information using his certificate
+    * Eg: a domain-owner like https://reachmesecurely.com,
+         ipsec-server, individual wanting to sign documents
+* RA (Registration authority)
+    * validates subscriber's request for a certificate
+    * carries mgmt functions
+* CA (certificate authority)
+    * issues those root certificates and revocation lists
+* relying party
+    * the consumer of the certifcate (web-browser)
+
+## Revocation
+
+CRL - Certificate revocation list
+OCSP - Online Certificate Status Protocol
+
+## Encoding
+
+* Certificates are in ASN.
+* ASN has BER(Basic encoding rules) and DER(distinguished ER) is a stricter way of using BER
+* PEM (privacy enhanced mail) is a base64 encoded DER
+* PKCS#7 certificate(s)
+    * typically with `.p7b` or `.p7c` extention.
+    * rfc3215
+    * can embed entire cert-chains
+    * supported by java tools
+* PKCS#12
+    * typically with `.p12` or `.pfx` extention.
+    * A complex format that can store and protect a server key
+      along with an entire certificate chain
+
+## Certificate fields
+
+* Version
+* Serial - uniquely idenfies a certificate issued by CA
+* Algo/Issuer/Validity
+* Subject
+    * DN - distinguished name. Has components below
+        * CN - common name
+    * Deprecated. Alt Subject name is used now
+* Pub Key
+* Extensions
+    * Subjet Alt Name
+        * supports multiple identities - IP, DNS-name, URI
+    * Name contraints
+        * limits to what a CA (the interim CA that is to which this cert belongs) can sign
+
+## Certifiate lifecycle
+
+* CSR - cert signing request
+    * pub-key to sign.
+    * proof of posession of private key (using a sign)
+        * By principle a csr can be verified
+* Domain Validation
+    * Eg. send a email to an approved email and following the link givein.
+* Organization Validation
+    * Lots of inconsitencies here
+* Extended Validation
+    * covers gaps in Organization Validation
+
+    * proof of posession of the domain/id
+
+# OpenSSL
+
+General openssl arg meaning
+```sh
+#get to know
+openssl version
+
+#list all commands
+openssl help
+
+-nodes      :   no encrpyption of private key if created.
+```
+
+## Key generations
+
+```sh
+
+# rsa key of a given strength
+openssl genrsa  -out site-root.key 4096
+
+#generate a rsa key - interactive - asks for paraphrase
+openssl genrsa -aes128 -out fd.key 2048
+
+#show the key
+openssl rsa -in fd.key -text -noout
+
+#get the pub key
+openssl rsa -in fd.key -pubout -out fd-public.key
+
+#dsa is a 2 step process
+openssl dsaparam -genkey 2048 | openssl dsa -out dsa.key -aes128
+
+#ecdsa -- you give the name of the curve
+openssl ecparam -genkey -name secp256r1 | openssl ec -out ec.key -aes128
+
+```
+
+## CSR
+
+
+```sh
+
+#create a certificate signing request
+openssl req -new -key fd.key -out fd.csr
+### .. and fill fields manually
+
+# from a config file
+cat <<EOF > host.cnf
+[ req ]
+prompt              = no
+distinguished_name  = req_distinguished_name
+policy              = policy_match
+x509_extensions     = user_crt
+req_extensions      = v3_req
+
+[ req_distinguished_name ]
+countryName                     = IN
+stateOrProvinceName             = KARNATAKA
+localityName                    = BENGALURU
+0.organizationName              = gxc
+organizationalUnitName          = gxc
+commonName                      = host.gxc.io
+
+[ user_crt ]
+basicConstraints        = critical, CA:FALSE
+subjectKeyIdentifier    = hash
+authorityKeyIdentifier  = keyid:always, issuer:always
+keyUsage                = critical, nonRepudiation, digitalSignature, keyEncipherment, keyAgreement
+extendedKeyUsage        = critical, clientAuth
+subjectAltName          = @alt_names
+
+[ v3_req ]
+basicConstraints        = critical, CA:FALSE
+subjectKeyIdentifier    = hash
+keyUsage                = critical, nonRepudiation, digitalSignature, keyEncipherment, keyAgreement
+extendedKeyUsage        = critical, clientAuth
+subjectAltName          = @alt_names
+
+[alt_names]
+DNS.1   = host.gxc.io
+DNS.2   = host1.gxc.io
+EOF
+openssl req -key host.key -config host.cnf -new -out host.csr
+
+#dump the csr
+openssl req -in fd.csr -text -noout
+#you can also very
+openssl req -in fd.csr -text -noout -verify
+
+#already have a cert.. just get a csr to extend it.
+openssl x509 -x509toreq -in fd.crt -out fd.csr -signkey fd.key
+
+```
+
+## Issue Cert
+
+
+```sh
+
+# issue a self-signed cert in one-shot from a config file (No csr)
+cat <<EOF > root.cnf
+[ req ]
+prompt             = no
+distinguished_name = req_distinguished_name
+x509_extensions     = v3_ca
+
+[ req_distinguished_name ]
+countryName                     = IN
+stateOrProvinceName             = KARNATAKA
+localityName                    = BENGALURU
+0.organizationName              = GXC
+organizationalUnitName          = GXC
+commonName                      = root.gxc.io
+
+[ v3_ca ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical,CA:true
+keyUsage  = critical, cRLSign, digitalSignature, keyCertSign
+nsComment = "OpenSSL Generated Certificate"
+EOF
+openssl req -new -x509 -days 365 -config root.cnf  -key site-root.key -out site-root.crt
+
+#non-interfactive - just with subj and no extensions
+openssl req -new -x509 -days 365 -key fd.key -out fd.crt \
+        -subj "/C=GB/L=London/O=Feisty Duck Ltd/CN=www.feistyduck.com"
+
+#signing our own certificate from a csr if present
+openssl x509 -req -days 365 -in fd.csr -signkey fd.key -out fd.crt
+
+
+#read a certificate
+openssl x509 -in fd.crt -noout -text
+
+```
+
+## Conversions
+
+
+```sh
+
+
+#convert PEM to DER
+openssl x509 -inform PEM -in fd.pem -outform DER -out fd.der
+#convert DER to PEM
+openssl x509 -inform DER -in fd.der -outform PEM -out fd.pem
+
+#convert key, pem-cert, cert-chain into pfx
+openssl pkcs12 -export -name "My Certificate" -out fd.p12 \
+      -inkey fd.key -in fd.crt -certfile fd-chain.crt
+
+#pfx to pem
+## you will have to manually split the parts
+### Note add -legacy if required.
+openssl pkcs12 -in fd.p12 -out fd.pem -nodes
+
+```
+
 
 openssl genrsa -aes128 -out fd.key 2048
