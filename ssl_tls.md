@@ -214,6 +214,8 @@ openssl ecparam -genkey -name secp256r1 | openssl ec -out ec.key -aes128
 openssl req -new -key fd.key -out fd.csr
 ### .. and fill fields manually
 
+## extendedKeyUsage -- clientAuth / serverAuth
+
 # from a config file
 cat <<EOF > host.cnf
 [ req ]
@@ -298,6 +300,11 @@ openssl req -new -x509 -days 365 -key fd.key -out fd.crt \
 #signing our own certificate from a csr if present
 openssl x509 -req -days 365 -in fd.csr -signkey fd.key -out fd.crt
 
+#a CA signing a host
+openssl x509 -req -days 365 -in host.csr \
+     -CA site-root.crt -CAkey site-root.key -CAcreateserial \
+     -out host.crt -extensions user_crt -extfile host.cnf
+
 
 #read a certificate
 openssl x509 -in fd.crt -noout -text
@@ -326,5 +333,19 @@ openssl pkcs12 -in fd.p12 -out fd.pem -nodes
 
 ```
 
+## openssl testing
 
-openssl genrsa -aes128 -out fd.key 2048
+```sh
+
+openssl verify -CAfile site-root.crt server.crt
+
+openssl s_client -connect localhost:1443 -CAfile site-root.crt -servername server.gxc.io
+
+curl --cert client.crt --key client.key --cacert site-root.crt --resolve server.gxc.io:1443:127.0.0.1 https://server.gxc.io:1443
+
+```
+
+# study links
+
+https://www.electricmonk.nl/log/2018/06/02/ssl-tls-client-certificate-verification-with-python-v3-4-sslcontext/
+https://stackoverflow.com/questions/22429648/ssl-in-python3-with-httpserver
