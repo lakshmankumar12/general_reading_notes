@@ -179,6 +179,10 @@ openssl version
 openssl help
 
 -nodes      :   no encrpyption of private key if created.
+-binary     :   provide op in binary form (used in dgst)
+-text       :   provide op in text form
+-pubout     :   give public key as output
+-noout      :   omits the output of the encoded version of whatever
 ```
 
 ## Key generations
@@ -198,10 +202,13 @@ openssl rsa -in fd.key -text -noout
 openssl rsa -in fd.key -pubout -out fd-public.key
 
 #dsa is a 2 step process
-openssl dsaparam -genkey 2048 | openssl dsa -out dsa.key -aes128
+openssl dsaparam -genkey 2048 | openssl dsa -out dsa.key
 
 #ecdsa -- you give the name of the curve
-openssl ecparam -genkey -name secp256r1 | openssl ec -out ec.key -aes128
+openssl ecparam -genkey -name secp256r1 | openssl ec -out ec.key
+
+# add a paraphrase to your key.. Use this option
+-aes128
 
 ```
 
@@ -331,7 +338,90 @@ openssl pkcs12 -export -name "My Certificate" -out fd.p12 \
 ### Note add -legacy if required.
 openssl pkcs12 -in fd.p12 -out fd.pem -nodes
 
+## generate random bytes of a given length
+openssl rand 32
+## generate random bytes of a length and then convert to base64
+openssl rand -base64 32
+
 ```
+
+## encrypt and decrypt
+
+```sh
+# mere conversion from b64
+openssl base64 -in file.orig -out file.b64
+openssl base64 -d -in file.b64 -out file.orig
+
+#des3 or blowfish
+openssl des3
+openssl bf
+
+#simple shared key
+#ask key from stdin
+openssl enc -in foo.bar -aes-256-cbc -pass stdin > foo.bar.enc
+### TO check if this works:
+### openssl enc -in foo.bar -aes-256-cbc -pass file:file_with_pass -out foo.bar.enc -outform DER
+# more fancy options
+-salt   : add a salt. Actually default.
+-pbkdf2 : Use PBKDF2 algorithm with default iteration count unless otherwise specified.
+    -iter <count>
+
+#decode back
+openssl enc -d -in foo.bar.enc -aes-256-cbc -pass stdin > foo.bar
+
+#with a pub-priv pair... Create a self-signed cert and then:
+openssl smime -encrypt -aes256 -in clear_text.txt -binary -outform DER -out encrypted.file certfile.pem
+#and decrypt with priv-key
+openssl smime -decrypt -in encrypted.file -inform DER -inkey privkey.pem -out clear_back.txt
+
+
+```
+
+## digests
+
+```sh
+# just get sha256sum of a message
+openssl dgst -sha256 input_file
+# gives the actual 32 byte in binary
+openssl dgst -sha256 -binary input_file
+
+# sign some file with a private key. output is binary(~512 bytes)
+# you can choose to convert that to base64 if you want later.
+openssl dgst -sha256 -sign privkey.pem -out sign.sha256 file_to_be_signed
+
+# verify the signature
+openssl dgst -sha256 -verify pubkey.pem -signature sign.sha256 file_to_be_signed
+
+
+```
+
+
+
+
+## extract
+
+Tip: Use sha256sum to compare the big outputs quickly
+
+* Getting pub key from cert and priv-key is a way to match
+  cert to its priv-key.
+```sh
+
+#extract pubkey from cert
+openssl x509 -in Org1-cert.pem -noout -pubkey
+
+#extract pubkey from any type of key
+openssl pkey -pubout -in Org1-key.pem
+
+```
+
+* Extracting modulus for rsa keys is another way. You can compare this.
+```
+openssl x509 -modulus -noout -in cert.pem
+
+openssl req -noout -modulus -in example.csr
+```
+
+
 
 ## openssl testing
 
@@ -347,5 +437,6 @@ curl --cert client.crt --key client.key --cacert site-root.crt --resolve server.
 
 # study links
 
+https://www.freecodecamp.org/news/openssl-command-cheatsheet-b441be1e8c4a/
 https://www.electricmonk.nl/log/2018/06/02/ssl-tls-client-certificate-verification-with-python-v3-4-sslcontext/
 https://stackoverflow.com/questions/22429648/ssl-in-python3-with-httpserver
