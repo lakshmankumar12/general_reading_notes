@@ -82,9 +82,9 @@ Gi - GGSN to IP-Network
 # IDs
 
 * PLMN-ID   = MCC + MNC
-* MMEI      = MMEC + MMEGI
-    * MME-code (one mme withing the group)
-    * MME-group-identifier
+* MMEI      = MMEGI + MMEC
+    * MME-group-identifier, 16 bits
+    * MME-code (one mme withing the group), 8 bits
 * GUMMEI    = PLMN-ID + MMEI
     * Globally unique MMEI
 * TAI       = PLMN-ID + TAC

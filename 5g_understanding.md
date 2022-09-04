@@ -5,22 +5,15 @@
 * Service points (Rest/API)
 * Point-to-Point (like in 4G)
 
+## 3 use-cases 5G tries to solve
+
+* eMBB  -- enhanced Mobile Broadband (better 4G network)
+* URLLC -- Ultra Reliable Low Latency Connection
+* mMTC  -- massive Machine Type Communication
+
 # Spec List
 
 * Refer to sae_lte_understanding.md
-
-# Core network Elements
-
-NR    -  New Radio (GNodeB)
-AMF   -  Access and Mobility Function
-SMF   -  Session Management Function
-LMF   -  Location Management Function
-PCF   -  Policy Control Function
-AUSF  -  Authentication and Subscription Function
-UDM   -  Unified Data Management
-UPF   -  User plane function
-CHF   -  Charging control function
-NRF   -  Network Repository function
 
 # List of Point to Point interfaces
 
@@ -76,9 +69,24 @@ N11 -   AMF to SMF (Mnemonic: S11 in 4g is MME -- SGW)
 
 ```
 
+# Core network Elements
 
-                |
-# Different Elements
+NR    -  New Radio (GNodeB)
+AMF   -  Access and Mobility Function
+SMF   -  Session Management Function
+LMF   -  Location Management Function
+PCF   -  Policy Control Function
+AUSF  -  Authentication and Subscription Function
+UDM   -  Unified Data Management
+UDR   -  Unified Data Repository
+UPF   -  User plane function
+CHF   -  Charging control function
+NRF   -  Network Repository function
+NEF   -  Network Exposure Function
+5GEIR -  5G Equipment Identity Registry
+NSSF  -  Network Slice Selection Function
+
+## Details
 
 * AMF
     * Very similar to MME, but there are some differences too.
@@ -110,7 +118,50 @@ N11 -   AMF to SMF (Mnemonic: S11 in 4g is MME -- SGW)
                   route data flows differently based on filters(eg: 5-tuple).
                 * Helps to implement MEC (Mobile Edge computing)
             * Roaming with Home routing
-
+* NRF
+    * Enables service discovery.
+        * Avoids static mapping of services to their endpoint addresses
+    * Services register with NRF at their start telling about themselves
+    * When services need to contact other services, they query NRF to get details of their
+      target service
+* UDM
+    * Frontend for UDR, that stores all subscription information
+    * Uses subscription data to perform
+        * access authorization
+        * registration management
+        * reacheability for terminating events like SMS
+    * Handles the SUCI to SUPI convertion
+    * Knows which AMF is handling the user
+    * Always in the home plmn
+    * Similar to HSS in some aspects
+* UDR
+    * Stores subscription like
+        * data related to network
+        * policies
+    * Helps UDM, PCF, AUSF and NEF
+* AUSF
+    * In the home network
+    * Perform auth based on info from UE
+* PCF
+    * provides policy control for
+        * access and mobilty mgmt
+            * frequency selection priority (used by RAN)
+        * session mgmt
+            * QoS authorized
+            * Charging control
+            * Policy Control
+            * Event reporting
+    * can directly interact with UE via AMF for
+        * discovery/selection of non-3GPP networks
+        * session continuation mode selection
+        * network slice selection
+        * data name selection
+* NSSF
+    * AMF asks the NSSF to give the list of AMF(s) that can serve a give UE
+      for its requested Network-slice.
+    * There is a NAS Reroute message, which a AMF can send to gNB to make it
+      send the re-route message to the other AMF
+    * Alternatively AMF can relay the registration with another AMF as well.
 
 # QoS
 
@@ -139,4 +190,66 @@ N11 -   AMF to SMF (Mnemonic: S11 in 4g is MME -- SGW)
       * This is referred as RQI marking on the pkt.
     * There is a reflective Qos timer to guard how long the PDRs remain in action.
 
+# Identities
 
+* SUCI
+    * Subscriber concealed identity
+    * One time usage. Everytime its used, a new SUCI is used.
+    * Is produced with the Home-Network-Public-Key
+    * In IMSI based SUPI, the MSIN is used to compute.
+* SUPI
+    * Subscriber Private identity , like IMSI(need not be always IMSI)
+    * Globally unique, provisioned in UDR
+    * Shall contain the address of home network
+    * For interworking with EPC(4G), SUPI shall be IMSI-based.
+    * Never transmitted on air.
+* PEI
+    * IMEI or IMEISV
+    * Same as EPS
+* 5G-GUTI
+    * Globally unique temporary identifier (GUTI)
+    * Globally unique AMF Identifier (GUAMI)
+    * Assigned as part of AMF, as part of Registration-Accept
+    * Components
+      ```
+      5G-GUTI =   5G-GUAMI                               +   M-TMSI
+              = MCC + MNC + AMF      + AMF   +  AMF      +   M-IMSI
+                            RegionId   SetID    Pointer
+                            8 bits     10 bits   6 bits
+      ```
+    * There is a scheme to convert 4G-GUTI <---> 5G-GUTI. Actually quite straightforward, as
+      the number of bits in 4G-GUTI and 5G-GUTI is still the same
+
+      ```
+           4G                 5G
+           MCC            ==  MCC
+           MNC            ==  MNC
+           MMEGI (8 bits) ==  AMF-Region-ID (8 bits)
+           MMEGI (8 bits)
+           +              ==  AMF-Set-ID (10 bits)
+           MMEC  (2 bits)
+           MMEC  (6 bits) ==  AMF-Pointer (6 bits)
+           M-TMSI         ==  5G-TMSI
+      ```
+      In co-located AMF/MME, the above mapping makes it seamless.
+
+# Network Slicing
+
+* Multiple logical network tailored for different use cases like eMBB, URLLC and mMTC
+* Slice Type(ST) - 8 bits, Slice Differentiator(SD) - 24 bits
+* S-NSSAI - Single Network Slice Selection Assistance Information
+* Can be use-case specific or UE-specific
+
+
+# Security
+
+* Network Access Security
+    * Mobile connection with the Air Network
+* Network Domain Security
+    * Inter NF Security (eg: RAN to AMF, or AMF to UDM)
+* User Domain Security
+    * ME and USIM
+* Application Domain sercurity
+    * App in UE to the Services in Data-Network
+* SBA domain security
+    * Between Operators
