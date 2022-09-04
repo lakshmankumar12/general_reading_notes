@@ -178,11 +178,15 @@ openssl version
 #list all commands
 openssl help
 
--nodes      :   no encrpyption of private key if created.
--binary     :   provide op in binary form (used in dgst)
--text       :   provide op in text form
--pubout     :   give public key as output
--noout      :   omits the output of the encoded version of whatever
+-nodes              :   no encrpyption of private key if created.
+-binary             :   provide op in binary form (used in dgst)
+-text               :   provide op in text form
+-pubout             :   give public key as output
+-noout              :   omits the output of the encoded version of whatever
+-pass pass:astyped  :   supply password from cmdline
+-pass file:filename :   get password from file
+-pass pass:         :   no password
+-passin <> , -passout <>  :  for pkcs12 command
 ```
 
 ## Key generations
@@ -440,3 +444,11 @@ curl --cert client.crt --key client.key --cacert site-root.crt --resolve server.
 https://www.freecodecamp.org/news/openssl-command-cheatsheet-b441be1e8c4a/
 https://www.electricmonk.nl/log/2018/06/02/ssl-tls-client-certificate-verification-with-python-v3-4-sslcontext/
 https://stackoverflow.com/questions/22429648/ssl-in-python3-with-httpserver
+
+## ec-key encrpytion
+
+https://medium.com/asecuritysite-when-bob-met-alice/elliptic-curve-keys-pythonand-hazmat-43750ec56ce3
+https://cryptobook.nakov.com/asymmetric-key-ciphers/ecc-encryption-decryption
+https://www.programcreek.com/python/example/106733/cryptography.hazmat.primitives.serialization.load_pem_public_key
+https://snyk.io/advisor/python/cryptography/functions/cryptography.hazmat.primitives.asymmetric.ec
+

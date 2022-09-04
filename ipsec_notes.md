@@ -73,6 +73,21 @@ some information is transmitted in cleartext.
 
 * https://docs.strongswan.org/docs/5.9/howtos/introduction.html
 
+# swanctl
+
+```sh
+swanctl --load-creds
+swanctl --load-pools
+swanctl --load-conns
+
+swanctl --initiate --child connname
+swanctl --list-pools --leases
+swanctl --terminate --ike connname
+swanctl --list-sas
+
+
+```
+
 
 
 #Sources

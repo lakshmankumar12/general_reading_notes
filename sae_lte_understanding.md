@@ -4,7 +4,10 @@ SAE and LTE General Understanding
 
 # List of interfaces
 
-* S1   -  Data plane from Enb to SGW
+Most common Ifcs: S1, S11, S5, SGi
+
+* S1-C -  Control plane from Enb to MME
+* S1-U -  Data plane from Enb to SGW
 * S2   -
 * S2a  -  Trusted non-3GPP to PGW (can be PMIP or TWAG(Gtp))
 * S2b  -  Non-Trusted non-3GPP to PGW (ePDG)
@@ -16,7 +19,7 @@ SAE and LTE General Understanding
 * S6b  -  PGW to AAA
 * S6d  -  S4-SGSN to HSS
 * S7   -  NOT_DEFINED
-* S8   -  inter-plmn S5->S9
+* S8   -  inter-plmn S5 (SGW-PGW)
 * S9   -  home PCRF to visited PCRF
 * S10  -  inter MME
 * S11  -  MME to SGW
@@ -28,7 +31,7 @@ SAE and LTE General Understanding
 * S17  -  MME to UCMF
 * S101 -  eHRPD to MME (Pmip?)
 * S103 -  HSGW to SGW (Pmip?)
-* SGi
+* SGi  -  PGW to Packet-Data-Network
 
 * X2 - eNodeb to eNode
 
@@ -73,7 +76,7 @@ Gi - GGSN to IP-Network
 29.060 - GTPv1
 
 23.501 - 5G
-23.502
+23.502 - 5G NGAP
 
 
 # IDs
@@ -98,8 +101,28 @@ Has good info on IDS - https://www.prodevelopertutorial.com/lte-chapter-6-identi
 
 # Policy and Bearers
 
+## Bearer
+
+* One logical connection between UE and PGW. It traveses
+  ```
+  UE ------ Enodeb ---- SGW  ----- PGW
+     Radio         S1        S5/S8
+     Bearer        Bearer    Bearer
+     <---E-RAB--------->
+
+  So its:
+  EPS - Bearer == E-RAB + S5/S8 Bearer
+               == Radio-Bearer + S1-Bearer + S5/S8 Bearer
+  ```
+* Is uniquely identfied by QCI/ARP
+    * QCI - Quality of Class Identifier
+        * 1 to 9.
+
+
+## PGW and PCRF
+
 * The PGW and PCRF maintain session-level contexts.
-* Each session is identified at PGW by (IMSI,APN-requested,Access-type) and so is it as PCRF
+* Each session is identified at PGW by (IMSI,APN-requested,Access-type) and so is it at PCRF
 * The following is the hierarchy of information exchanged between PGW and PCRF
     * Session-level
         * Default-Bearer's QCI/ARP
@@ -110,8 +133,7 @@ Has good info on IDS - https://www.prodevelopertutorial.com/lte-chapter-6-identi
             This could be just gating/drop or apply some Qos. Qos is specified in terms of a QCI/ARP. Another action
             is to classify this traffic into a (Rating-Grounp,service-id) for charging.
 * The PCRF and PGW are in sync about the current session that is ongoing, and
-  the rules that are applied/in-progress
-  for that session.
+  the rules that are applied/in-progress for that session.
 * The PCRF may at any point add a new rule to a session, delete a rule or edit a rule.
 * Note that there is no notion of bearer per se, between PCRF and PGW
 
@@ -138,6 +160,64 @@ Has good info on IDS - https://www.prodevelopertutorial.com/lte-chapter-6-identi
 # Security
 
 * Very good break-down in https://www.prodevelopertutorial.com/lte-chapter-10-lte-security/
+
+# UE
+
+## Info stored by UE
+
+* USIM
+    * Network Operator's PLMN list
+    * Subscription Information
+    * Access Barring
+* Stored Information
+    * Most recently used frequency band
+    * PLMN
+    * Tracking Area Code
+    * Cell ID
+    * S-TMSI
+    * InterRAT Frequency Band
+* Information that UE needs to get
+    * Frequency and Timing Synchronization info
+    * System Bandwidth
+    * Number of MIMO Antennas
+    * Identities
+        * (C-RNTI, Physical Cell ID, Tracking Area Code)
+        * Network PLMN
+        * Signaling & Traffic Radio Resouce
+        * RACH_ROOT_SEQUENCE
+        * PRACH Config.
+
+## Power-On Sequence
+
+* UE is Off
+* Power On UE
+* Frequency Search
+* Time and Frame Synchronization
+    * In this process, PSS and SSS will be decoded as well.
+* PCI (Physical Cell ID) detection
+* MIB decoding
+    * UE can figure out System Bandwidth and Transmission Mode
+      in this process. (As you see in Downlink Framestructure,
+      MIB/PBCH is located at the 6 RBs around the center frequency.
+      So the success of MIB decoding does not guarantee that signal
+      quality across the whole band is good)
+* Detect CSR (Cell Specific Reference Signal) and perform Channel
+  Estimation and Equalization. In this process, UE will detect/measure
+  reference signal across the whole system bandwidth. So RSRP/RSRQ
+  measured at this step can be a good indicator for overall signal quality.
+* Decode PDCCH and extract DCI information for SIB. PDCCH is spread
+  across the whole bandwidth, so the signal quality across the whole
+  bandwidth should be good enough for this step.
+* SIB deconding (SIB1 should be decoded first and then SIB2 and then
+  remaining SIBs)
+* Cell Selection:
+    * UE may find multiple suitable cells, but it try camp on to HPLM
+      cell with the highest priority
+
+## DRX
+
+* A way for the network to let the UE sleep for some time and only wake up for the moments
+  when the network will schedule data for that UE.
 
 # from tutorials
 

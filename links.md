@@ -1,5 +1,19 @@
 # Linux-Networking
 
+## Lte
+
+https://www.quora.com/How-are-cells-defined-in-LTE-if-a-single-eNodeB-can-serve-multiple-cells
+https://www.tutorialspoint.com/lte/lte_quick_guide.htm
+https://www.commscope.com/blog/2014/cells-sectors-and-antenna-beamforming/
+https://www.techplayon.com/pss-and-sss-lte-synchronization/
+Too techie: https://ourtechplanet.com/pci-planning-facts-myths/
+https://www.rfwireless-world.com/Tutorials/LTE-tutorial.html
+Really good: https://www.sharetechnote.com/html/BasicProcedure_LTE_OverallSequence.html
+    * ON interferece: https://www.sharetechnote.com/html/Handbook_LTE_Interference_Downlink.html
+    * frame sturcture: https://www.sharetechnote.com/html/FrameStructure_DL.html#Overview
+
+
+
 ## Modify a pkt using nfqueue
 
 https://stackoverflow.com/questions/50732261/modify-data-in-outgoing-udp-packets-on-linux
@@ -18,3 +32,8 @@ https://stackoverflow.com/questions/54735049/graphviz-how-to-create-overlapping-
 # Sanskrit
 
 https://tounicode.blogspot.com/p/sanskrit-98-to-unicode-converter-01.html
+
+# Python
+
+http://dabeaz.com/coroutines/Coroutines.pdf
+https://bbc.github.io/cloudfit-public-docs/asyncio/asyncio-part-1
