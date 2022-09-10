@@ -109,10 +109,8 @@ Has good info on IDS - https://www.prodevelopertutorial.com/lte-chapter-6-identi
      Radio         S1        S5/S8
      Bearer        Bearer    Bearer
      <---E-RAB--------->
+     <---EPS-Bearer--------------->
 
-  So its:
-  EPS - Bearer == E-RAB + S5/S8 Bearer
-               == Radio-Bearer + S1-Bearer + S5/S8 Bearer
   ```
 * Is uniquely identfied by QCI/ARP
     * QCI - Quality of Class Identifier
@@ -218,6 +216,43 @@ Has good info on IDS - https://www.prodevelopertutorial.com/lte-chapter-6-identi
 
 * A way for the network to let the UE sleep for some time and only wake up for the moments
   when the network will schedule data for that UE.
+
+# Procedures
+
+* Create Session Request/Response
+    * between MME and SGW for creating a session
+* Modify Bearer Request/Response
+    * between MME and SGW for updating a session
+
+# Radio stuff
+
+1 s  =  100 Frames
+     =  10 sub-frames per frame * 100    =  1000 sub-frames
+     =  2 slots per sub-frame * 1000     =  2000 slots      (each slot = 0.5 ms)
+
+There are 7 symbols per slot, with each symbol preceded by a cyclic-prefix.
+Or there are 6 symbols per slot, with each symbol preceded by a extended-cyclic-prefix
+
+You have a Band, Say band-48 (CBPRS), this is split into Bandwidth of either of the following.
+This Bandwidth is called the carrier and is the least unit given to one cell.
+But note that with a re-use factor of 1, adjacent cells can have the same freq.
+
+Bandwidth | Resource Bloc | Subcarriers (downlink) | Subcarriers (uplink)
+1.4 MHz   | 6             | 73                     | 72
+3 MHz     | 15            | 181                    | 180
+5 MHz     | 25            | 301                    | 300
+10 MHz    | 50            | 601                    | 600
+15 MHz    | 75            | 901                    | 900
+20 MHz    | 100           | 1201                   | 1200
+
+One subcarrier is 15Khz.
+One Resource Element is 1 subcarrier * 1 Symbol
+One Resource Block is 12 subcarriers (180Khz) * 1 time-slot (7 symbols)
+
+In a 1.4Mhz bandwidth allocation, there are 6 Resource blocks
+
+How you allocate the 10 subframes is the TDD config.
+
 
 # from tutorials
 

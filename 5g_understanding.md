@@ -17,13 +17,22 @@
 
 # List of Point to Point interfaces
 
+* Important ones - N3, N4, N11
+
 N1  -   UE to AMF
 N2  -   NR to AMF
 N3  -   NR to UPF
 N4  -   SMF to UPF
 N6  -   UPF to Data-Network
+N7  -   SMF to PCF
+N8  -   AMF to UDM
 N9  -   UPF to UPF
+N10 -   SMF to UDM
 N11 -   AMF to SMF (Mnemonic: S11 in 4g is MME -- SGW)
+N15 -   AMF to PCF
+N26 -   MME to AMF
+
+
 
 
 
@@ -76,7 +85,6 @@ AMF   -  Access and Mobility Function
 SMF   -  Session Management Function
 LMF   -  Location Management Function
 PCF   -  Policy Control Function
-AUSF  -  Authentication and Subscription Function
 UDM   -  Unified Data Management
 UDR   -  Unified Data Repository
 UPF   -  User plane function
@@ -85,6 +93,13 @@ NRF   -  Network Repository function
 NEF   -  Network Exposure Function
 5GEIR -  5G Equipment Identity Registry
 NSSF  -  Network Slice Selection Function
+AUSF  -  Authentication Server Function
+SEAP  -  Security Anchor Function
+ARPF  -  Authentication Credential Repository and Processing Function
+SIDF  -  Subscriber Identity De-concealing Function
+AF    -  ??
+NWDAF -  ?? (inter-working something)
+
 
 ## Details
 
@@ -93,6 +108,7 @@ NSSF  -  Network Slice Selection Function
     * Relays messages to UE from all of SMF, AUSF, UDM, SMSF, PCF
     * One UE is connected to only one AMF at any point in time.
     * Responsible for picking SMF (like MME chose SGW/PGW in 4G)
+    * Implements the SEAP function to enforce authentication
 * SMF
     * Responsible for setting up User-plane for the UE.
     * Allocates IP to the UE.
@@ -162,6 +178,37 @@ NSSF  -  Network Slice Selection Function
     * There is a NAS Reroute message, which a AMF can send to gNB to make it
       send the re-route message to the other AMF
     * Alternatively AMF can relay the registration with another AMF as well.
+* AUSF
+    * Responsible for authentication, given data from UE and uses services of UDM
+    * Always in HPLMN
+* SIDF
+    * Converts SUPI to SUCI.
+    * Always in HPLMN
+    * Can be within UDM or UDR (impl. dependant)
+* ARPF
+    * Stores the credentials - Keys and SUPI
+    * Can be within UDM or UDR (impl. dependant)
+* NEF
+    * Exposes 5G data to other networks like UE location/mobility-status etc.
+
+## services offered
+
+* AMF
+    * Table 5.2.2.1-1 in 23.502
+    * Namf_Communication
+        * allows other services like SMF,PCF to communicate to UE over NG-RAN
+        * enables one AMF to fetch contexts from another AMF
+        * allows for subscription(by other services) to UE status changes
+    * Namf_EventExposure
+        * allows other services to subscribe to events such as UE recheability, mobility change
+    * Namf_MT
+        * allows other services to ensure UE is recheable
+    * Namf_Location
+        * allows other service to get location of UE
+* SMF
+    * Table 5.2.8.1-1 in 23.502
+    * Nsmf_PDUSession_service
+    * Nsmf_EventExposure
 
 # QoS
 
@@ -232,6 +279,11 @@ NSSF  -  Network Slice Selection Function
            M-TMSI         ==  5G-TMSI
       ```
       In co-located AMF/MME, the above mapping makes it seamless.
+* DNN
+    * Data network Name
+    * provided by UE when initiating a pdu-session-request
+* PDU session id
+    * Identifies the pdu-session. (created and owned by the SMF)
 
 # Network Slicing
 
@@ -253,3 +305,38 @@ NSSF  -  Network Slice Selection Function
     * App in UE to the Services in Data-Network
 * SBA domain security
     * Between Operators
+
+## other points
+
+* There is integrity protection for data, which isn't there in 4g.
+  4G has only ciphering.
+* Home plmn is more involved in authentication process
+* UDM decides integrity and ciphering protection instad of enodeb.
+* AKA - sim based auth
+* EAP-AKA also possible.
+* See figure 6.2.1-1 in TS.33.501 for the key hierarchy
+    * In short, this is the hiearchy of functions and keys
+        ```
+         UDM/ARPF -> UDM/ARPF -> AUSF -> SEAF -> AMF -> Gnb
+         K -> CK,IK -> KAUSF -> KSEAF -> KAMF --+--> K-Nas-int, K-Nas-enc
+                                                |
+                                                +--> Kgnb --+--> K-rrc-int
+                                                            |
+                                                            +--> K-rrc-enc
+                                                            |
+                                                            +--> K-up-int (new in 5g)
+                                                            |
+                                                            +--> K-up-enc
+        ```
+    * The K-AUSF has the serving plmn as its input. This ensures, different
+      keys are used in different networks.
+
+* Authentication vector
+    * Has 5 components
+        * AUTN - authentication token
+        * RAND
+        * XRES* - AUSF computes HXRES* and stores XRES*
+        * K_AUSF
+    * AUSF forwards only (AUTN, RAND, HXRES*) to the serving network
+    * K + AUTN ---> CK, IK, RES (given by USIM)
+    * CK, IK, RES ---> RES*, K_AUSF, K_SEAF, KAMF (done by ME)

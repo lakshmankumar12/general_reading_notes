@@ -18,6 +18,7 @@
     * has long-standing configuration like information
 * ovs-vswitchd
     * listens to flow updates from controller
+    * Is in the data-path for first-pkts
 * Kernel datapath
     * handles pkts.
     * If no match found, its sent to ovs-vswitchd, that decides and injects the flow-entry into kernel.
