@@ -10,6 +10,8 @@ https://kubernetes.io/docs/concepts/architecture/nodes/
 
 Wiki has the info pretty laid out - https://en.wikipedia.org/wiki/Kubernetes
 
+Good read on other tools in the kubernetes ecosystem: https://www.densify.com/kubernetes-tools
+
 # Main componenets of Kubernetes
 
 * pod: minimum deployment unit in kubernetes.
@@ -119,6 +121,7 @@ spec:
 ## Deployment / ReplicaSet
 
 * Resource object that defines how pods should be started
+* Helps in the self-healing goal of kubernetes
 * A deployment is a collection of replica-sets
 * When you update a image, the current replica-sets are replaced with new ones.
 
@@ -130,11 +133,12 @@ kind: Deployment
 metadata:
   name: anything-say-ngnix-deployment
 spec:
+  replicas: 2                # tells deployment to run 2 pods matching the template
   selector:
     matchLabels:
       app: ngnix-app
-  replicas: 2                # tells deployment to run 2 pods matching the template
   template:                  # create pods using pod definition in this template
+                             # kind of taking a pod.yml here.
     metadata:
       labels:
         app: ngnix-app
@@ -150,18 +154,30 @@ spec:
 
 * Logical abstraction for a collection of pods that function exactly alike
 * Pods are ephemeral - so service offers a frontend to the pods to other functions
-* service spec has a label, which maps it to the backing deployment/pod.
+* This is how the service to pod mapping works:
+  ```
+  service.yml                                      pod.yml
+  spec:                                            metadata:
+    selector:             -- matched with -->        label:
+      project: name-to-match                           project: name-to-match
+  ```
+  * Note that that is one-to-many mapping. The service forwards the traffic to all
+    pods with the matching label.
+  * Kubernets keeps track of which pods are available and which pods are gone.
 
 ### Service types
 
 * ClusterIP
-    * Exposes a service which is only accessible from within the cluster.
     * This is the default
-    * (My own note) Restricts service to be visible only to other entities within cluster
+    * (to understand better)Exposes a service which is only accessible from within the cluster.
+    * you can use forward-port to expose localhost to the cluster
 * NodePort
-    * Exposes a service via a static port on each node’s IP.
+    * Exposes a service via a static port on every node’s IP.
+    * you can use forward-port to expose localhost to the nodeport
 * LoadBalancer
-    * Exposes the service via the cloud provider’s load balancer.
+    * Exposes the service via the cloud provider’s internet-facing load balancer.
+        * If your cluster runs on AWS, this Service will automatically provision
+          an AWS Network Load Balancer (NLB) or Classic Load Balancer (CLB).
 * ExternalName
     * Maps a service to a predefined externalName field by returning a value for the CNAME record.
 
@@ -181,6 +197,23 @@ spec:
       port: 80
       targetPort: 80
 ```
+
+### Explanation of get output
+
+
+* The CLUSTER-IP value is an IP address on the internal Kubernetes Pod
+  network and is used by other Pods and applications running on the
+  cluster. You won’t be connecting to that address.
+* The Kubernetes service is used internally by Kubernetes for Service discovery.
+
+```sh
+NAME                                    TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                                   AGE
+bootstrapper-orc8r-nginx-proxy          LoadBalancer   10.101.99.35     <pending>     80:31638/TCP,443:31479/TCP,8444:32159/TCP 4h15m
+db                                      NodePort       10.107.209.211   <none>        5432:31184/TCP,5433:31046/TCP             4h16m
+domain-proxy-configuration-controller   ClusterIP      10.108.80.166    <none>        8080/TCP                                  4h15m
+kubernetes                              ClusterIP      10.96.0.1        <none>        443/TCP                                   17h
+```
+
 
 ## Labels
 
@@ -204,6 +237,15 @@ spec:
 
 
 # kubectl commands
+
+## environment
+
+```sh
+# this env variable give kubectl information on
+# where the cluster runs and the auth details
+export KUBECONFIG=/usercode/config
+```
+
 
 ## General notes
 
@@ -271,6 +313,9 @@ kubectl port-forward --address <address> <podname> port1:port2
 ## port2            -- port of the pod where its offering service
 # to a service
 kubectl port-forward --address <address> <svcname> port1:port2
+
+## list all port-forwards
+kubectl get svc -o json | jq '.items[] | {name:.metadata.name, p:.spec.ports[] } | select( .p.nodePort != null ) | "\(.name): localhost:\(.p.nodePort) -> \(.p.port) -> \(.p.targetPort)"'
 
 ```
 

@@ -13,7 +13,9 @@ Really good: https://www.sharetechnote.com/html/BasicProcedure_LTE_OverallSequen
     * frame sturcture: https://www.sharetechnote.com/html/FrameStructure_DL.html#Overview
 Also another frame related link: https://rfmw.em.keysight.com/wireless/helpfiles/89600b/webhelp/subsystems/lte/content/lte_overview.htm
 
+## CBRS
 
+Pitching for Collaborative Coexistence Framework: https://www.ericsson.com/en/blog/6/2022/cbrs-growing-pains-and-progress
 
 ## Modify a pkt using nfqueue
 
