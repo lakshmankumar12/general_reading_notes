@@ -97,7 +97,7 @@ AUSF  -  Authentication Server Function
 SEAP  -  Security Anchor Function
 ARPF  -  Authentication Credential Repository and Processing Function
 SIDF  -  Subscriber Identity De-concealing Function
-AF    -  ??
+AF    -  (External) Application Function
 NWDAF -  ?? (inter-working something)
 
 
@@ -190,6 +190,8 @@ NWDAF -  ?? (inter-working something)
     * Can be within UDM or UDR (impl. dependant)
 * NEF
     * Exposes 5G data to other networks like UE location/mobility-status etc.
+* AF
+    * External application that can create policies into the 5G-CN(PCF) for UEs
 
 ## services offered
 
@@ -209,6 +211,39 @@ NWDAF -  ?? (inter-working something)
     * Table 5.2.8.1-1 in 23.502
     * Nsmf_PDUSession_service
     * Nsmf_EventExposure
+* PCF
+    * Npcf_AMPolicyControl
+        * access-control, network-selection, mobility-mgmt-related policies, ue-route-selection
+        * allows AMF to create/modify/delete per UE policy assocations with PCF
+        * Per-UE policies can have access and mobility policy info, policy-control-request trigger conditions
+            * Upon hitting trigger AMF may contact PCF, which may give further policies to AMF
+            * allows PCF to send new Policies for a existing AMF-PCF per UE policy association
+    * Npcf_PolicyAuthorization
+        * Authorizes and crates policies from AF(s) for the pdu-session for which the AF is bound to
+        * allows SMF to create/modify/delete per UE policy assocations with PCF
+        * same as AMF - send in triggers and send more policies when triggers are met.
+    * Npcf_SMPolicyControl
+        * PDU session related policies for SMF
+    * Npcf_BDTPolicyControl
+        * Background Data Transfer (BDT) policies for NEF
+    * Npcf_UEPolicyControl
+    * Npcf_EventExposure
+        * allows other service to subscribe to events (eg, IPchange, Data-usage-cap-reached)
+* UDM
+    * Table 5.2.3:1-1 in 23.502
+    * Nudm_SDM - subscriber data mgmt
+        * AMF, SMF get subscription data from here.
+        * And notified of new subscription updates
+    * Nudm_UECM - UE context mgmt
+        * AMF, SMF can update the UDM of the current AMF,SMF serving the UE, UE-status etc.
+    * Nudm_UEAuthentication
+    * Nudm_EventExposure
+    * Nudm_ParameterProvision
+    * Nudm_NIDDAuthorization
+* NRF
+    * Nnrf_NFManagement
+    * Nnrf_NFDiscovery
+    * Nnrf_AccessToken
 
 # QoS
 
@@ -340,3 +375,20 @@ NWDAF -  ?? (inter-working something)
     * AUSF forwards only (AUTN, RAND, HXRES*) to the serving network
     * K + AUTN ---> CK, IK, RES (given by USIM)
     * CK, IK, RES ---> RES*, K_AUSF, K_SEAF, KAMF (done by ME)
+
+# Procedures
+
+## Registration
+
+* 23.502 has it
+* first procedure after power on
+* types:
+    * initial reg, mobility reg, periodic reg
+* Info sent by UE:
+    * IDentities - 5G-TMSI/GAUMI or SUCI
+    * registration type
+    * requested-NSSAI
+        * Help RAN pick the AMF that serves this requested-NSSAI.
+        * If RAN can't pick, it will send to default AMF
+* New AMF contacts old AMF to collect UE-context
+
