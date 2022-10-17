@@ -257,8 +257,12 @@ export KUBECONFIG=/usercode/config
 
 ## Commands cheat-sheet
 
+* Kubectl own cheatsheet: https://kubernetes.io/docs/reference/kubectl/cheatsheet/
 
 ```sh
+
+# config
+kubectl config view
 
 # cluster related
 kubectl cluster-info

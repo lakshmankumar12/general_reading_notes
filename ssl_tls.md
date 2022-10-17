@@ -170,7 +170,8 @@ OCSP - Online Certificate Status Protocol
 
 # OpenSSL
 
-General openssl arg meaning
+## General openssl arg meaning
+
 ```sh
 #get to know
 openssl version
@@ -211,8 +212,15 @@ openssl dsaparam -genkey 2048 | openssl dsa -out dsa.key
 #ecdsa -- you give the name of the curve
 openssl ecparam -genkey -name secp256r1 | openssl ec -out ec.key
 
+#dump the ec key
+openssl ec -in ec.key -noout -text
+
 # add a paraphrase to your key.. Use this option
 -aes128
+
+# verify ssh-key fingerprint
+file="$HOME/.ssh/id_rsa"
+openssl pkcs8 -in ${file} -inform PEM -outform DER -topk8 -nocrypt | openssl sha1 -c
 
 ```
 
@@ -318,7 +326,8 @@ openssl x509 -req -days 365 -in host.csr \
 
 
 #read a certificate
-openssl x509 -in fd.crt -noout -text
+file="fd.crt"
+openssl x509 -in ${file} -noout -text | less
 
 ```
 
@@ -431,6 +440,7 @@ openssl req -noout -modulus -in example.csr
 
 ```sh
 
+openssl verify -CAfile ${rootcert} ${certfile}
 openssl verify -CAfile site-root.crt server.crt
 
 openssl s_client -connect localhost:1443 -CAfile site-root.crt -servername server.gxc.io

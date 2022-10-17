@@ -112,10 +112,13 @@ Has good info on IDS - https://www.prodevelopertutorial.com/lte-chapter-6-identi
      <---EPS-Bearer--------------->
 
   ```
-* Is uniquely identfied by QCI/ARP
+* Is uniquely identfied by (QCI,ARP)
     * QCI - Quality of Class Identifier
         * 1 to 9.
-
+        * Each number maps to a specification defined preset
+          value of pkt-loss,pkt-delay and usecase.
+    * ARP - allocation and retention priority
+        * a number from 1 to 15 , 1 highest prio
 
 ## PGW and PCRF
 
