@@ -72,6 +72,7 @@ some information is transmitted in cleartext.
 # Strongswan
 
 * https://docs.strongswan.org/docs/5.9/howtos/introduction.html
+* https://wiki.strongswan.org/projects/strongswan/wiki/Fromipsecconf
 
 # swanctl
 
@@ -84,6 +85,9 @@ swanctl --initiate --child connname
 swanctl --list-pools --leases
 swanctl --terminate --ike connname
 swanctl --list-sas
+
+swanctl --log
+# or grep charon in /var/log/messages or syslog
 
 
 ```

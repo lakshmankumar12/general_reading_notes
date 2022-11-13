@@ -1,7 +1,7 @@
 # links
 
-youtube link: https://www.youtube.com/watch?v=d6WC5n9G_sM&t=2s&ab_channel=freeCodeCamp.org
-        Current at 9:22
+youtube link: https://www.youtube.com/watch?v=d6WC5n9G_sM&ab_channel=freeCodeCamp.org&t=922
+        Current at 22min (edit the t=1320)
 
 https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/
 https://kubernetes.io/docs/concepts/overview/components/
@@ -17,7 +17,7 @@ Good read on other tools in the kubernetes ecosystem: https://www.densify.com/ku
 * pod: minimum deployment unit in kubernetes.
     * may have one or more containers. Usually one is common.
     * a pod has to be on the same server.
-    * ephemeral, disposable
+    * ephemeral, disposable (keep this in mind when designing your application)
     * not restarted by scheduler by itself
     * all continers in the pod share the shared-volumes and network-space.
     * has its own ip address and reacheable from rest of the system
@@ -26,18 +26,14 @@ Good read on other tools in the kubernetes ecosystem: https://www.densify.com/ku
         * this allows other instances of the app to bind to the same port on different pods.
 * Node:
     * collection of pods.
-    * (one machine - physical or virtual or even a umbrella container (eg: minikube))
+    * (one machine - physical or virtual or even a umbrella container (eg: minikube-with-docker-engine))
 * Cluster: Collection of nodes.
     * Typically all in same data-center
         * but technically the nodes can be anywhere though.
     * has one master node and other worker nodes
+        * Highly available clusters have more. To study later.
     * master node:
-        * api-server (front-ends all kubectl commands)
-        * controller
-        * scheduler
-            * assigns pods to nodes
-        * cluster store(kv)
-            * runs etcd
+        * See the section control-plane components on this.
     * worker node. The first 3 are mandatory in all nodes.
         * kubelet
             * the main-brain inside the node
@@ -60,7 +56,42 @@ Good read on other tools in the kubernetes ecosystem: https://www.densify.com/ku
 * spec, state
     * spec tells the desired state of the system
 
-## controller
+## Control plane components
+
+* api-server
+    * front-ends all kubectl commands
+* cluster store(kv)
+    * runs etcd
+* scheduler
+    * assigns pods to nodes
+* controller
+    * see below
+
+### controller
+
+* Logically, each controller is a separate process, but to reduce complexity,
+  they are all compiled into a single binary and run in a single process.
+
+Some types of these controllers are:
+
+* Node controller:
+    * Responsible for noticing and responding when nodes go down.
+* Job controller:
+    * Watches for Job objects that represent one-off tasks,
+      then creates Pods to run those tasks to completion.
+* EndpointSlice controller:
+    * Populates EndpointSlice objects (to provide a link between Services and Pods).
+* ServiceAccount controller:
+    * Create default ServiceAccounts for new namespaces
+
+* cloud-controller-manager
+    * Embeds cloud-provider logic.
+    * Runs specific code that is relevant to the provider env. Not started if you
+      run kubernets in your premises or learning env.
+    * Has the following pieces
+        * node controller
+        * route controller
+        * service controller
 
 * Replication Controller
     * Older. Now use replicaset
@@ -71,8 +102,6 @@ Good read on other tools in the kubernetes ecosystem: https://www.densify.com/ku
     * pause(updates) and resume use-cases.
 * daemonset controller
     * ensures all nodes run a specific pod
-* job controller
-    * like cron-job. Run one process to completion
 * Services
     * Allow connectivity between one set of deployments with another
       in a seamless way by anchoring the IP to use.
@@ -86,6 +115,71 @@ Good read on other tools in the kubernetes ecosystem: https://www.densify.com/ku
     * Can be internal or external.
         * External exposes a node-ip:node-port
         * Load balancer: exposes a application to internet
+
+# Kubernetes Objects
+
+* Kubernetes objects are persistent entities in the Kubernetes system.
+* Kubernetes uses these entities to represent the state of your cluster.
+* Specifically, they can describe:
+    * What containerized applications are running (and on which nodes)
+    * The resources available to those applications
+    * The policies around how those applications behave, such as restart
+      policies, upgrades, and fault-tolerance
+* A Kubernetes object is a "record of intent"--once you create the object,
+  the Kubernetes system will constantly work to ensure that object exists.
+* By creating an object, you're effectively telling the Kubernetes system
+  what you want your cluster's workload to look like; this is your
+  cluster's desired state.
+
+We use kube-api (using kubectl or client-libs) to create, modify, delete
+objects.
+
+* Every object has a
+    * object spec
+        * the desired state, the config for the object.
+    * object status
+        * current runtime state.
+
+## Sample object definition
+
+```yaml
+apiVersion: apps/v1             ## Which api version to use to talk with kubernetes
+kind: Deployment                ## What type of object this is
+metadata:                       ## Data that helps uniquely identify the object,
+                                ## including a name string, UID, and optional namespace
+  name: nginx-deployment
+spec:                           ## Desired state of object. Very object specific
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 2                   # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+
+```
+
+## object attributes
+
+* Name
+    * unique for a given kind of object at a time.
+    * Eg: podname
+* UIDs
+    * unique across whole cluster, even after their lifetime.
+    * helps tracking historic uniqueness.
+* Labels
+    * Key-value pairs that the core system doesn't care, but are of
+      significance to user
+    * many objects can carry same label.
+* Label-Selector
+    * 
 
 ## Pod States
 
@@ -170,7 +264,7 @@ spec:
 * ClusterIP
     * This is the default
     * (to understand better)Exposes a service which is only accessible from within the cluster.
-    * you can use forward-port to expose localhost to the cluster
+    * (not sure - check) you can use forward-port to expose localhost to the cluster
 * NodePort
     * Exposes a service via a static port on every node’s IP.
     * you can use forward-port to expose localhost to the nodeport
@@ -229,6 +323,7 @@ kubernetes                              ClusterIP      10.96.0.1        <none>  
 ## Namespaces
 
 * All objects are placed in default namespace at start
+* The `kube-system` namespace refers to resources that deal with kubernets control plane
 
 ## probes
 
@@ -260,6 +355,9 @@ export KUBECONFIG=/usercode/config
 * Kubectl own cheatsheet: https://kubernetes.io/docs/reference/kubectl/cheatsheet/
 
 ```sh
+
+# version
+kubectl version --client
 
 # config
 kubectl config view
@@ -308,6 +406,8 @@ kubectl create -f <file.yml>
 # --record          => keeps a log of changes.
 
 kubectl logs pod/pod_name
+## tail/follow the logs
+kubectl logs -f pod/pod_name
 
 # port forward to a pod
 kubectl port-forward --address <address> <podname> port1:port2

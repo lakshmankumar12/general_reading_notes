@@ -215,12 +215,19 @@ openssl ecparam -genkey -name secp256r1 | openssl ec -out ec.key
 #dump the ec key
 openssl ec -in ec.key -noout -text
 
+# dump a ec-pub key that is base64 encoded form of a der-key
+openssl ec -pubin -inform der -in b64encodedDerPub.key -noout -text
+
 # add a paraphrase to your key.. Use this option
 -aes128
 
 # verify ssh-key fingerprint
 file="$HOME/.ssh/id_rsa"
 openssl pkcs8 -in ${file} -inform PEM -outform DER -topk8 -nocrypt | openssl sha1 -c
+
+# openssh
+# see public key from private key. (-y) just does that
+ssh-keygen -f private_key.pem -y
 
 ```
 
@@ -350,6 +357,10 @@ openssl pkcs12 -export -name "My Certificate" -out fd.p12 \
 ## you will have to manually split the parts
 ### Note add -legacy if required.
 openssl pkcs12 -in fd.p12 -out fd.pem -nodes
+
+## read a .pfx file
+openssl pkcs12 -in infile.pfx -nocerts -out privateKey.pem -passin:whatever -passout pass:qwert
+openssl pkcs12 -in infile.pfx -nokeys -out certs.pem -passin:whatever -passout pass:qwert
 
 ## generate random bytes of a given length
 openssl rand 32

@@ -136,3 +136,44 @@
     * Faster, Cheaper - Do high value activities faster and efficiently
 * How to redesign
     * Identify pain points
+
+# psychology of money - Morgan Housel
+
+## 20 points
+
+* No one is crazy
+    * Everybody have their own reasons for their financial decisions
+* Luck and Risk
+    * Efforts are not everything.
+    * Luck takes you to places
+    * Risk puts you back.
+* Never Enough
+    * will ruin our financial happiness
+* Confounding Compounding
+    * stay in the game for long
+* Getting wealthy vs staying wealthy
+* Tails, you win
+    * Even if we make success only 50% of the time, we can still make it big.
+* Freedom
+    * Time freedom is the biggest dividend money can get
+* Man in the car paradox
+    * Never buy anything thinking it will show off
+    * Only get things that intrisinically add value to your life
+* Wealth is what you dont see
+* Save Money
+* Reasonble > Rational
+* Surprise
+    * we simply cant predict what will happen
+    * It is the outliers that move the needle most in the financial world
+* Room for error
+    * Always allow for a margin for safety
+    * No risk is worth it, if it can ruin everthing
+    * You should always be continuing to play the game.
+* You will change
+    * Our personal goals will keep changing
+    * Our finacial goals will keep changing
+* Nothing free
+    * Look at the volatility as a fee instead of a fine.
+* You and Me
+    * Beware of taking advice from others.
+    * They may be playing a different game.

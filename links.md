@@ -15,6 +15,10 @@ https://docs.cilium.io/en/v1.11/bpf/
 
 https://sreeninet.wordpress.com/2016/05/29/macvlan-and-ipvlan/
 
+## ngnix
+
+https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms
+
 # Lte
 
 https://www.quora.com/How-are-cells-defined-in-LTE-if-a-single-eNodeB-can-serve-multiple-cells
