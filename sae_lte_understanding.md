@@ -256,6 +256,25 @@ In a 1.4Mhz bandwidth allocation, there are 6 Resource blocks
 
 How you allocate the 10 subframes is the TDD config.
 
+# CBRS stuff
+
+* Different frame structure can cause bad interface.
+    * One is doing downlink(higher power) when another guy is doing uplink(lesser power)
+* CA is usually not sported in uplink, as band-48 is mostly used as downlink offload by carriers
+* Band-48 is 150Mhz big. Its typically split into 20/10 sized channels. (15/5 is allowed, but rarely used in practise)
+* Types of categories
+    * Cat-A lowpower
+        * `< 200mW`
+        * phones typically transmit at this power
+    * Cab-B high power
+        * 47dbMs, 30W-per-10Mhz
+        * 6M above ground
+        * can power 2x2 sq.miles
+* direction of antennas
+    * omni, direction, tilted
+    * back lobe, back leakage
+* cat-B cpe should be static
+    * rural internet is a typical use-case.
 
 # from tutorials
 

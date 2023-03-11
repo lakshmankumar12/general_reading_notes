@@ -306,4 +306,41 @@
     * Forget yourself by being interested in others.
     * Do everyday a good deed that will put a smile on someone's face.
 
+# Getting things Done
+
+## Part 1
+
+### A new practice for a new reality
+
+Problem:
+    * New demands - but finite resources
+    * Our jobs and live keep changin
+Promise:
+    * Ready state of martial art - mind like water
+    * Can you get into that state?
+Principle : Dealing effectively with internal commitments
+    1. If its on your mind, your mind isn't clear. Capture it in a trusted system
+    2. Clarify what exactly is your commitment. Decide what you have to do to
+        fulfill it.
+    3. Once you have decided actions, keep reminders organized in a system you
+        review regularly
+    * Use your mind to get things off your mind.
+Real work of knowledge work
+    * "What are the expected results of this work" is the key question in making
+        knowledge workers productive
+    * Thinking in a concentrated manner to define desired outcomes and requisite
+        next actions.
+Your mind doesn't have a mind of its own
+    * It will remind us at the inappropriate times
+Stuff
+    * Anything in your physical or pshycological world for which we haven't
+        * defined what is means to you, desired outcome (is "done" defined?)
+        * next action step is not found out
+    * As long as some is still stuff, its uncontrollable
+    * Just gathering stuff as to-do list is not going to achieve anything.
+Process : Managing action
+    * Not managing time, information or priorities
+    * Define
+        * what done means
+        * what is the doing i.e next action steps
 

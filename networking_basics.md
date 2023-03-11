@@ -612,6 +612,18 @@ and the whole operation gets an order of magnitude more complex with HTTPS
 (to draw fully)
 ```
 
+# Basic acronyms
+
+* COGS - cost of golds sold
+* KPI - key performance indicator
+* SDF - service data flow (5 tuple - what identifies a flow)
+
+# wifi notes
+
+* 2.4Ghz has about 11 channels
+* 5Ghz has 10 100Mhz channels
+    * doesnt penetrate walls like 2.4Gbhz because of physics.
+
 # Socket programming call sequence
 
 ## socket
