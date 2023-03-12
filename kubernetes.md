@@ -27,6 +27,8 @@ Good read on other tools in the kubernetes ecosystem: https://www.densify.com/ku
 * Node:
     * collection of pods.
     * (one machine - physical or virtual or even a umbrella container (eg: minikube-with-docker-engine))
+* Flat inter-pod network
+    * There is one network that spans across all nodes, in which every pod is a member of.
 * Cluster: Collection of nodes.
     * Typically all in same data-center
         * but technically the nodes can be anywhere though.
@@ -55,6 +57,12 @@ Good read on other tools in the kubernetes ecosystem: https://www.densify.com/ku
         * Actual pods
 * spec, state
     * spec tells the desired state of the system
+
+
+Instead of telling Kubernetes exactly what actions it should perform, you’re
+only declaratively changing the desired state of the system and letting
+Kubernetes examine the current actual state and reconcile it with the desired
+state. This is true across all of Kubernetes
 
 ## Control plane components
 
@@ -181,9 +189,10 @@ spec:                           ## Desired state of object. Very object specific
 * Label-Selector
     * 
 
+
 ## Pod States
 
-* Pending - accepted by kubernetes system.
+* Pending - accepted by kubernetes system. (i (likely downloading images)
 * ContainerCreating
 * Running
 * Succeeded
@@ -248,6 +257,10 @@ spec:
 
 * Logical abstraction for a collection of pods that function exactly alike
 * Pods are ephemeral - so service offers a frontend to the pods to other functions
+    * Typically services expose a ClusterIP on which they are available. This IP is fixed
+      although pods (offering that service) may keep changing with their actual IPs. This
+      way other pods contant the service on its ClusterIP instead of bothering with the
+      serving pod's ip.
 * This is how the service to pod mapping works:
   ```
   service.yml                                      pod.yml
@@ -263,7 +276,9 @@ spec:
 
 * ClusterIP
     * This is the default
-    * (to understand better)Exposes a service which is only accessible from within the cluster.
+    * Exposes a service which is only accessible from within the cluster.
+    * Requests coming to the IP and port of the service will be forwarded
+      to the IP and port of ONE OF THE PODS belonging to the service at that moment.
     * (not sure - check) you can use forward-port to expose localhost to the cluster
 * NodePort
     * Exposes a service via a static port on every node’s IP.
@@ -423,6 +438,17 @@ kubectl get svc -o json | jq '.items[] | {name:.metadata.name, p:.spec.ports[] }
 
 ```
 
+* Abbreviations
+
+```
+po   pods
+svc  services
+rc   replica controller
+
+```
+
+
+
 # AWS and kubectl
 
 * Install aws-cli : https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions
@@ -466,10 +492,22 @@ minikube service servicename
 minikube delete --all
 ```
 
-# Cloud-native application
+# General notes
+
+## Cloud-native application
 
 A cloud-native application must :
 * Scale on demand
 * Self-heal
 * Support zero-downtime rolling updates
 * Run anywhere that has Kubernetes
+
+## microservices
+
+REST - REpresentational State Transfer
+
+* each service can be written in a language that is most appropriate for it
+* each service can be independantly replaced as long as the api change only
+  in a backwards compatible way
+* can scale independantly
+

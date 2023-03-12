@@ -310,7 +310,7 @@
 
 ## Part 1
 
-### A new practice for a new reality
+### Ch-01: A new practice for a new reality
 
 Problem:
     * New demands - but finite resources
@@ -338,9 +338,28 @@ Stuff
         * next action step is not found out
     * As long as some is still stuff, its uncontrollable
     * Just gathering stuff as to-do list is not going to achieve anything.
-Process : Managing action
+Process
+    * Should Manage action
     * Not managing time, information or priorities
     * Define
         * what done means
         * what is the doing i.e next action steps
+Horizontal vs Vertical Management
+    * horizontal
+        * coherence in all activities
+    * vertical
+        * one focussed activity
+    * Both mgmt is the same - get things off your mind
+
+* The major change is going to get things out of your mind.
+
+### Ch-02: Getting control of your life
+
+* 5 steps of mastering workflow
+    * Capture
+    * Clarify
+    * Organize
+    * Reflect
+    * Engage
+
 
