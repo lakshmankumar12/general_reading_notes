@@ -182,13 +182,35 @@ spec:                           ## Desired state of object. Very object specific
 * UIDs
     * unique across whole cluster, even after their lifetime.
     * helps tracking historic uniqueness.
-* Labels
-    * Key-value pairs that the core system doesn't care, but are of
-      significance to user
-    * many objects can carry same label.
-* Label-Selector
-    * 
 
+### labels
+
+* Part of the metadata
+* Good way to organize resources
+* Key-value pairs that the core system doesn't care, but are of
+  significance to user
+* used later in label-selectors
+* args for kubectl
+```
+--show-labels
+-L label_name1,label_name2
+-l label_name           # has that label
+-l '!label_name'        # doesn't have that label
+-l label_name=value     # has a label with that value
+-l 'label_name!=value'  # has a label != that value
+-l 'label_name in (value1,value2)'  # ...
+-l 'label_name not in (value1,value2)'  # ...
+-l 'cond1,cond2'        # where each cond is any of as above.
+
+```
+
+### Annotations
+
+* Part of metadata
+* again key-value pairs
+* But there are no annotation selectors
+* Help is solidifying fields before they becomes fields.
+* labels typically have short values, while annotations can be long values
 
 ## Pod States
 
@@ -218,6 +240,10 @@ spec:
       image: educative1/qsk-course:1.0
       ports:
         - containerPort: 8080
+
+## other specs
+  nodeSelector:  # labels
+    gpu: "true"
 ```
 
 
@@ -271,6 +297,10 @@ spec:
   * Note that that is one-to-many mapping. The service forwards the traffic to all
     pods with the matching label.
   * Kubernets keeps track of which pods are available and which pods are gone.
+
+### port-forwarding
+
+* A quick simply way to expose a port to a pod w/o creating a service.
 
 ### Service types
 
@@ -337,8 +367,9 @@ kubernetes                              ClusterIP      10.96.0.1        <none>  
 
 ## Namespaces
 
-* All objects are placed in default namespace at start
+* All objects are placed in `default` namespace at start
 * The `kube-system` namespace refers to resources that deal with kubernets control plane
+* 
 
 ## probes
 
@@ -436,11 +467,16 @@ kubectl port-forward --address <address> <svcname> port1:port2
 ## list all port-forwards
 kubectl get svc -o json | jq '.items[] | {name:.metadata.name, p:.spec.ports[] } | select( .p.nodePort != null ) | "\(.name): localhost:\(.p.nodePort) -> \(.p.port) -> \(.p.targetPort)"'
 
+## explain a spec
+kubectl explain pod
+kubectl explain pod.spec
+
 ```
 
-* Abbreviations
+* abbreviations
 
 ```
+ns   namespace
 po   pods
 svc  services
 rc   replica controller

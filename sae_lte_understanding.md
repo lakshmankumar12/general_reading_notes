@@ -275,6 +275,11 @@ How you allocate the 10 subframes is the TDD config.
     * back lobe, back leakage
 * cat-B cpe should be static
     * rural internet is a typical use-case.
+* CPRI - common public radio interface
+    * interface between RRU (the antenna unit) and the baseband unit (central processing unit).
+    * This is typically about 10 miles long
+    * eCPRI - enhanced CPRI.
+    * stretches the limits of fiber bw with 5G rates.
 
 # from tutorials
 
