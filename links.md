@@ -32,6 +32,10 @@ Really good: https://www.sharetechnote.com/html/BasicProcedure_LTE_OverallSequen
     * frame sturcture: https://www.sharetechnote.com/html/FrameStructure_DL.html#Overview
 Also another frame related link: https://rfmw.em.keysight.com/wireless/helpfiles/89600b/webhelp/subsystems/lte/content/lte_overview.htm
 
+## 5G Radio splits
+
+V.Good: https://www.5gtechnologyworld.com/open-ran-functional-splits-explained/
+
 ## CBRS
 
 Pitching for Collaborative Coexistence Framework: https://www.ericsson.com/en/blog/6/2022/cbrs-growing-pains-and-progress
@@ -52,3 +56,19 @@ https://bbc.github.io/cloudfit-public-docs/asyncio/asyncio-part-1
 # Finance
 
 https://www.mattcutts.com/blog/investing-reading-list/
+
+# Technology Terminology dump
+
+* Corosync
+    * The Corosync Cluster Engine is a Group Communication System with
+      additional features for implementing high availability within
+      applications
+    * A closed process group communication model with extended virtual
+      synchrony guarantees for creating replicated state machines.
+    * A simple availability manager that restarts the application process
+      when it has failed.
+* pacemaker
+    * Pacemaker is an open source, high availability resource manager
+      suitable for both small and large clusters.
+
+

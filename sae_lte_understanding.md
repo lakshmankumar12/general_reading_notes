@@ -258,6 +258,11 @@ How you allocate the 10 subframes is the TDD config.
 
 # CBRS stuff
 
+* N48 band.
+    * 3550 to 3700 Mhz
+    * If split in 10, we have 29 possibilities (mid-freq from 3555 to 3595, in steps of 5)
+        * However simultaneously utmost 15 channels are possible.
+    * Split in 10/20 (5/15 are less common)
 * Different frame structure can cause bad interface.
     * One is doing downlink(higher power) when another guy is doing uplink(lesser power)
 * CA is usually not sported in uplink, as band-48 is mostly used as downlink offload by carriers

@@ -19,9 +19,9 @@
 
 * Important ones - N3, N4, N11
 
-N1  -   UE to AMF
-N2  -   NR to AMF
-N3  -   NR to UPF
+N1  -   UE to AMF (control plane)
+N2  -   NR to AMF (control plane)
+N3  -   NR to UPF (user plane)
 N4  -   SMF to UPF
 N6  -   UPF to Data-Network
 N7  -   SMF to PCF
@@ -31,6 +31,12 @@ N10 -   SMF to UDM
 N11 -   AMF to SMF (Mnemonic: S11 in 4g is MME -- SGW)
 N15 -   AMF to PCF
 N26 -   MME to AMF
+Xn  -   gNB to gNb
+Uu  -   UE  to RU (radio unit)
+
+Also:
+CPRI  - common public radio interface (Antenna point to ServerRoom)
+eCPRI - enhanced CPRI
 
 
 
@@ -66,13 +72,15 @@ N26 -   MME to AMF
         * make-before-break
         * Eventually the old session is closed.
 
-# Simplified Diagram
+# simplified diagram
 
 ```
+  <-----N1------------>
 
+                 N2          N11
   UE ----- NR --+----  AMF  ----  SMF
                 |
-                |
+                |N3
                 +---- UPF ---- Data-Network
 
 
@@ -392,3 +400,11 @@ NWDAF -  ?? (inter-working something)
         * If RAN can't pick, it will send to default AMF
 * New AMF contacts old AMF to collect UE-context
 
+
+# A bit radio'ey
+
+* Splits in 5G Radio architechture
+    * https://www.5gtechnologyworld.com/open-ran-functional-splits-explained/
+
+* Synchronization configurations
+    * LLC-C1, .. LLS-C4
