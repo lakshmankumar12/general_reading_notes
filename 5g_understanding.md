@@ -401,10 +401,3 @@ NWDAF -  ?? (inter-working something)
 * New AMF contacts old AMF to collect UE-context
 
 
-# A bit radio'ey
-
-* Splits in 5G Radio architechture
-    * https://www.5gtechnologyworld.com/open-ran-functional-splits-explained/
-
-* Synchronization configurations
-    * LLC-C1, .. LLS-C4
