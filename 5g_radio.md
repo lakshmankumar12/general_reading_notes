@@ -28,11 +28,11 @@ At 30.72 Mhz sampling rate:
 * One frame can carry 307,200 samples (307.2K)
 * One slot is 15,360 samples (307.2K/20)
 * One slot has (160+2048) in first and (144+2048) in next 6.
-    * (CP,useful) symbols
+    * (CP,useful) samples
     * First OFDM symbol is slighly longer than the rest
 * So, one slot has 2048*7 = 14336 useful samples, 1204 CP samples,
   15360 samples in all.
-* This 2048 useflu symbols is referred as 2048 bins/IFFT (N_ifft)
+* This 2048 useful samples in one symbol, is referred as 2048 bins/IFFT (N_ifft)
 
 
 * Resource Grid - time is X-axis , Frequency in Y-axis
@@ -44,7 +44,7 @@ At 30.72 Mhz sampling rate:
 * In a 10Mhz system bandwith, there will be  50 RBs -  600 subcarriers
 * In a  5Mhz system bandwith, there will be  25 RBs -  300 subcarriers
 
-* subcarriers are of types
+* subcarriers are of types (to confirm - may be in LTE all are data only)
     * Guard -> that last 2 on either side
     * Pilot -> ..
     * Data  -> real symbols carrying
@@ -72,6 +72,7 @@ TDD configs
     * Carries user specific data (DL Payload).
     * Carries Random Access Response Message.
 * PRACH(Physicall Random access channel)
+    * uplink channel
     * carries random access preamble
 * P-SS(Primary Synchronization Signal)
     * Mapped to 72 active sub carriers(6 resource blocks), centered around
@@ -95,20 +96,19 @@ TDD configs
         * UE Specific Reference Signal : This reference signal is being
           transmitted within the resource blocks allocated only to a specific
           UE and is being transmitted by Antenna port 5.
-
+* PUSCH
+    * uplink channel
+* PUCCH
+    * uplink channel
 
 # Antenna ports
 
 https://www.sharetechnote.com/html/Handbook_LTE_AntennaPort.html
 
 
-
-
-# Terms
+# 5G specific
 
 * Frequence Range (FR) - FR1 is `< 6Ghz` while FR2 is `24 to 52 Ghz` (millimeter)
-* Cyclic Prefix (CP)
-* Protocol Resource Block
 * max BW is 100Mhz for sub6Ghz, and 400Mhz for mm-wave
     * 5/10/.../100 for sub6
     * 50/100/200/400 for mm
@@ -118,14 +118,163 @@ https://www.sharetechnote.com/html/Handbook_LTE_AntennaPort.html
 * 256 QAM
 * MIMO - upto 8 layers
 
-# Frames
+## 5G frame splits
 
-* 1 Frame is 10ms long
-* 1 Frame has N, (μ)-sized sub-frames
-*
+Subcarrier spacing (KHz)     | 15   | 30   | 60                                  | 120  | 240
+Symbol duration (µs)         | 66.7 | 33.3 | 16.7                                | 8.33 | 4.17
+CP duration (µS)             | 4.7  | 2.3  | 1.2 (Normal CP), 4.13 (Extended CP) | 0.59 | 0.29
+Max. nominal system BW (MHz) | 50   | 100  | 100 (sub-6 GHz), 200 (mmwave)       | 400  | 400
+FFT size (max.)              | 4096 | 4096 | 4096                                | 4096 | 4096
+Symbols per slot             | 14   | 14   | 14 (normal CP), 12 (extended CP)    | 14   | 14
+Slots per subframe (Note1)   | 1    | 2    | 4                                   | 8    | 16
+Slots per frame              | 10   | 20   | 40                                  | 80   | 160
+Subframes per frame (fixed)  | 10   | 10   | 10                                  | 10   | 10
+
+Note1 - Each subframe has `2^μ` slots, depending on subcarrier size.
+Note2 - 4G had 7 or 6(ext-CP) symbols per slot. Here its 14 (or 12).
+
+* 12 subcarriers in one Resource-Block
+* 4G had eactly 20 RBs in one frame (20 slots in one frame), and 12 subcarrier in freq-axis
+  In a 20Mhz BW, there would be hence 100RBs (1200 subcarriers)
+  * 5G NR supports 24 to 275 PRBs in a single slot (in the freq-axis)
 
 
-# A bit radio'ey
+# functional split
+
+* RU:
+    * This is the radio hardware unit that coverts radio signals sent to and
+      from the antenna into a digital signal for transmission over packet
+      networks.
+    * It handles the digital front end (DFE) and the lower PHY layer, as well
+      as the digital beamforming functionality.
+    * key considerations of RU design are size, weight, and power consumption.
+    * Deployed on site.
+* DU (Distributed Unit)
+    * Deployed on site on a COTS server.
+    * Normally deployed close to the RU on site
+    * Runs the RLC, MAC, and parts of the PHY layer.
+    * Includes a subset of the eNodeB (eNB)/gNodeB (gNB) functions, depending on
+      the functional split option, and its operation is controlled by the CU.
+* CU (Centralized Unit)
+    * Runs the Radio Resource Control (RRC) and Packet Data Convergence Protocol (PDCP) layers.
+    * gNB consists of a CU and one DU connected to the CU via Fs-C and Fs-U interfaces
+      for CP and UP respectively.
+    * A CU with multiple DUs will support multiple gNBs. The CU controls the operation of
+      several DUs over the midhaul interface.
+        * CU software can be co-located with DU software on the same server on site.
+    * The split architecture lets a 5G network utilize different distributions of protocol
+      stacks between CU and DUs depending on midhaul availability and network design.
+    * Includes the gNB functions like transfer of user data, mobility control,
+      RAN sharing (MORAN), positioning, session management etc., except for functions
+      that are allocated exclusively to the DU.
+
+* ECPRI -> interface between DU and RU, called fronthaul
+    * fronthaul latency should be less than 100us.
+    * Fronthaul - CUS plane (Control/User/Sync) and M plane (mgmt plane)
+* F1 -> midhaul between CU and DU
+    * latency should be less than 1ms
+
+## layers
+
+* RF , PHY, MAC, RLC, PDCP, RRC/DATA
+* PHY/MAC/RLC have LO/HI
+* RF/PHY are L1, MAC/RLC are L2, PDCP/RRC are L3
+* 7.2x split is keeping RF,LOW-PHY in RU
+* typically HI-PHY/LOW&HI-MAC/LOW&HI-RLC are with DU. Rest in CU
+
+
+```
+control plane
+-------------
+
+  RU          DU                  CU             AMF/Core
+
+                                RRC
+                                PDCP
+              RLC      F1-AP    F1-AP  NG-AP     NG-AP
+              MAC      SCTP     SCTP   SCTP      SCTP
+  LOW-PHY     HI-PHY   IP       IP     IP        IP
+
+Data plane
+----------
+
+  RU          DU                  CU                  UPF/Core
+
+                                SDAP(PSUP)
+                                PDCP(NRUP)
+              RLC      eGTPU    eGTPU       eGTPU     eGTPU
+              MAC      UDP      UDP         UDP       UDP
+  LOW-PHY     HI-PHY   IP       IP          IP        IP
+
+```
+
+### mac layer
+
+* HARQ - hybrid automatic repeat request
+* BSR  - buffer status report (from ue to network)
+* DRX  - discontinuous reception mode 
+         (enables ue to relax and check signals once in
+          a while. Great battery saver)
+
+
+# Processing
+
+* Upper layer gives transport blocks
+
+```
+    TransportBlock
+          |
+          |
+          v
+    CRC Attachment
+          |
+          |
+          v
+    LDPC base graph selection
+    Code block segmentation and CRC attachment
+    LDPC encoding
+    Rate matching
+    Code block concatenation
+    Scrambling
+    Modulation
+    Layer Mapping
+          |
+          |(multiple)
+          v
+    Antenna Port mapping
+    Mapping to RBs
+
+```
+
+docs:
+3GPP TS 38.201 : General description
+3GPP TS 38.202 : Services provided by physical layer
+3GPP TS 38.211 : Physical channels and modulation
+3GPP TS 38.212 : Multiplexing and channel coding
+3GPP TS 38.213 : Physical layer procedures for control
+3GPP TS 38.214 : Physical layer procedures for data
+3GPP TS 38.215 : Physical layer measurements
+
+3GPP TS 38.374 : IAB mentions
+
+# IAB
+
+* Integrated access and backhaul
+* CU is single. THe DU keeps getting split as donor-DU and IAB-DU.
+* IAB has 2 parts:
+    * MT (mobile-termination), that registers with CU
+    * DU
+* BAP - backhaul adaptation protocol
+    * On top of RLC. So, PHY,MAC,RLC repeat. But F1-AP is UE to CU.
+
+# Antenna related terms
+
+* MIMO
+* Spatial diversity
+* Sectors
+* Ports
+
+# Other Dump of terms
 
 
 * Synchronization configurations

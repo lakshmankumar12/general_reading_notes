@@ -31,8 +31,13 @@ N10 -   SMF to UDM
 N11 -   AMF to SMF (Mnemonic: S11 in 4g is MME -- SGW)
 N15 -   AMF to PCF
 N26 -   MME to AMF
-Xn  -   gNB to gNb
+Xn  -   gNB to gNb (Xn-C,Xn,U)
 Uu  -   UE  to RU (radio unit)
+NG  -   gNB to Core (AMF/UPF) (NG-C, NG-U)
+E1  -   gNb-CU-CP to gNb-CU-UP
+E2  -   gNb-CU/DU to RIC(Ran Intelligent controller near real-time)
+        E2C-with CU only
+F1  -   gNb-CU to gN-DU   (F1-C, F1-U)  (Mnemonic F is not fronthaul, but midhaul)
 
 Also:
 CPRI  - common public radio interface (Antenna point to ServerRoom)

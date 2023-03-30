@@ -29,7 +29,7 @@ Too techie: https://ourtechplanet.com/pci-planning-facts-myths/
 https://www.rfwireless-world.com/Tutorials/LTE-tutorial.html
 Really good: https://www.sharetechnote.com/html/BasicProcedure_LTE_OverallSequence.html
     * ON interferece: https://www.sharetechnote.com/html/Handbook_LTE_Interference_Downlink.html
-    * frame sturcture: https://www.sharetechnote.com/html/FrameStructure_DL.html#Overview
+    * Best - frame sturcture: https://www.sharetechnote.com/html/FrameStructure_DL.html#Overview
 Also another frame related link: https://rfmw.em.keysight.com/wireless/helpfiles/89600b/webhelp/subsystems/lte/content/lte_overview.htm
 
 ## 5G Radio splits
