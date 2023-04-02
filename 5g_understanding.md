@@ -38,6 +38,7 @@ E1  -   gNb-CU-CP to gNb-CU-UP
 E2  -   gNb-CU/DU to RIC(Ran Intelligent controller near real-time)
         E2C-with CU only
 F1  -   gNb-CU to gN-DU   (F1-C, F1-U)  (Mnemonic F is not fronthaul, but midhaul)
+F1* -   IAB-node to its donor-node
 
 Also:
 CPRI  - common public radio interface (Antenna point to ServerRoom)

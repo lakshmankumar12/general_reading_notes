@@ -174,7 +174,7 @@ Note2 - 4G had 7 or 6(ext-CP) symbols per slot. Here its 14 (or 12).
 * F1 -> midhaul between CU and DU
     * latency should be less than 1ms
 
-## layers
+# layers
 
 * RF , PHY, MAC, RLC, PDCP, RRC/DATA
 * PHY/MAC/RLC have LO/HI
@@ -187,34 +187,91 @@ Note2 - 4G had 7 or 6(ext-CP) symbols per slot. Here its 14 (or 12).
 control plane
 -------------
 
-  RU          DU                  CU             AMF/Core
+UE        RU               DU                  CU        AMF/Core
 
-                                RRC
-                                PDCP
-              RLC      F1-AP    F1-AP  NG-AP     NG-AP
-              MAC      SCTP     SCTP   SCTP      SCTP
-  LOW-PHY     HI-PHY   IP       IP     IP        IP
+NAS-msg                                                  NAS-msg
+RRC                                     RRC
+PDCP                                    PDCP
+RLC                   RLC      F1-AP    F1-AP  NG-AP     NG-AP
+MAC                   MAC      SCTP     SCTP   SCTP      SCTP
+PHY       LOW-PHY     HI-PHY   IP       IP     IP        IP
 
 Data plane
 ----------
 
-  RU          DU                  CU                  UPF/Core
+UE       RU          DU                  CU                  UPF/Core
 
-                                SDAP(PSUP)
-                                PDCP(NRUP)
-              RLC      eGTPU    eGTPU       eGTPU     eGTPU
-              MAC      UDP      UDP         UDP       UDP
-  LOW-PHY     HI-PHY   IP       IP          IP        IP
+
+IP...........................................................IP
+SDAP                                   SDAP(PSUP)
+PDCP                                   PDCP(NRUP)
+RLC                  RLC      eGTPU    eGTPU       eGTPU     eGTPU
+MAC                  MAC      UDP      UDP         UDP       UDP
+PHY      LOW-PHY     HI-PHY   IP       IP          IP        IP
 
 ```
 
-### mac layer
+# mac layer
 
 * HARQ - hybrid automatic repeat request
 * BSR  - buffer status report (from ue to network)
 * DRX  - discontinuous reception mode 
          (enables ue to relax and check signals once in
           a while. Great battery saver)
+* CQI  - Channel Quality Indicator measurements
+
+* Maps logical to physical/transport channels
+* SDUs belongs to logical channels and transport blocks belong to physical
+    * So, this multiplexes and de-multiplexes this.
+
+## logical channels
+
+* BCCH - broadcast control channel
+* PCCH - paging    control channel
+* CCCH - common    control channel
+* DCCH - dedicated control channel
+* DTCH - dedicated traffic channel
+
+Uplink Maps
+Physical ->  PUSCH     PRACH
+Logical
+CCCH         X
+DCCH         X
+DTCH         X
+
+Downlink Maps
+Physical ->  PBCH      PDCCH   PDSCH
+Logical
+BCCH         X                   X
+PCCH                    X
+CCCH                             X
+DCCH                             X
+DTCH                             X
+
+## Procedures
+
+* Random Access Procedure
+    * Get the initial uplink grant for UE and helps in performing
+      synchronization with the gNB (i.e. network).
+    * It covers Random Access procedure
+        * procedure initialization,
+        * Resource selection,
+        * Preamble transmission,
+        * Response reception,
+        * Contention Resolution
+        * Completion
+* DL-SCH transfer
+* UL-SCH transfer
+* Scheduling Request
+    * Used by UE to transmit request to gNB (i.e. network) to obtain UL grant.
+* PCH reception
+    * monitoring paging in special time period
+* BCH reception
+    * MIB, SFN etc.
+* DRX
+    * monitoring PDCCH as per special pattern in discontinuous manner.
+
+
 
 
 # Processing
@@ -262,10 +319,50 @@ docs:
 * Integrated access and backhaul
 * CU is single. THe DU keeps getting split as donor-DU and IAB-DU.
 * IAB has 2 parts:
-    * MT (mobile-termination), that registers with CU
-    * DU
+    * IAB joins the network as a regular UE all the way to the core
+      using its MT(Mobile-termination)
+        * Similar to gxc solution in 4G.
+    * Then IAB-DU setup happens
+* Note that CU is central. Only DU functionality is split.
 * BAP - backhaul adaptation protocol
     * On top of RLC. So, PHY,MAC,RLC repeat. But F1-AP is UE to CU.
+* The interface between IAB to its donor is F*
+* RRC Connection establishment and F1-setup request indicates IAB support
+
+```
+control plane
+-------------
+
+UE        RU       Node1-DU   Node2-DU      DU        CU             AMF/Core
+
+NAS-msg                                                                NAS-msg
+RRC                                                   RRC
+                    F1-AP                             F1-AP
+                    SCTP                              SCTP
+                    IP        IP  IP        IP        IP
+PDCP                BAP       BAP BAP       BAP       PDCP
+RLC                 RLC       RLC RLC       RLC       F1-AP  NG-AP     NG-AP
+MAC                 MAC       MAC RLC       RLC       SCTP   SCTP      SCTP
+PHY       LOW-PHY   PHY       PHY RLC       RLC       IP     IP        IP
+
+Data plane
+----------
+
+UE        RU       Node1-DU   Node2-DU      DU        CU             AMF/Core
+
+UE-IP                                                                  UE-IP
+SDAP                                                  SDAP
+PDCP                                                  PDCP
+                    GTPU                              GTPU
+                    UDP                               UDP
+                    IP        IP  IP        IP        IP
+                    BAP       BAP BAP       BAP
+RLC                 RLC       RLC RLC       RLC              GTPU      GTPU
+MAC                 MAC       MAC RLC       RLC              UDP       UDP
+PHY       LOW-PHY   PHY       PHY RLC       RLC              IP        IP
+
+
+```
 
 # Antenna related terms
 
