@@ -12,6 +12,8 @@ Wiki has the info pretty laid out - https://en.wikipedia.org/wiki/Kubernetes
 
 Good read on other tools in the kubernetes ecosystem: https://www.densify.com/kubernetes-tools
 
+Book: Kubernetes in action, chapter 3.7.3
+
 # Main componenets of Kubernetes
 
 * pod: minimum deployment unit in kubernetes.
@@ -242,7 +244,7 @@ spec:
         - containerPort: 8080
 
 ## other specs
-  nodeSelector:  # labels
+  nodeSelector:  # runs this pods only in nodes matching the label-selector
     gpu: "true"
 ```
 
@@ -369,7 +371,13 @@ kubernetes                              ClusterIP      10.96.0.1        <none>  
 
 * All objects are placed in `default` namespace at start
 * The `kube-system` namespace refers to resources that deal with kubernets control plane
-* 
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: custom-namespace
+```
 
 ## probes
 
