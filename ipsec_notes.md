@@ -92,7 +92,7 @@ swanctl --log
 
 ```
 
-# Decoding in wireshark
+# decoding in wireshark
 
 * Enable charon log:
     ```sh
@@ -188,6 +188,9 @@ swanctl --log
     ```
     C:\Users\<username>\AppData\Roaming\Wireshark\ikev2_decryption_table
     C:\Users\<username>\AppData\Roaming\Wireshark\esp_sa
+
+    #vbox , virtual box
+    /home/lakshman/host_c/Users/laksh/AppData/Roaming/Wireshark
     ```
 
 #Sources

@@ -54,6 +54,10 @@ TDD configs
 
 * splits how the 10 subframes in a frame is split for uplink/downlink/special-subframe
 
+# basic procedure overview
+
+https://www.sharetechnote.com/html/BasicProcedures_LTE.html
+
 # Channel types
 
 * PBCH (Physical Broadcast Channel)
@@ -270,6 +274,7 @@ DTCH                             X
     * MIB, SFN etc.
 * DRX
     * monitoring PDCCH as per special pattern in discontinuous manner.
+* 
 
 
 

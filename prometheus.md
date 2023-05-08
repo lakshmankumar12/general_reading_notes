@@ -17,12 +17,16 @@ counter {label-combination l1="b", l2="y", l3="0"}
 
 RANGE-VECTOR:
     adding a [timeinterval] to the above -- goives a range vector
-counter {label-combination l1="a", l2="x", l3="0"}
+counter {label-combination l1="a", l2="x", l3="0"} [$timeinterval]
     - [ (t1,v1),(t2,v2).... (tn,vn) ] , [   ] , [   ] , [   ] , [   ] , [   ]
         |                         |
         |                         |
         +------range values ------+
          (spread over the [..] interval)
+
+SUB-QUERY
+Same as above, but you give the resolution for samples in the range vectory
+counter {label-combination l1="a", l2="x", l3="0"} [$timeinterval:$resolution]
 
 FUNCTION that collapse a range-vector back to instant-vector:
 

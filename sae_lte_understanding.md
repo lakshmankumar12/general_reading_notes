@@ -63,12 +63,12 @@ Gi - GGSN to IP-Network
 
 # Spec list
 
+21.905 - Vocabulary for 3GPP Specifications
+
 23.401 - 4G general architecture
 
 24.301 - Nas Signalling
 29.274 - GTP
-
-36.300 - eNodeb
 
 23.060 - 3G general architecture
 24.008 - GMM
@@ -77,6 +77,17 @@ Gi - GGSN to IP-Network
 
 23.501 - 5G
 23.502 - 5G NGAP
+
+36.211 - E-UTRA Physical channels and modulation
+
+36.300 - eNodeb
+
+38.201 - 5GNR Phy layer general description
+38.214 - phy layer procedure for data
+
+38.300 - NR and NG-RAN overall description
+38.321 - 5GNR MAC
+
 
 
 # IDs

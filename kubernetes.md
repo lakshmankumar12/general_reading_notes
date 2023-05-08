@@ -470,7 +470,7 @@ kubectl port-forward --address <address> <podname> port1:port2
 ## port1            -- port of the location machine
 ## port2            -- port of the pod where its offering service
 # to a service
-kubectl port-forward --address <address> <svcname> port1:port2
+kubectl port-forward --address <address> svc/<svcname> port1:port2
 
 ## list all port-forwards
 kubectl get svc -o json | jq '.items[] | {name:.metadata.name, p:.spec.ports[] } | select( .p.nodePort != null ) | "\(.name): localhost:\(.p.nodePort) -> \(.p.port) -> \(.p.targetPort)"'
