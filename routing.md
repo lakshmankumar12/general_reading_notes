@@ -490,3 +490,7 @@ My Question:
 
 * Linux Advanced Routing & Traffic Control
   http://lartc.org/howto/index.html
+
+* Ordering picture:(go from wikipedia)
+  https://en.wikipedia.org/wiki/Iptables
+  https://en.wikipedia.org/wiki/Iptables#/media/File:Netfilter-packet-flow.svg

@@ -229,6 +229,15 @@ openssl pkcs8 -in ${file} -inform PEM -outform DER -topk8 -nocrypt | openssl sha
 # see public key from private key. (-y) just does that
 ssh-keygen -f private_key.pem -y
 
+#fingerprint from public key
+# skip that -E md5 to see in base64 format
+ssh-keygen -lf ~/.ssh/id_rsa.pub -E md5
+
+## fingerprint of public-key
+### its actually as simple as md5 of the bytes of the pub-key
+awk '{print $2}' ~/.ssh/id_rsa.pub | base64 -d | md5sum
+### 671b83b6c16661bf16ba51b2ede90df8  -
+
 ```
 
 ## CSR

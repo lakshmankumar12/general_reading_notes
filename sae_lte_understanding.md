@@ -61,7 +61,7 @@ Gs - SGSN to MSC/VLR
 Iu - RNC to SGSN
 Gi - GGSN to IP-Network
 
-# Spec list
+# spec list
 
 21.905 - Vocabulary for 3GPP Specifications
 
@@ -70,24 +70,51 @@ Gi - GGSN to IP-Network
 24.301 - Nas Signalling
 29.274 - GTP
 
+29.281 - GTPv1-U GPRS
+
 23.060 - 3G general architecture
 24.008 - GMM
 25.413 - RANAP
 29.060 - GTPv1
 
-23.501 - 5G
+23.501 - 5G system architechture
 23.502 - 5G NGAP
+
+28.532 - 5G Management and orchestration. Performance mgmt services
+28.541 - 5G Management and orchestration. 5G network resource model
+
 
 36.211 - E-UTRA Physical channels and modulation
 
 36.300 - eNodeb
+36.304 - E-UTRA .. UE procedures in IDLE mode
+
+36.423 - X2AP
+
+37.324 - SDAP
+
+37.340 - UMTS and NR multi-connectivity
 
 38.201 - 5GNR Phy layer general description
-38.214 - phy layer procedure for data
+38.211 - PHY 
+38.212 - PHY 
+38.213 - PHY 
+38.214 - PHY layer procedure for data
 
 38.300 - NR and NG-RAN overall description
 38.321 - 5GNR MAC
+38.323 - 5GNR PDCP
+38.331 - 5GNR RRC
+38.413 - 5GNR NGAP
+38.415 - PDU session user plane protocol
+38.423 - XnAP
+38.425 - NRUP
+38.463 - E1AP
+38.473 - F1AP
 
+## interesting spec references
+
+* Qm/MCS references: 38.214 - Table 5.1.3.1-1
 
 
 # IDs

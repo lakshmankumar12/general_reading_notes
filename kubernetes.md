@@ -12,7 +12,7 @@ Wiki has the info pretty laid out - https://en.wikipedia.org/wiki/Kubernetes
 
 Good read on other tools in the kubernetes ecosystem: https://www.densify.com/kubernetes-tools
 
-Book: Kubernetes in action, chapter 3.7.3
+Book: Kubernetes in action, chapter 4
 
 # Main componenets of Kubernetes
 
@@ -367,7 +367,7 @@ kubernetes                              ClusterIP      10.96.0.1        <none>  
     * Equality
     * Set based - IN, NOTIN, EXISTS
 
-## Namespaces
+## namespaces
 
 * All objects are placed in `default` namespace at start
 * The `kube-system` namespace refers to resources that deal with kubernets control plane
@@ -378,6 +378,9 @@ kind: Namespace
 metadata:
     name: custom-namespace
 ```
+
+* namespaces DONT provide any network isolation. If a pod in ns-A knows the ip of a pod in ns-B,
+  it can just communiate with it.
 
 ## probes
 
@@ -435,6 +438,8 @@ kubectl label pod/pod_name keyname-  # deletes the label keyname
 ##connecting into a pod
 kubectl exec -it pod/pod_name -c container_name_in_pod /bin/bash
 kubectl delete pod pod_name
+# delete all pods with a label
+kubectl delete pod -l label1
 
 # deployment related
 kubectl apply -f deployment.yml
@@ -478,6 +483,9 @@ kubectl get svc -o json | jq '.items[] | {name:.metadata.name, p:.spec.ports[] }
 ## explain a spec
 kubectl explain pod
 kubectl explain pod.spec
+
+## delete entire namespace with all its pods
+kubectl delete ns namespace1
 
 ```
 

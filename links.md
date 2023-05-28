@@ -19,6 +19,12 @@ https://sreeninet.wordpress.com/2016/05/29/macvlan-and-ipvlan/
 
 https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms
 
+# Linux - General
+
+## cpu memory affinity
+
+https://www.admin-magazine.com/HPC/Articles/Processor-and-Memory-Affinity-Tools
+
 # Lte
 
 https://www.quora.com/How-are-cells-defined-in-LTE-if-a-single-eNodeB-can-serve-multiple-cells
