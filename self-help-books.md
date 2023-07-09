@@ -306,6 +306,8 @@
     * Forget yourself by being interested in others.
     * Do everyday a good deed that will put a smile on someone's face.
 
+# Expectation Effect
+
 # Getting things Done
 
 ## Part 1
@@ -362,4 +364,83 @@ Horizontal vs Vertical Management
     * Reflect
     * Engage
 
+
+# Atomic Habits
+
+## The fundamentals
+
+Chapter 1: The surprising power of atomic habits
+
+* Habits are the compound interest, of self-improvement. Getting one-percent
+  better everyday counts for a lot in the long run
+* Habits are a double edged sword. They can work for you, or against you,
+  which is why understanding the details is essential.
+* Small changes often appear to make no difference, until you cross a critical
+  threshold. The most powerful outcomes of any compounding processes are
+  delayed. You need to be patient.
+* An atomic habit is a little habit that is part of a larger system. Just as
+  atom are the building blocks of molecules, atomic habits are the building
+  blocks of remarkable results.
+* If you want better results, then forget about setting goals. Focus on your
+  systems instead.
+* You do not rise to the level of your goals. You fall to the level of your
+  systems.
+
+Chapter 2: How your habits shape your Identity
+
+* There are 3 levels of change:
+    * outcome change,
+    * process change, and
+    * identity change.
+* The most effective way to change your habits is to focus not on what you
+  want to achieve, but on who you wish to become.
+* Your identity emerges out of your habits. Every action is a vote for a type
+  of person you wish to become.
+* Becoming the best version of yourself requires you to continuously edit your
+  beliefs, and to upgrade and expand your identity.
+* The real reason habits matter is not because they can get you better results
+  (although they can do that),but because they can change your beliefs about
+  yourself.
+
+Chapter 3: How to build better habits in 4 steps
+
+* A habit is a behaviour that has been enough times to become automatic.
+* The ultimate purpose of habits is to solve the problems of life with as
+  little energy and effort as possible.
+* Any habit can be broken down into a feedback loop that involves 4 steps:
+    * cue, craving, response, and reward.
+* The 4 laws of behaviour change are a simple set of rules that we can use to
+  build better habits. They are
+    1. Make it obvious,
+    2. Make it attractive,
+    3. Make it easy,
+    4. Make it satisfying.
+
+## First Law
+
+Chapter 4: Awareness of habits
+
+* With enough practice, your brain will pick up on the cues that predict
+  certain outcomes without consciously thinking about it.
+* Once our habits become automatic, we stop paying attention to what we are
+  doing.
+* The process of behaviour change always starts with awareness. You need to be
+  aware of your habits before you can change them.
+* Pointing and calling raises your level of awareness from a non-conscious
+  habit to a more concious level by verbalizing your actions.
+* The habits scorecard is a simple exercise you can use to become more aware
+  of your behaviour.
+
+Chapter 5: Best way to start a new habit
+
+* The first law of behaviour change is to make it obvious.
+* The 2 most common cues are time and location.
+* Creating an IMPLEMENTATION INTENTION is a strategy you can use to pair a
+  new habit with a specific time and location.
+* The implementation intention formula is:
+    * I will [Behaviour] at [Time] in [Location].
+* Habit stacking is a strategy you can use to pair a new habit with a current
+  habit
+* The habit stacking formula is:
+    * After [Current Habit], I will [New Habit].
 

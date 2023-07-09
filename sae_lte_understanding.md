@@ -114,7 +114,7 @@ Gi - GGSN to IP-Network
 
 ## interesting spec references
 
-* Qm/MCS references: 38.214 - Table 5.1.3.1-1
+* Qm/MCS references: 38.214 - table 5.1.3.1-1
 
 
 # IDs

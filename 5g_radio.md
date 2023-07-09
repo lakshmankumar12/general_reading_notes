@@ -116,14 +116,20 @@ https://www.sharetechnote.com/html/Handbook_LTE_AntennaPort.html
 * max BW is 100Mhz for sub6Ghz, and 400Mhz for mm-wave
     * 5/10/.../100 for sub6
     * 50/100/200/400 for mm
-* Subcarrier spacing/size (μ) - 15Khz, 30Khz, 60, 120, 240, 240, 480
+* Subcarrier spacing/size (μ)
+    * 15Khz, 30Khz, 60, 120, 240, 480, 960
+        * respective μ values from 0, 1, 2, 3, 4, 5, 6
+        * numerology table
+            * 38.211 table 4.2-1
+            * 38.300-table 5.1-1
     * 60 and above is for mm-wave
 * CA allows upto 16 carriers
-* 256 QAM
+* QPSK, 16QAM, 64QAM, 256QAM
 * MIMO - upto 8 layers
 
 ## 5G frame splits
 
+Numerology (μ)               | 0    | 1    | 2                                   | 3    | 4
 Subcarrier spacing (KHz)     | 15   | 30   | 60                                  | 120  | 240
 Symbol duration (µs)         | 66.7 | 33.3 | 16.7                                | 8.33 | 4.17
 CP duration (µS)             | 4.7  | 2.3  | 1.2 (Normal CP), 4.13 (Extended CP) | 0.59 | 0.29
@@ -141,6 +147,10 @@ Note2 - 4G had 7 or 6(ext-CP) symbols per slot. Here its 14 (or 12).
 * 4G had eactly 20 RBs in one frame (20 slots in one frame), and 12 subcarrier in freq-axis
   In a 20Mhz BW, there would be hence 100RBs (1200 subcarriers)
   * 5G NR supports 24 to 275 PRBs in a single slot (in the freq-axis)
+
+## throughput calculator
+
+https://www.rfwireless-world.com/calculators/5G-NR-maximum-throughput-calculator.html
 
 
 # functional split
@@ -278,8 +288,7 @@ DTCH                             X
 
 
 
-
-# Processing
+## Processing
 
 * Upper layer gives transport blocks
 

@@ -237,6 +237,24 @@ Protection Against Wrapped Seq Number.
   is high on the same connection. For eg, in a 1Gbps connection, seqence number will be
   reused every 17s!
 
+## linux tcp tweaking
+
+```sh
+sysctl net.core.rmem_max=134217728
+sysctl net.core.wmem_max=134217728
+# increase Linux autotuning TCP buffer limit to 32MB
+sysctl net.ipv4.tcp_rmem=67108864
+sysctl net.ipv4.tcp_wmem=67108864
+# recommended default congestion control is htcp
+sysctl net.ipv4.tcp_congestion_control=htcp
+# recommended for hosts with jumbo frames enabled
+sysctl net.ipv4.tcp_mtu_probing=1
+# recommended to enable 'fair queueing'
+sysctl net.core.default_qdisc=fq
+
+```
+
+
 # SCTP
 
 Reading from : http://www.slideshare.net/PeterREgli/overview-of-sctp-transport-protocol
