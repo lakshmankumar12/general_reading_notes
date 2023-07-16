@@ -444,3 +444,75 @@ Chapter 5: Best way to start a new habit
 * The habit stacking formula is:
     * After [Current Habit], I will [New Habit].
 
+Chapter 6: Motivation is overrated; Environment often matters more
+
+* Small changes in context can lead to large changes in behavior over time
+* Every habit is inhabited by a cue. We are more likely to notice cues that
+  stand out
+* Make the cues of good habit obvious in your environment.
+* Gradually your habits become associated not with a single trigger but with the entire context surrounding the behavior. The context becomes the cue.
+* It is easier to build new habits in a new environment because you are not fighting against the old cues
+
+Chapter 7: The secret to self control
+
+* The inversion of the first law of behavior change is make it invisible
+* Once a habit is formed, it is unlikely to be forgotten.
+* People with high self-control tend to spend less time in tempting situations. It is easier to avoid temptations than to resist it.
+* One of the most practical ways to eliminate a bad habit is to reduce exposure to the cue that causes it.
+* Self control is a short term strategy not a long term one.
+
+## 2nd law
+
+Chapter 8: How to make a habit irresistable
+
+* The second law of behavior change is to make it attractive.
+* The more attractive an oppurtunity is, the more likely it is to become habit forming.
+* Habits are a dopamine driven feedback loop. When dopamine rises so does our motivation to act.
+* It is the anticipation of a reward - not the fulfillment of it - that gets us to take action. The greater the anticipation, the greater the dopamine spike.
+* Temptation bundling is one way to make your habits more attractive. This stratedy is to pair an action you want to do with the action you need to do.
+
+Chapter 9: The role of family and friends in shaping your habits
+
+* The culture we live in, determines which behaviors are more attractive to us.
+* We tend to adopt habits that are praised and approved of by our culture because we have a strong desire to fit in and belong to the tribe.
+* We tend to imitate the habits of three social groups: the close(family and friends), the many(the tribe) and the powerful(status, prestige)
+* One of the most effective things you can do to build better habits is to join a culture where
+    * your desired behavior is the normal behavior.
+    * you already have something in common with the group.
+* The normal behavior of the tribe often overpowers the desired behavior of the individual. Most days, we rather be wrong with the crowd than be right by ourselves.
+* If a behavior can get us approval, respect and praise, we find it attractive.
+
+Chapter 10: How to find and fix the causes of your bad habits
+
+* The inversion of the second law of behavior change is to make it unattractive.
+* Every behavior ha a surface level craving and a deeper underlying motive.
+* Your habits are modern day solutions to your ancient desires.
+* The cause of your habits is actually the prediction that precedes them. The prediction leads to a feeling.
+* Highlight the benefits of avoiding the bad habit to make it seem unattractive.
+* Habits are attractive when we associate them with positive feelings and unattractive when we associate them with negative feelings. Create a motivation ritual by doing something your enjoy immediately before a difficult habit.
+
+Chapter 11: Walk slowly but never backward
+
+* The third law of behavior change is to make it easy
+* The most effective form of learning is practise not planning.
+* Focus on taking action not being in motion
+* Habit formation is the process by which behavior becomes progressively more automatic through repitition.
+* THe amount of time, you have been performing a habit, is not as important as the number of times you have performed it.
+
+Chapter 12: The law of least effort
+
+* Human behavior follows the law of least effort. We will naturally gravitate towards the option that requires the least amount of work.
+* Create an environment where doing the right thing is easy as possible. 
+* Reduce the friction associated with good behavior. When friction is low, habits are easy.
+* Increase the friction associated with bad behavious. When friction is high, habits are difficult.
+* Prime your environment to make future actions easier.
+
+Chapter 13: How to stop procrastinating by using the 2 minute rule.
+
+* Habits can be completed in a few seconds but continue to impact your behavior for minutes or hours afterwards
+* Many habits occur at decisive moments - choices that are like a fork in the road - can either send you in the direction of a productive day or an unproductive one.
+* The 2 minutes rules states , "when you start a new habit it should take less than 2 minutes to do".
+* The more you ritualize the beginning of a process, the more likely it becomes that you can slip in to the state of deep focus that is required to do great things.
+* Standarize before you optimize. You cant improve a habit that doesnt exist.
+
+

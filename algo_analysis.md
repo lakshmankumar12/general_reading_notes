@@ -578,7 +578,7 @@ Not sure I understand this. Need some simple explanation from somewhere.
 * Parallel edges are those that have same origin and destination vertex.
   This may or may not be meaningful to a given problem
 * Typically m is number of edges, and n is number of vertices.
-  (Mnemonic: m>>n, we have far more edges than there are vertices.
+  (Mnemonic: `m>>n`, we have far more edges than there are vertices.
   Number of lines in m(3) is more than n(2)!
 * A degree of a vertex, is referred as the number of edges that start out from
   that vertex.
@@ -1148,6 +1148,67 @@ paths (?) is resilient to this.
 * Runs in O(n-cube) .. thus better than Dijkstra is 2 cases,
   Competitive in 1 case.
 
+Idea of the Algortithm
+
+```
+Let:
+
+shortestPath(i,j,k) = shortest path from i to j, with intermediate vertices
+                      only from {1,2,...k}
+
+Then we have by recursion:
+
+shortestPath(i,j,k) = min of (
+                        shortestPath(i,j,k-1),
+                        shortestPath(i,k,k-1) + shortestPath(k,j,k-1)
+                        )
+with base case:
+shortestPath(i,j,0) = w(i,j)   # weight of edge connecting i,j if it exists
+                               # ∞ otherwise
+
+```
+
+Pseudocode of the algorithm:
+
+This is surprisingly super simple in code.
+
+```
+let dist be a |V| × |V| array of minimum distances initialized to ∞ (infinity)
+let prev be a |V| × |V| array of vertex indices initialized to null
+
+for each edge (u, v) do
+    dist[u][v] ← w(u, v)  // The weight of the edge (u, v)
+    prev[u][v] ← u
+for each vertex v do
+    dist[v][v] ← 0
+    prev[v][v] ← v
+for k from 1 to |V|
+    for i from 1 to |V|
+        for j from 1 to |V|
+            if dist[i][j] > dist[i][k] + dist[k][j]
+                dist[i][j] ← dist[i][k] + dist[k][j]
+                prev[i][j] ← prev[k][j]
+            end if
+
+procedure Path(u, v)
+    if prev[u][v] = null then
+        return []
+    path ← [v]
+    while u ≠ v
+        v ← prev[u][v]
+        path.prepend(v)
+    return path
+```
+
+#### Detecting negative cycles
+
+* If graph has -ve cycles, then our algo will report some
+  A[i,i] path (i.e the diagnal of final result) is -ve, instead of 0.
+* At each innermost iteration, this can be checked. It should never happen
+  during the course of the algorithm
+
+#### Historic notes
+
 Subproblem structure:
 
 * Name vertices arbitrarily. Each iteration, you start by adding one vertex in consideration.
@@ -1162,6 +1223,7 @@ known from previous iterations.
 
 Algo:
 
+```
 Let A = 3-D array (indexed by i, j, k)
 Base cases: For all i, j ∈ V :
             +-- 0   if i = j
@@ -1172,13 +1234,31 @@ For k = 1 to n
     For j = 1 to n
       A[i, j, k] = min ( A[i, j, k-1]                   # k not part
                          A[i, k, k-1] + A[k, j, k-1] )  # k part.
+```
 
-If graph has -ve cycles, then our algo will report some
-A[i,i] path (i.e the diagnal of final result) is -ve, instead of 0.
+### Johnson's Algorithm
 
-To reconstruct, have another B[i,j] which stores the last updated k of case-2.
-We can then use this to reconstruct a shortest path.
+* Runs one iteration of Bellman-Ford and n iterations of Dijkstra.
+* The idea is to run the Bellman-Ford and covert all edge weights to +ve.
+* Note that we can't just like that add a positive weight, as that will
+  displace paths with unequal number of edges in them.
 
+Idea to reweight edges:
+* Reweighting using vertex weights {Pv} adds the same amount (namely, ps - pt)
+  to every s-t path
+* Reweighting always leaves the shortest path unchanged
+* Image a new vertex and a path from here to every other vertex of value 0.
+  These edges are invisible to the original Graph.
+* Run Bellman-Ford on this new graph. The shortest path from S to every node
+  is now the weight of that n
+  * note that P(s,n) will either be 0 or be -ve.
+
+
+Find out weights to every vertex
+Re-adjust cost of every edge from:
+ newL = L + Ps - Pt
+
+Question in Quiz: (To see discussion forum)
 
 
 # Design Paradigm
@@ -1394,28 +1474,6 @@ Running time
 
 
 
-## Johnson's Algorithm
-
-* Runs one iteration of Bellman-Ford and n iterations of Dijkstra.
-* The idea is to run the Bellman-Ford and covert all edge weights to +ve.
-* Note that we can't just like that add a positive weight, as that will
-  displace paths with unequal number of edges in them.
-
-Idea to reweight edges:
-* Reweighting using vertex weights {Pv} adds the same amount (namely, ps - pt)
-  to every s-t path
-* Reweighting always leaves the shortest path unchanged
-* Image a new vertex and a path from here to every other vertex of value 0.
-  These edges are invisible to the original Graph.
-* Run Bellman-Ford on this new graph. The shortest path from S to every node
-  is now the weight of that n
-
-
-Find out weights to every vertex
-Re-adjust cost of every edge from:
- newL = L + Ps - Pt
-
-Question in Quiz: (To see discussion forum)
 
 # Polynomial Time Solvable Problem
 
@@ -1719,3 +1777,7 @@ Note that if we try to pick items sorted on Vi/Wi, we wont be picking the best.
 So, we can either pick items like this or pick the item with the most highest Value.
 
 It turns out that the last strategy is always alteast 50% of best solution!
+
+# General links 
+
+* https://memgraph.com/blog/graph-algorithms-applications
