@@ -66,3 +66,29 @@ SAS - spectrum access system
         * cbsdId, grantId, transmitExpireTime, grantExpireTime,
         * heartbeatInterval, operationParam, measReportConfig, response).
 
+# TR069
+
+xml-rpc list from Enodebd to Enodeb
+
+* GET
+* SET
+* Reboot
+* Upload logs
+* Download Firmware
+* Add-object/Delete-object
+
+State Transition
+
+* Waiting for Inform in connected state
+* Waiting for Inform in disconnected state
+* Waiting for empty message
+* Waiting for transient cfg-params
+* Waiting for regular cfg-params
+* Waiting for set responses
+
+Inform params
+* Boot
+* Reboot
+* Periodic
+* Value change
+* Upload logs complete

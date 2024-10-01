@@ -390,3 +390,6 @@ PHY       LOW-PHY   PHY       PHY RLC       RLC              IP        IP
 
 * Synchronization configurations
     * LLC-C1, .. LLS-C4
+* SEPP
+* RIC
+

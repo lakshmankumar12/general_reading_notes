@@ -233,7 +233,7 @@ spec:                           ## Desired state of object. Very object specific
 apiVersion: v1
 kind: Pod
 metadata:
-  name: first-pod
+  name: first-pod              ## container inherit this as their hostname
   labels:
     project: qsk-course
 spec:
@@ -242,8 +242,14 @@ spec:
       image: educative1/qsk-course:1.0
       ports:
         - containerPort: 8080
-
-## other specs
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 8081
+      volumeMounts:
+        - name: html
+          mountpath: /usr/share/nghttp
+  ## other specs
   nodeSelector:  # runs this pods only in nodes matching the label-selector
     gpu: "true"
 ```
@@ -379,13 +385,39 @@ metadata:
     name: custom-namespace
 ```
 
+* You then call out the `namespace: name` in the `metadata` of other objects like svc, pod
+
 * namespaces DONT provide any network isolation. If a pod in ns-A knows the ip of a pod in ns-B,
   it can just communiate with it.
 
 ## probes
 
+https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+
+* Lets us test the health and status of a pod
+
 * readiness probe
 * liveliness probe
+* called out in the `pod.spec.containers`
+
+## users
+
+* Even though a normal user cannot be added via an API call, any user that
+  presents a valid certificate signed by the cluster's certificate authority
+  (CA) is considered authenticated.
+* Meant to be used by humans
+
+## service account
+
+* Created by doing requests to api server
+
+## roles
+
+Eg: `clusterrole=view`
+
+## rolebinding
+
+* binds a role to a service-account on a namespace
 
 
 # kubectl commands
@@ -415,9 +447,6 @@ export KUBECONFIG=/usercode/config
 
 # version
 kubectl version --client
-
-# config
-kubectl config view
 
 # cluster related
 kubectl cluster-info
@@ -465,6 +494,8 @@ kubectl create -f <file.yml>
 # --record          => keeps a log of changes.
 
 kubectl logs pod/pod_name
+# in case of multi-container pod
+kubectl logs pod/pod_name --container container_name
 ## tail/follow the logs
 kubectl logs -f pod/pod_name
 
@@ -483,9 +514,30 @@ kubectl get svc -o json | jq '.items[] | {name:.metadata.name, p:.spec.ports[] }
 ## explain a spec
 kubectl explain pod
 kubectl explain pod.spec
+## give a good liner of all properties of an object
+kubectl explain pod --recursive
 
 ## delete entire namespace with all its pods
 kubectl delete ns namespace1
+
+```
+
+* On the host running kubectl commands
+
+```sh
+# config (that of local kubectl)
+kubectl config view
+
+## change the cluster
+kubectx <clustername>
+kubectx minikube
+
+## or
+kubectl config get-contexts
+kubectl config use-context minikube
+
+# change something in the config
+kubectl config set-context --current --namespace shield
 
 ```
 
@@ -526,8 +578,10 @@ rm -rf $temp_dir
 
 # Minikube
 
-minikube is a lightweight Kubernetes implementation that creates a VM/docker on your
-local machine and deploys a simple cluster containing only one node.
+minikube is a lightweight Kubernetes implementation that creates a VM/docker on
+your local machine and deploys a simple cluster containing only one node.
+
+* In the default installation, minikube starts a docker that then runs all containers within it.
 
 
 * Link to instal kubernets/minibox within a vm
@@ -542,6 +596,9 @@ minikube service servicename
 
 #destroy everthing
 minikube delete --all
+
+#get into the minikube
+minikube ssh
 ```
 
 # General notes

@@ -84,7 +84,9 @@ swanctl --load-conns
 swanctl --initiate --child connname
 swanctl --list-pools --leases
 swanctl --terminate --ike connname
+
 swanctl --list-sas
+swanctl --list-conns
 
 swanctl --log
 # or grep charon in /var/log/messages or syslog

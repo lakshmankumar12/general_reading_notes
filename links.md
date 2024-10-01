@@ -24,6 +24,31 @@ https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-
 ## cpu memory affinity
 
 https://www.admin-magazine.com/HPC/Articles/Processor-and-Memory-Affinity-Tools
+* kvm cpu pinning
+    * https://www.intel.com/content/www/us/en/products/docs/processors/processor-numbers-data-center.html
+
+## bash autocompletion
+
+https://opensource.com/article/18/3/creating-bash-completion-script
+
+## grub password
+
+https://superuser.com/questions/1001810/grub-menu-edit-protection-only
+https://hmarco.org/bugs/CVE-2015-8370-Grub2-authentication-bypass.html
+
+# processors
+
+## intel
+
+* intel processor numbering
+    * python equivalent of curl --resolve : https://stackoverflow.com/a/22614367/25560091
+
+# packer
+
+https://www.lisenet.com/2022/building-qemu-kvm-images-with-packer/
+https://actuated.dev/blog/automate-packer-qemu-image-builds
+https://shantanoo-desai.github.io/posts/technology/packer-ubuntu-qemu/
+https://www.puppeteers.net/blog/building-ubuntu-20-04-qemu-images-with-packer/
 
 # Lte
 
@@ -37,6 +62,7 @@ Really good: https://www.sharetechnote.com/html/BasicProcedure_LTE_OverallSequen
     * ON interferece: https://www.sharetechnote.com/html/Handbook_LTE_Interference_Downlink.html
     * Best - frame sturcture: https://www.sharetechnote.com/html/FrameStructure_DL.html#Overview
 Also another frame related link: https://rfmw.em.keysight.com/wireless/helpfiles/89600b/webhelp/subsystems/lte/content/lte_overview.htm
+https://www.5gfundamental.com/
 
 ## 5G Radio splits
 
@@ -46,9 +72,18 @@ V.Good: https://www.5gtechnologyworld.com/open-ran-functional-splits-explained/
 
 Pitching for Collaborative Coexistence Framework: https://www.ericsson.com/en/blog/6/2022/cbrs-growing-pains-and-progress
 
+# Project Management
+
+https://www.pmi.org/learning/library/top-five-causes-scope-creep-6675
+
 # Graphiz
 
 https://stackoverflow.com/questions/54735049/graphviz-how-to-create-overlapping-subnode-on-another
+
+# Git
+
+https://git-school.github.io/visualizing-git/
+https://www.youtube.com/watch?v=CAP7ZSryvE8&t=376s&ab_channel=FlyingLogic
 
 # Sanskrit
 
@@ -62,6 +97,13 @@ https://bbc.github.io/cloudfit-public-docs/asyncio/asyncio-part-1
 # Finance
 
 https://www.mattcutts.com/blog/investing-reading-list/
+https://www.businessinsider.com/finally-some-excellent-investment-advice-2011-12?IR=T
+
+## new tax regime diffs in fy2223 vs fy 2324
+
+https://cleartax.in/s/old-tax-regime-vs-new-tax-regime
+https://cleartax.in/paytax/TaxCalculator
+https://www.policybazaar.com/financial-tools-calculators/income-tax-calculator/o
 
 # Technology Terminology dump
 

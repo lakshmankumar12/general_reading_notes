@@ -1,4 +1,3 @@
-
 # TLS introduction
 
 ## Record protocol
@@ -238,6 +237,9 @@ ssh-keygen -lf ~/.ssh/id_rsa.pub -E md5
 awk '{print $2}' ~/.ssh/id_rsa.pub | base64 -d | md5sum
 ### 671b83b6c16661bf16ba51b2ede90df8  -
 
+## generate dh param
+openssl dhparam -text -2 2048
+
 ```
 
 ## CSR
@@ -286,12 +288,13 @@ subjectAltName          = @alt_names
 [alt_names]
 DNS.1   = host.gxc.io
 DNS.2   = host1.gxc.io
+IP.1    = 192.168.122.18
 EOF
 openssl req -key host.key -config host.cnf -new -out host.csr
 
 #dump the csr
 openssl req -in fd.csr -text -noout
-#you can also very
+#you can also verify
 openssl req -in fd.csr -text -noout -verify
 
 #already have a cert.. just get a csr to extend it.
@@ -327,12 +330,14 @@ keyUsage  = critical, cRLSign, digitalSignature, keyCertSign
 nsComment = "OpenSSL Generated Certificate"
 EOF
 openssl req -new -x509 -days 365 -config root.cnf  -key site-root.key -out site-root.crt
+## other args
+##  -set_serial 0xe76186cbfe816195            ## use a given serial for the cert
 
 #non-interfactive - just with subj and no extensions
 openssl req -new -x509 -days 365 -key fd.key -out fd.crt \
         -subj "/C=GB/L=London/O=Feisty Duck Ltd/CN=www.feistyduck.com"
 
-#signing our own certificate from a csr if present
+#(rare)signing our own certificate from a csr if present
 openssl x509 -req -days 365 -in fd.csr -signkey fd.key -out fd.crt
 
 #a CA signing a host
@@ -375,6 +380,9 @@ openssl pkcs12 -in infile.pfx -nokeys -out certs.pem -passin:whatever -passout p
 openssl rand 32
 ## generate random bytes of a length and then convert to base64
 openssl rand -base64 32
+
+## convert RSA KEY to OPENSSL key -- note the input file will be rewritten
+ssh-keygen -p -N "" -f /path/to/rsakey.pem
 
 ```
 
@@ -454,6 +462,28 @@ openssl x509 -modulus -noout -in cert.pem
 openssl req -noout -modulus -in example.csr
 ```
 
+* list all certs in a bundle file
+
+```
+file=whatever.pem
+openssl crl2pkcs7 -nocrl -certfile $file | openssl pkcs7 -print_certs -noout -text | less
+
+```
+
+* see the trust chain
+
+```sh
+openssl s_client -showcerts -connect www.serverfault.com:443
+## optional
+-cert cerfile
+-CAfile cafile
+-key keyfile
+-servername www.serverfault.com  ## looks like this enables SNI in request
+
+```
+
+
+
 
 
 ## openssl testing
@@ -465,7 +495,7 @@ openssl verify -CAfile site-root.crt server.crt
 
 openssl s_client -connect localhost:1443 -CAfile site-root.crt -servername server.gxc.io
 
-curl --cert client.crt --key client.key --cacert site-root.crt --resolve server.gxc.io:1443:127.0.0.1 https://server.gxc.io:1443
+curl -vvv --cert client.crt --key client.key --cacert site-root.crt --resolve server.gxc.io:1443:127.0.0.1 https://server.gxc.io:1443
 
 ```
 
@@ -482,3 +512,13 @@ https://cryptobook.nakov.com/asymmetric-key-ciphers/ecc-encryption-decryption
 https://www.programcreek.com/python/example/106733/cryptography.hazmat.primitives.serialization.load_pem_public_key
 https://snyk.io/advisor/python/cryptography/functions/cryptography.hazmat.primitives.asymmetric.ec
 
+
+# websites useful towards security
+
+Search certificates in the wild
+* https://crt.sh/?q=gxc.io
+
+
+# elliptic curve cryptograph
+
+* python try is in 

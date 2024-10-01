@@ -340,6 +340,12 @@ SENT
        CLOSED
 ```
 
+Wireshark display filter for detecting fragments:
+```
+sctp.sack_number_of_gap_blocks != 0
+```
+
+
 ## Stuff in INIT
 
 * Initial TSN
