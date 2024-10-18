@@ -60,4 +60,6 @@ the switch.
 
 https://aptira.com/openstack-rules-how-openvswitch-works-inside-openstack/
 
+https://arthurchiao.art/blog/ovs-deep-dive-0-overview/
+
 Papers: Packet classification through tuple based search
