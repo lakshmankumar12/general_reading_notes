@@ -120,3 +120,8 @@ https://www.policybazaar.com/financial-tools-calculators/income-tax-calculator/o
       suitable for both small and large clusters.
 
 
+
+## scribd downloaders
+
+https://scribd.vdownloaders.com/
+https://www.downloadfreescribd.com/en/
