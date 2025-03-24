@@ -324,6 +324,39 @@ How you allocate the 10 subframes is the TDD config.
     * eCPRI - enhanced CPRI.
     * stretches the limits of fiber bw with 5G rates.
 
+# various radio KPIs
+
+* RSRP (Reference Signal Received Power)
+    * measures the average power of resource elements that carry cell-specific reference signals within the measurement bandwidth
+    * It represents the signal strength from a specific cell, excluding noise and interference
+    * RSRP is measured in dBm (decibels relative to 1 milliwatt) and typically
+      ranges from about -44 dBm (extremely strong, near the cell site) to -140
+      dBm (extremely weak, at cell edge)
+    * In 4G, RSRP measures the power of Cell-Specific Reference Signals (CRS)
+    * In 5G, RSRP measures the power of Synchronization Signal Blocks (SSB)
+* RSRQ (Reference Signal Received Quality):
+    * RSRQ measures the quality of the reference signals received from a cell
+      by taking into account both the signal strength (RSRP - Reference Signal
+      Received Power) and the overall interference plus noise in the system
+    * It is calculated as: RSRQ = (N × RSRP) / RSSI, where N is the number of
+      resource blocks, and RSSI (Received Signal Strength Indicator) includes
+      all received power including interference and noise
+    * RSRQ helps determine if a cell is suitable for serving a user, especially
+      in scenarios with multiple cells available
+    * It's particularly useful for handover decisions since it accounts for
+      interference from neighboring cells
+    * RSRQ values typically range from -3 dB (excellent) to -20 dB (poor)
+* SINR (Signal to Interference plus Noise Ratio):
+    * SINR measures the power of the desired signal compared to the sum of
+      interference from other transmitters and background noise
+    * It directly indicates the signal quality and potential throughput that
+      can be achieved
+    * SINR is crucial for determining the modulation and coding scheme (MCS)
+      that can be used for data transmission
+    * Higher SINR allows for higher-order modulation (like 64QAM or 256QAM) and
+      less error correction overhead, resulting in better throughput
+    * SINR is typically expressed in dB, with values above 20 dB considered excellent
+
 # from tutorials
 
 Dump:
